@@ -1,0 +1,26 @@
+/* css/credits.css */
+.credits-container {
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid var(--border-color);
+    padding: 3rem;
+    border-radius: 8px;
+    background: white;
+}
+
+.credits-container h3 {
+    margin-top: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.credits-container ul {
+    list-style: disc;
+    margin-left: 1.5rem;
+    color: var(--text-muted);
+}
+
+.credits-container li {
+    margin-bottom: 0.5rem;
+}

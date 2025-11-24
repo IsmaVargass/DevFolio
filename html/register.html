@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - DevFolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="auth-container">
+            <h2>Crear Cuenta</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-nombre">Nombre Completo</label>
+                    <input type="text" id="register-nombre" required placeholder="Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required placeholder="tu@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Contraseña</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Registrarse</button>
+                <p class="auth-switch">
+                    ¿Ya tienes cuenta? <a href="login.html">Inicia Sesión</a>
+                </p>
+            </form>
+        </div>
+    </main>
+
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module">
+        import { register } from '../js/auth.js';
+        document.getElementById('register-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById('register-nombre').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            register(nombre, email, password);
+        });
+    </script>
+</body>
+
+</html>

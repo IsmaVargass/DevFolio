@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DevFolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="dashboard.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="#" id="btn-logout">Cerrar Sesión</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1 style="margin-bottom: 3rem;">Tu Portfolio</h1>
+
+        <!-- PROYECTOS -->
+        <section style="margin-bottom: 4rem;">
+            <div class="dashboard-header">
+                <h2>Proyectos</h2>
+                <button class="btn btn-primary" id="btn-new-project">Nuevo Proyecto</button>
+            </div>
+            <div id="projects-grid" class="projects-grid">
+                <p>Cargando...</p>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section style="margin-bottom: 4rem;">
+            <div class="dashboard-header">
+                <h2>Habilidades</h2>
+                <button class="btn btn-outline btn-sm" id="btn-new-skill">Añadir</button>
+            </div>
+            <div id="skills-grid" class="skills-grid"></div>
+        </section>
+
+        <!-- EXPERIENCIA -->
+        <section style="margin-bottom: 4rem;">
+            <div class="dashboard-header">
+                <h2>Experiencia</h2>
+                <button class="btn btn-outline btn-sm" id="btn-new-experience">Añadir</button>
+            </div>
+            <div id="experience-list" class="list-container"></div>
+        </section>
+
+        <!-- EDUCACIÓN -->
+        <section style="margin-bottom: 4rem;">
+            <div class="dashboard-header">
+                <h2>Educación</h2>
+                <button class="btn btn-outline btn-sm" id="btn-new-education">Añadir</button>
+            </div>
+            <div id="education-list" class="list-container"></div>
+        </section>
+
+        <!-- TESTIMONIOS -->
+        <section style="margin-bottom: 4rem;">
+            <div class="dashboard-header">
+                <h2>Testimonios</h2>
+                <button class="btn btn-outline btn-sm" id="btn-new-testimonial">Añadir</button>
+            </div>
+            <div id="testimonials-list" class="list-container"></div>
+        </section>
+
+        <!-- REDES -->
+        <section style="margin-bottom: 4rem;">
+            <div class="dashboard-header">
+                <h2>Redes Sociales</h2>
+                <button class="btn btn-outline btn-sm" id="btn-new-social">Añadir</button>
+            </div>
+            <div id="social-list" class="skills-grid"></div>
+        </section>
+    </main>
+
+    <!-- MODAL PROYECTO -->
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-title">Proyecto</h2>
+            <form id="project-form">
+                <input type="hidden" id="project-id" />
+                <div class="form-group">
+                    <label for="project-titulo">Título</label>
+                    <input type="text" id="project-titulo" required />
+                </div>
+                <div class="form-group">
+                    <label for="project-descripcion">Descripción</label>
+                    <textarea id="project-descripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="project-tecnologias">Tecnologías</label>
+                    <input type="text" id="project-tecnologias" />
+                </div>
+                <div class="form-group">
+                    <label for="project-imagen">Imagen URL</label>
+                    <input type="url" id="project-imagen" />
+                </div>
+                <div class="form-group">
+                    <label for="project-enlace">Enlace</label>
+                    <input type="url" id="project-enlace" />
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="../js/app.js"></script>
+</body>
+
+</html>
