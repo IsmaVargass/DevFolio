@@ -18,6 +18,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add delete avatar handler
     document.getElementById('delete-avatar-btn').addEventListener('click', handleAvatarDelete);
+
+    // Add preferences section with tutorial restart button
+    const securitySection = document.querySelector('.security-section');
+    if (securitySection && !document.getElementById('restart-tutorial-btn')) {
+        const preferencesSection = document.createElement('div');
+        preferencesSection.className = 'preferences-section';
+        preferencesSection.style.cssText = 'margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);';
+        preferencesSection.innerHTML = `
+            <h3>Preferencias</h3>
+            <button id="restart-tutorial-btn" class="btn btn-outline">Ver Tutorial de Nuevo</button>
+        `;
+        securitySection.parentNode.insertBefore(preferencesSection, securitySection);
+
+        // Add event listener
+        document.getElementById('restart-tutorial-btn').addEventListener('click', () => {
+            localStorage.removeItem('tutorial_completed');
+            showToast('Redirigiendo al tutorial...', 'info');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html?start_tutorial=true';
+            }, 1000);
+        });
+    }
 });
 
 function loadProfileData(user) {
@@ -88,10 +110,6 @@ function handleAvatarUpload(e) {
 }
 
 function handleAvatarDelete() {
-    if (!confirm('¿Estás seguro de que quieres eliminar tu foto de perfil?')) {
-        return;
-    }
-
     // Remove profile photo from user object
     const user = JSON.parse(localStorage.getItem('user'));
     delete user.profile_photo;
@@ -103,6 +121,20 @@ function handleAvatarDelete() {
 
     showToast('Foto de perfil eliminada correctamente', 'success');
 }
+
+// Add tutorial restart handler
+document.addEventListener('DOMContentLoaded', () => {
+    const restartTutorialBtn = document.getElementById('restart-tutorial-btn');
+    if (restartTutorialBtn) {
+        restartTutorialBtn.addEventListener('click', () => {
+            localStorage.removeItem('tutorial_completed');
+            showToast('Redirigiendo al tutorial...', 'info');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html?start_tutorial=true';
+            }, 1000);
+        });
+    }
+});
 
 function showToast(message, type = 'info') {
     const existingToast = document.querySelector('.toast');

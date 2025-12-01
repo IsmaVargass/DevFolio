@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check if user is admin
     const currentUser = JSON.parse(localStorage.getItem('user'));
     if (!currentUser || currentUser.role !== 'admin') {
-        alert('Acceso denegado. Se requieren permisos de administrador.');
+        showToast('Acceso denegado. Se requieren permisos de administrador.', 'error');
         window.location.href = 'dashboard.html';
         return;
     }

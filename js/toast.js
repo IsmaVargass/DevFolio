@@ -1,8 +1,7 @@
-// js/toast.js
-// Simple toast notification system
+// js/toast.js - Global Toast Notification System
 
 function showToast(message, type = 'info') {
-    // Remove any existing toast
+    // Remove existing toast if any
     const existingToast = document.querySelector('.toast');
     if (existingToast) {
         existingToast.remove();
@@ -21,7 +20,7 @@ function showToast(message, type = 'info') {
         toast.classList.add('show');
     }, 10);
 
-    // Remove after 3 seconds
+    // Auto-remove after 3 seconds
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
@@ -29,3 +28,6 @@ function showToast(message, type = 'info') {
         }, 300);
     }, 3000);
 }
+
+// Make it globally available
+window.showToast = showToast;

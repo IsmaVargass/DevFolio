@@ -7,25 +7,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadTickets() {
     const list = document.getElementById('tickets-list');
-    // Mock data
-    const tickets = [
-        { id: 101, subject: 'Problema con exportación PDF', status: 'open', date: '2025-12-01', priority: 'high' },
-        { id: 98, subject: 'Cambio de correo electrónico', status: 'resolved', date: '2025-11-28', priority: 'medium' }
-    ];
+    const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
+    const user = JSON.parse(localStorage.getItem('user'));
 
-    if (tickets.length === 0) {
+    // Filter tickets for current user
+    const userTickets = user ? tickets.filter(t => t.user === user.email) : [];
+
+    if (userTickets.length === 0) {
         list.innerHTML = '<p class="text-muted">No tienes tickets abiertos.</p>';
         return;
     }
 
-    list.innerHTML = tickets.map(t => `
+    list.innerHTML = userTickets.map(t => `
         <div class="ticket-item">
             <div class="ticket-header">
                 <span class="ticket-subject">#${t.id} - ${t.subject}</span>
                 <span class="ticket-status status-${t.status}">${getStatusLabel(t.status)}</span>
             </div>
             <div class="ticket-meta">
-                <span>Fecha: ${t.date}</span>
+                <span>Fecha: ${new Date(t.created).toLocaleDateString()}</span>
                 <span>Prioridad: ${getPriorityLabel(t.priority)}</span>
             </div>
         </div>
@@ -79,22 +79,50 @@ function setupModal() {
 
     document.getElementById('ticket-form').onsubmit = (e) => {
         e.preventDefault();
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        const ticket = {
+            id: Date.now(),
+            subject: document.getElementById('ticket-subject').value,
+            category: document.getElementById('ticket-category').value,
+            priority: document.getElementById('ticket-priority').value,
+            description: document.getElementById('ticket-desc').value,
+            status: 'open',
+            created: new Date().toISOString(),
+            user: user ? user.email : 'anonymous',
+            userName: user ? user.nombre : 'Usuario'
+        };
+
+        // Save to localStorage for admin panel
+        const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
+        tickets.push(ticket);
+        localStorage.setItem('support_tickets', JSON.stringify(tickets));
+
         modal.classList.remove('show');
-        alert('Ticket enviado correctamente. Te contactaremos pronto.');
-        // Reload tickets (mock)
-        const list = document.getElementById('tickets-list');
-        const newTicket = `
-            <div class="ticket-item">
-                <div class="ticket-header">
-                    <span class="ticket-subject">#102 - ${document.getElementById('ticket-subject').value}</span>
-                    <span class="ticket-status status-open">Abierto</span>
-                </div>
-                <div class="ticket-meta">
-                    <span>Fecha: Hoy</span>
-                    <span>Prioridad: ${getPriorityLabel(document.getElementById('ticket-priority').value)}</span>
-                </div>
-            </div>
-        `;
-        list.insertAdjacentHTML('afterbegin', newTicket);
+        showToast('Ticket enviado correctamente. Te contactaremos pronto.', 'success');
+
+        // Reload tickets list
+        loadTickets();
+
+        // Reset form
+        e.target.reset();
     };
+}
+
+function showToast(message, type = 'info') {
+    const existingToast = document.querySelector('.toast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    toast.offsetHeight;
+    toast.classList.add('show');
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }

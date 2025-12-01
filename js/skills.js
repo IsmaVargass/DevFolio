@@ -65,18 +65,13 @@ function createSkillCard(skill) {
         <div class="skill-card">
             <div class="skill-progress-circle">
                 <svg width="120" height="120">
-                    <defs>
-                        <linearGradient id="gradient-${skill.id}" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <circle class="progress-bg" cx="60" cy="60" r="54"></circle>
+                    <circle class="progress-bg" cx="60" cy="60" r="54"
+                        fill="none" stroke="#e5e7eb" stroke-width="8"></circle>
                     <circle class="progress-bar" cx="60" cy="60" r="54"
-                        stroke="url(#gradient-${skill.id})"
+                        fill="none" stroke="#10b981" stroke-width="8"
                         stroke-dasharray="${circumference}"
-                        stroke-dashoffset="${offset}">
-                    </circle>
+                        stroke-dashoffset="${offset}"
+                        transform="rotate(-90 60 60)"></circle>
                 </svg>
                 <div class="progress-text">${skill.level}%</div>
             </div>
