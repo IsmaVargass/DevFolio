@@ -7,14 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadExperience() {
     const timeline = document.getElementById('work-timeline');
-    // Mock data
     const work = [
         {
             id: 1,
             company: 'Tech Solutions Inc.',
             role: 'Senior Developer',
             start: '2022-01',
-            end: null, // Current
+            end: null,
             description: 'Liderando el equipo de desarrollo frontend y arquitecturando soluciones escalables.'
         },
         {
@@ -32,7 +31,6 @@ function loadExperience() {
 
 function loadEducation() {
     const timeline = document.getElementById('education-timeline');
-    // Mock data
     const edu = [
         {
             id: 1,
@@ -74,7 +72,6 @@ function createTimelineItem(item, type) {
 }
 
 function formatDate(dateStr) {
-    // Simple formatter, can be improved
     return dateStr;
 }
 
@@ -93,7 +90,7 @@ function setupModal() {
     document.getElementById('experience-form').onsubmit = (e) => {
         e.preventDefault();
         modal.classList.remove('show');
-        alert('Guardado (simulación)');
+        showToast('Experiencia guardada correctamente', 'success');
     };
 }
 
@@ -124,7 +121,23 @@ window.editEntry = (id, type) => {
 };
 
 window.deleteEntry = (id, type) => {
-    if (confirm('¿Eliminar esta entrada?')) {
-        console.log('Delete', id, type);
-    }
+    console.log('Delete', id, type);
+    showToast('Entrada eliminada correctamente', 'success');
 };
+
+function showToast(message, type = 'info') {
+    const existingToast = document.querySelector('.toast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('show'), 10);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}

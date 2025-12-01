@@ -1,8 +1,9 @@
-/* js/customer_support.js */
+/* js/customer_support.js - Enhanced Help System */
 document.addEventListener('DOMContentLoaded', () => {
     loadTickets();
     setupAccordion();
     setupModal();
+    setupTutorialButton();
 });
 
 function loadTickets() {
@@ -10,7 +11,6 @@ function loadTickets() {
     const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
     const user = JSON.parse(localStorage.getItem('user'));
 
-    // Filter tickets for current user
     const userTickets = user ? tickets.filter(t => t.user === user.email) : [];
 
     if (userTickets.length === 0) {
@@ -58,9 +58,7 @@ function setupAccordion() {
         const header = item.querySelector('.accordion-header');
         header.addEventListener('click', () => {
             const isActive = item.classList.contains('active');
-            // Close all
             items.forEach(i => i.classList.remove('active'));
-            // Toggle clicked
             if (!isActive) item.classList.add('active');
         });
     });
@@ -93,7 +91,6 @@ function setupModal() {
             userName: user ? user.nombre : 'Usuario'
         };
 
-        // Save to localStorage for admin panel
         const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
         tickets.push(ticket);
         localStorage.setItem('support_tickets', JSON.stringify(tickets));
@@ -101,12 +98,22 @@ function setupModal() {
         modal.classList.remove('show');
         showToast('Ticket enviado correctamente. Te contactaremos pronto.', 'success');
 
-        // Reload tickets list
         loadTickets();
-
-        // Reset form
         e.target.reset();
     };
+}
+
+function setupTutorialButton() {
+    const tutorialBtn = document.getElementById('show-tutorial-btn');
+    if (tutorialBtn) {
+        tutorialBtn.addEventListener('click', () => {
+            localStorage.removeItem('tutorial_completed');
+            showToast('Redirigiendo al tutorial...', 'info');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html?start_tutorial=true';
+            }, 1000);
+        });
+    }
 }
 
 function showToast(message, type = 'info') {
@@ -118,8 +125,7 @@ function showToast(message, type = 'info') {
     toast.textContent = message;
     document.body.appendChild(toast);
 
-    toast.offsetHeight;
-    toast.classList.add('show');
+    setTimeout(() => toast.classList.add('show'), 10);
 
     setTimeout(() => {
         toast.classList.remove('show');

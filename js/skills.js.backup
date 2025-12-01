@@ -1,4 +1,4 @@
-/* js/skills.js - Enhanced Dynamic Skills System with Green Circles */
+/* js/skills.js - Enhanced Dynamic Skills System */
 document.addEventListener('DOMContentLoaded', () => {
     loadSkills();
     setupTabs();
@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateOverview();
 });
 
+// Mock data - In production, load from API/localStorage
 let skillsData = {
     technical: [
         { id: 1, name: 'JavaScript', level: 90, type: 'technical' },
@@ -25,6 +26,7 @@ let skillsData = {
 };
 
 function loadSkills() {
+    // Load from localStorage if exists
     const stored = localStorage.getItem('skills');
     if (stored) {
         const allSkills = JSON.parse(stored);
@@ -56,7 +58,7 @@ function renderSkills(type) {
 function createSkillCard(skill) {
     const levelLabel = getLevelLabel(skill.level);
     const levelClass = getLevelClass(skill.level);
-    const circumference = 2 * Math.PI * 54;
+    const circumference = 2 * Math.PI * 54; // radius = 54
     const offset = circumference - (skill.level / 100) * circumference;
 
     return `
@@ -114,9 +116,11 @@ function setupTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
+            // Remove active from all
             document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.skills-view').forEach(v => v.classList.remove('active'));
 
+            // Add active to clicked
             tab.classList.add('active');
             document.getElementById(`${tab.dataset.tab}-skills`).classList.add('active');
         });
@@ -171,6 +175,7 @@ function saveSkill() {
     const level = parseInt(document.getElementById('skill-level').value);
 
     if (id) {
+        // Edit existing
         const allSkills = [...skillsData.technical, ...skillsData.soft, ...skillsData.hard];
         const skill = allSkills.find(s => s.id == id);
         if (skill) {
@@ -179,6 +184,7 @@ function saveSkill() {
             skill.level = level;
         }
     } else {
+        // Add new
         const newSkill = {
             id: Date.now(),
             name,
@@ -188,9 +194,11 @@ function saveSkill() {
         skillsData[type].push(newSkill);
     }
 
+    // Save to localStorage
     const allSkills = [...skillsData.technical, ...skillsData.soft, ...skillsData.hard];
     localStorage.setItem('skills', JSON.stringify(allSkills));
 
+    // Reload and close
     loadSkills();
     document.getElementById('skill-modal').classList.remove('show');
     showToast('Skill guardada correctamente', 'success');
@@ -207,6 +215,7 @@ window.editSkill = (id) => {
         document.getElementById('skill-type').value = skill.type;
         document.getElementById('skill-level').value = skill.level;
 
+        // Trigger input event to update display
         document.getElementById('skill-level').dispatchEvent(new Event('input'));
 
         document.getElementById('skill-modal').classList.add('show');
@@ -214,15 +223,19 @@ window.editSkill = (id) => {
 };
 
 window.deleteSkill = (id) => {
+    if (!confirm('¿Eliminar esta habilidad?')) return;
+
+    // Find and remove
     for (let type in skillsData) {
         skillsData[type] = skillsData[type].filter(s => s.id !== id);
     }
 
+    // Save to localStorage
     const allSkills = [...skillsData.technical, ...skillsData.soft, ...skillsData.hard];
     localStorage.setItem('skills', JSON.stringify(allSkills));
 
     loadSkills();
-    showToast('Skill eliminada correctamente', 'success');
+    showToast('Skill eliminada', 'info');
 };
 
 function showToast(message, type = 'info') {
@@ -234,7 +247,8 @@ function showToast(message, type = 'info') {
     toast.textContent = message;
     document.body.appendChild(toast);
 
-    setTimeout(() => toast.classList.add('show'), 10);
+    toast.offsetHeight;
+    toast.classList.add('show');
 
     setTimeout(() => {
         toast.classList.remove('show');
