@@ -30,7 +30,11 @@
                 <div class="profile-header">
                     <div class="profile-avatar-container">
                         <img src="../assets/default-avatar.png" alt="Profile" id="current-avatar">
-                        <button class="btn-icon" id="change-avatar-btn" title="Cambiar foto">📷</button>
+                        <div class="avatar-actions">
+                            <button class="btn-icon" id="change-avatar-btn" title="Cambiar foto">📷</button>
+                            <button class="btn-icon btn-icon-danger" id="delete-avatar-btn"
+                                title="Eliminar foto">🗑️</button>
+                        </div>
                         <input type="file" id="avatar-upload" hidden accept="image/*">
                     </div>
                     <h2 id="display-name">Usuario</h2>
@@ -88,6 +92,41 @@
             </div>
         </div>
     </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="privacy.html">Política de Privacidad</a></li>
+                    <li><a href="terms.html">Términos de Servicio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="#" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">LinkedIn</a>
+                    <a href="#" target="_blank">Twitter</a>
+                </div>
+            </div>
+            <div class="footer-section footer-shortcuts">
+                <h3>Atajos</h3>
+                <div class="shortcuts-grid">
+                    <a href="portfolio_builder.html">Portfolio</a>
+                    <a href="profile.html">Perfil</a>
+                    <a href="skills.html">Skills</a>
+                    <a href="experience.html">Experiencia</a>
+                    <a href="communities.html">Comunidades</a>
+                    <a href="messages.html">Mensajes</a>
+                    <a href="customer_support.html">Atención al Cliente</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <script src="../js/utils.js"></script>
     <script src="../js/profile.js"></script>

@@ -32,22 +32,22 @@
         </div>
 
         <div class="communities-tabs">
-            <button class="tab-btn active" data-tab="portfolios">Portfolios Destacados</button>
-            <button class="tab-btn" data-tab="recent">Portfolios Recientes</button>
+            <button class="tab-btn active" data-tab="recent">Portfolios Recientes</button>
+            <button class="tab-btn" data-tab="featured">Portfolios Destacados</button>
             <button class="tab-btn" data-tab="jobs">Ofertas de Trabajo</button>
             <button class="tab-btn" data-tab="groups">Grupos de Trabajo</button>
         </div>
 
         <div class="communities-content">
-            <div id="portfolios-view" class="content-view active">
-                <div class="grid-layout" id="portfolios-grid">
-                    <!-- Featured Portfolios will be loaded here -->
+            <div id="recent-view" class="content-view active">
+                <div class="grid-layout" id="recent-portfolios-grid">
+                    <!-- Recent Portfolios will be loaded here -->
                 </div>
             </div>
 
-            <div id="recent-view" class="content-view">
-                <div class="grid-layout" id="recent-portfolios-grid">
-                    <!-- Recent Portfolios will be loaded here -->
+            <div id="featured-view" class="content-view">
+                <div class="grid-layout" id="featured-portfolios-grid">
+                    <!-- Featured Portfolios will be loaded here -->
                 </div>
             </div>
 
@@ -64,6 +64,41 @@
             </div>
         </div>
     </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="privacy.html">Política de Privacidad</a></li>
+                    <li><a href="#">Términos de Servicio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="#" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">LinkedIn</a>
+                    <a href="#" target="_blank">Twitter</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Atajos</h3>
+                <div class="social-links">
+                    <a href="portfolio_builder.html">Portfolio</a>
+                    <a href="profile.html">Perfil</a>
+                    <a href="skills.html">Skills</a>
+                    <a href="experience.html">Experiencia</a>
+                    <a href="communities.html">Comunidades</a>
+                    <a href="messages.html">Mensajes</a>
+                    <a href="customer_support.html">Atención al Cliente</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <script src="../js/utils.js"></script>
     <script src="../js/communities.js"></script>

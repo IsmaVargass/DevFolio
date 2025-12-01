@@ -1,161 +1,163 @@
-/* js/messages.js */
+/* js/messages.js - Messaging System Logic */
 document.addEventListener('DOMContentLoaded', () => {
-    loadContacts();
     loadConversations();
-    setupMessageSending();
-
-    // Simulate real-time updates
-    setInterval(checkForNewMessages, 5000);
+    setupEventListeners();
 });
 
-function loadContacts() {
-    // Mock contacts (people in your "circle")
-    const contacts = [
-        { id: 3, name: 'Elena Web', status: 'online' },
-        { id: 4, name: 'David Tech', status: 'offline' }
-    ];
+let currentConversationId = null;
 
-    // Add contacts section to sidebar if not exists
-    let contactsSection = document.getElementById('contacts-section');
-    if (!contactsSection) {
-        const sidebar = document.querySelector('.conversations-sidebar');
-        contactsSection = document.createElement('div');
-        contactsSection.id = 'contacts-section';
-        contactsSection.style.padding = '1rem';
-        contactsSection.style.borderTop = '1px solid var(--border-color)';
-        contactsSection.innerHTML = '<h3 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-muted);">Contactos</h3><div id="contacts-list"></div>';
-        sidebar.appendChild(contactsSection);
+// Mock Data
+const mockConversations = [
+    {
+        id: 1,
+        userId: 'user2',
+        name: 'María García',
+        avatar: '../assets/default-avatar.png',
+        lastMessage: '¡Hola! Me interesa tu perfil para un proyecto.',
+        time: '10:30',
+        unread: 2,
+        messages: [
+            { id: 1, text: 'Hola, he visto tu portfolio.', sender: 'them', time: '10:28' },
+            { id: 2, text: '¡Hola! Me interesa tu perfil para un proyecto.', sender: 'them', time: '10:30' }
+        ]
+    },
+    {
+        id: 2,
+        userId: 'tech_recruiter',
+        name: 'Tech Recruiter',
+        avatar: '../assets/default-avatar.png',
+        lastMessage: 'Gracias por aplicar a la oferta.',
+        time: 'Ayer',
+        unread: 0,
+        messages: [
+            { id: 1, text: 'Gracias por aplicar a la oferta.', sender: 'them', time: 'Yesterday' },
+            { id: 2, text: 'Quedamos a la espera de noticias.', sender: 'me', time: 'Yesterday' }
+        ]
     }
-
-    const list = document.getElementById('contacts-list');
-    list.innerHTML = contacts.map(c => `
-        <div class="contact-item" onclick="startNewChat(${c.id}, '${c.name}')" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; cursor: pointer;">
-            <div style="width: 8px; height: 8px; border-radius: 50%; background: ${c.status === 'online' ? 'var(--success-color)' : '#ccc'}"></div>
-            <span style="font-size: 0.9rem;">${c.name}</span>
-        </div>
-    `).join('');
-}
+];
 
 function loadConversations() {
     const list = document.getElementById('conversations-list');
-    // Load messages from localStorage + mock data
-    const localMessages = JSON.parse(localStorage.getItem('messages') || '[]');
+    // In production, load from localStorage/API
+    const conversations = mockConversations; // Using mock for now
 
-    // Group messages by user
-    const conversations = {};
-    localMessages.forEach(msg => {
-        const otherUser = msg.from === 'Yo' ? msg.to : msg.from;
-        if (!conversations[otherUser]) {
-            conversations[otherUser] = {
-                user: otherUser,
-                lastMsg: msg.text,
-                time: msg.time,
-                unread: false // Simplified logic
-            };
-        }
-        // Update with latest message
-        conversations[otherUser].lastMsg = msg.text;
-        conversations[otherUser].time = msg.time;
-    });
-
-    // Add mock conversations if empty
-    if (Object.keys(conversations).length === 0) {
-        conversations['Ana García'] = { id: 1, user: 'Ana García', lastMsg: 'Hola, ¿cómo estás?', time: '10:30', unread: true };
-        conversations['Carlos Ruiz'] = { id: 2, user: 'Carlos Ruiz', lastMsg: 'Gracias por la ayuda', time: 'Ayer', unread: false };
-    }
-
-    list.innerHTML = Object.values(conversations).map(c => `
-        <div class="conversation-item ${c.unread ? 'active' : ''}" onclick="openChat('${c.user}')">
-            <div class="conv-user">
-                ${c.user}
-                ${c.unread ? '<span class="unread-badge"></span>' : ''}
+    list.innerHTML = conversations.map(conv => `
+        <div class="conversation-item ${currentConversationId === conv.id ? 'active' : ''}" 
+             onclick="openConversation(${conv.id})">
+            <img src="${conv.avatar}" alt="${conv.name}" class="conv-avatar">
+            <div class="conv-info">
+                <div class="conv-top">
+                    <span class="conv-name">${conv.name}</span>
+                    <span class="conv-time">${conv.time}</span>
+                </div>
+                <div class="conv-bottom" style="display: flex; justify-content: space-between;">
+                    <span class="conv-last-msg">${conv.lastMessage}</span>
+                    ${conv.unread > 0 ? `<span class="conv-unread">${conv.unread}</span>` : ''}
+                </div>
             </div>
-            <div class="conv-preview">${c.lastMsg}</div>
-            <div class="conv-time">${c.time}</div>
         </div>
     `).join('');
 }
 
-window.openChat = (username) => {
-    document.getElementById('chat-header').style.display = 'flex';
-    document.getElementById('chat-input-area').style.display = 'block';
-    document.getElementById('chat-username').textContent = username;
-    document.getElementById('chat-avatar').src = generateAvatar(username);
+window.openConversation = (id) => {
+    currentConversationId = id;
+    const conv = mockConversations.find(c => c.id === id);
 
-    loadChatMessages(username);
+    if (!conv) return;
 
-    // On mobile, show chat area
-    if (window.innerWidth <= 768) {
-        document.querySelector('.chat-area').classList.add('active');
-    }
-};
+    // Update UI
+    document.getElementById('chat-empty-state').style.display = 'none';
+    document.getElementById('chat-content').style.display = 'flex';
 
-window.startNewChat = (id, username) => {
-    openChat(username);
-};
+    document.getElementById('current-chat-name').textContent = conv.name;
+    document.getElementById('current-chat-avatar').src = conv.avatar;
 
-function loadChatMessages(username) {
-    const display = document.getElementById('messages-display');
-    const allMessages = JSON.parse(localStorage.getItem('messages') || '[]');
-    const user = JSON.parse(localStorage.getItem('user'));
+    // Render messages
+    renderMessages(conv.messages);
 
-    // Filter messages for this conversation
-    const chatMessages = allMessages.filter(m =>
-        (m.from === user.nombre && m.to === username) ||
-        (m.from === username && m.to === user.nombre) ||
-        (m.from === username && !m.to) // Handle mock messages
-    );
-
-    if (chatMessages.length === 0) {
-        display.innerHTML = '<div class="empty-state">Inicia la conversación...</div>';
-    } else {
-        display.innerHTML = chatMessages.map(m => `
-            <div class="message ${m.from === user.nombre ? 'sent' : 'received'}">
-                ${m.text}
-                <div class="message-time">${m.time}</div>
-            </div>
-        `).join('');
-    }
-    display.scrollTop = display.scrollHeight;
-}
-
-function setupMessageSending() {
-    document.getElementById('message-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const input = document.getElementById('message-input');
-        const text = input.value.trim();
-        const toUser = document.getElementById('chat-username').textContent;
-        const user = JSON.parse(localStorage.getItem('user'));
-
-        if (text && toUser) {
-            const newMessage = {
-                id: Date.now(),
-                from: user.nombre,
-                to: toUser,
-                text: text,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-
-            // Save to localStorage
-            const messages = JSON.parse(localStorage.getItem('messages') || '[]');
-            messages.push(newMessage);
-            localStorage.setItem('messages', JSON.stringify(messages));
-
-            loadChatMessages(toUser);
-            loadConversations(); // Update sidebar
-            input.value = '';
-        }
-    });
-}
-
-function checkForNewMessages() {
-    // In a real app, this would fetch from API
-    // Here we just refresh the conversation list to show updates
+    // Update active state in sidebar
     loadConversations();
 
-    // If a chat is open, refresh it too
-    const currentChatUser = document.getElementById('chat-username').textContent;
-    if (currentChatUser) {
-        loadChatMessages(currentChatUser);
-    }
+    // Mark as read
+    conv.unread = 0;
+
+    // Scroll to bottom
+    scrollToBottom();
+};
+
+function renderMessages(messages) {
+    const area = document.getElementById('messages-area');
+    area.innerHTML = messages.map(msg => `
+        <div class="message ${msg.sender === 'me' ? 'sent' : 'received'}">
+            <div class="msg-text">${msg.text}</div>
+            <span class="msg-time">${msg.time}</span>
+        </div>
+    `).join('');
+}
+
+function scrollToBottom() {
+    const area = document.getElementById('messages-area');
+    area.scrollTop = area.scrollHeight;
+}
+
+function setupEventListeners() {
+    const input = document.getElementById('message-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    const sendMessage = () => {
+        const text = input.value.trim();
+        if (!text || !currentConversationId) return;
+
+        const conv = mockConversations.find(c => c.id === currentConversationId);
+
+        // Add message
+        const newMsg = {
+            id: Date.now(),
+            text: text,
+            sender: 'me',
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        conv.messages.push(newMsg);
+        conv.lastMessage = text;
+        conv.time = 'Ahora';
+
+        // Render
+        renderMessages(conv.messages);
+        loadConversations();
+        input.value = '';
+        scrollToBottom();
+
+        // Simulate reply
+        setTimeout(() => {
+            const replyMsg = {
+                id: Date.now() + 1,
+                text: 'Gracias por tu mensaje. Te responderé pronto.',
+                sender: 'them',
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            conv.messages.push(replyMsg);
+            conv.lastMessage = replyMsg.text;
+
+            if (currentConversationId === conv.id) {
+                renderMessages(conv.messages);
+                scrollToBottom();
+                // Play sound
+                if (window.notificationSystem) {
+                    window.notificationSystem.playNotificationSound();
+                }
+            } else {
+                conv.unread++;
+                loadConversations();
+                if (window.addNotification) {
+                    window.addNotification('message', `Nuevo mensaje de ${conv.name}`, { conversationId: conv.id });
+                }
+            }
+        }, 2000);
+    };
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
 }

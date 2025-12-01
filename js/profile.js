@@ -12,7 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('change-avatar-btn').addEventListener('click', () => {
         document.getElementById('avatar-upload').click();
     });
-    // Social links would be loaded here
+
+    // Add avatar upload handler
+    document.getElementById('avatar-upload').addEventListener('change', handleAvatarUpload);
+
+    // Add delete avatar handler
+    document.getElementById('delete-avatar-btn').addEventListener('click', handleAvatarDelete);
 });
 
 function loadProfileData(user) {
@@ -25,6 +30,12 @@ function loadProfileData(user) {
     document.getElementById('bio').value = user.bio || '';
     document.getElementById('location').value = user.location || '';
     document.getElementById('phone').value = user.phone || '';
+
+    // Social links
+    document.getElementById('github').value = user.github || '';
+    document.getElementById('linkedin').value = user.linkedin || '';
+    document.getElementById('twitter').value = user.twitter || '';
+    document.getElementById('website').value = user.website || '';
 }
 
 function handleProfileUpdate(e) {
@@ -32,10 +43,7 @@ function handleProfileUpdate(e) {
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
 
-    // Simulate API call
-    console.log('Updating profile:', data);
-
-    // Update local storage for demo purposes
+    // Update local storage
     const user = JSON.parse(localStorage.getItem('user'));
     const updatedUser = { ...user, ...data };
     localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -49,20 +57,66 @@ function handleProfileUpdate(e) {
 function handleAvatarUpload(e) {
     const file = e.target.files[0];
     if (file) {
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            showToast('Por favor selecciona un archivo de imagen válido', 'error');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('La imagen es demasiado grande. Máximo 5MB', 'error');
+            return;
+        }
+
         const reader = new FileReader();
-        reader.onload = function (e) {
-            document.getElementById('current-avatar').src = e.target.result;
-            // Here you would upload to server
+        reader.onload = function (event) {
+            const imageData = event.target.result;
+
+            // Update display immediately
+            document.getElementById('current-avatar').src = imageData;
+
+            // Save to user profile in localStorage
+            const user = JSON.parse(localStorage.getItem('user'));
+            user.profile_photo = imageData;
+            localStorage.setItem('user', JSON.stringify(user));
+
+            showToast('Foto de perfil actualizada correctamente', 'success');
         };
         reader.readAsDataURL(file);
     }
 }
 
+function handleAvatarDelete() {
+    if (!confirm('¿Estás seguro de que quieres eliminar tu foto de perfil?')) {
+        return;
+    }
+
+    // Remove profile photo from user object
+    const user = JSON.parse(localStorage.getItem('user'));
+    delete user.profile_photo;
+    localStorage.setItem('user', JSON.stringify(user));
+
+    // Restore generated avatar
+    const generatedAvatar = generateAvatar(user.nombre);
+    document.getElementById('current-avatar').src = generatedAvatar;
+
+    showToast('Foto de perfil eliminada correctamente', 'success');
+}
+
 function showToast(message, type = 'info') {
+    const existingToast = document.querySelector('.toast');
+    if (existingToast) existingToast.remove();
+
     const toast = document.createElement('div');
-    toast.className = `toast toast-${type} show`;
+    toast.className = `toast toast-${type}`;
     toast.textContent = message;
     document.body.appendChild(toast);
+
+    // Trigger reflow
+    toast.offsetHeight;
+
+    toast.classList.add('show');
 
     setTimeout(() => {
         toast.classList.remove('show');

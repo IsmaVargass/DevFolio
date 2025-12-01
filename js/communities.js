@@ -1,49 +1,61 @@
 /* js/communities.js */
 document.addEventListener('DOMContentLoaded', () => {
-    loadPortfolios();
+    loadRecentPortfolios();
+    loadFeaturedPortfolios();
     loadJobs();
     loadGroups();
     setupTabs();
+    setupButtons();
 });
 
-function loadPortfolios() {
-    const featuredGrid = document.getElementById('portfolios-grid');
-    const recentGrid = document.getElementById('recent-portfolios-grid');
+function loadRecentPortfolios() {
+    const grid = document.getElementById('recent-portfolios-grid');
+    if (!grid) return;
 
-    // Mock Featured Data
-    const featuredPortfolios = [
-        { id: 1, title: 'Full Stack Developer Portfolio', author: 'Ana García', tags: ['React', 'Node.js'], photo: '../assets/p1.jpg' },
-        { id: 2, title: 'UX/UI Design Showcase', author: 'Carlos Ruiz', tags: ['Figma', 'UI Design'], photo: '../assets/p2.jpg' },
-        { id: 3, title: 'Mobile App Projects', author: 'Elena Web', tags: ['Flutter', 'Dart'], photo: '../assets/p3.jpg' }
-    ];
+    const portfolios = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
 
-    // Load published portfolios from localStorage (Recent)
-    const localPortfolios = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
-
-    // Render Featured
-    if (featuredGrid) {
-        featuredGrid.innerHTML = renderPortfolioCards(featuredPortfolios);
-    }
-
-    // Render Recent
-    if (recentGrid) {
-        if (localPortfolios.length > 0) {
-            recentGrid.innerHTML = renderPortfolioCards(localPortfolios);
-        } else {
-            recentGrid.innerHTML = '<p class="text-muted">Aún no hay portfolios recientes. ¡Sé el primero en publicar!</p>';
-        }
+    if (portfolios.length > 0) {
+        // Sort by published date (most recent first)
+        portfolios.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+        grid.innerHTML = renderPortfolioCards(portfolios);
+    } else {
+        grid.innerHTML = '<p class="text-muted">Aún no hay portfolios recientes. ¡Sé el primero en publicar!</p>';
     }
 }
 
-function renderPortfolioCards(portfolios) {
+function loadFeaturedPortfolios() {
+    const grid = document.getElementById('featured-portfolios-grid');
+    if (!grid) return;
+
+    const portfolios = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
+
+    if (portfolios.length > 0) {
+        // Sort by views (most viewed first) - Featured portfolios
+        const featured = portfolios
+            .filter(p => p.views > 0)
+            .sort((a, b) => b.views - a.views)
+            .slice(0, 10); // Top 10
+
+        if (featured.length > 0) {
+            grid.innerHTML = renderPortfolioCards(featured, true);
+        } else {
+            grid.innerHTML = '<p class="text-muted">Aún no hay portfolios destacados. Los portfolios con más vistas aparecerán aquí.</p>';
+        }
+    } else {
+        grid.innerHTML = '<p class="text-muted">Aún no hay portfolios publicados.</p>';
+    }
+}
+
+function renderPortfolioCards(portfolios, showViews = false) {
     return portfolios.map(p => `
-        <div class="portfolio-card">
+        <div class="portfolio-card" onclick="viewPortfolio(${p.id})">
             <div class="portfolio-preview" style="background-image: url('${p.photo || ''}'); background-size: cover; background-position: center; background-color: #f5f5f5;">
-                ${!p.photo ? 'Vista Previa' : ''}
+                ${!p.photo ? '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #999;">Vista Previa</div>' : ''}
             </div>
             <div class="portfolio-info">
                 <div class="portfolio-title">${p.title}</div>
                 <div class="portfolio-author">por ${p.author}</div>
+                ${showViews ? `<div class="portfolio-views" style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">${p.views} vistas</div>` : ''}
                 <div class="portfolio-tags">
                     ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
                 </div>
@@ -52,6 +64,23 @@ function renderPortfolioCards(portfolios) {
     `).join('');
 }
 
+window.viewPortfolio = (portfolioId) => {
+    // Increment view count
+    const portfolios = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
+    const portfolio = portfolios.find(p => p.id === portfolioId);
+
+    if (portfolio) {
+        portfolio.views = (portfolio.views || 0) + 1;
+        localStorage.setItem('published_portfolios', JSON.stringify(portfolios));
+
+        // Refresh featured portfolios if we're on that tab
+        loadFeaturedPortfolios();
+
+        // Show portfolio details (you can implement a modal or redirect)
+        showToast(`Viendo portfolio de ${portfolio.author} (${portfolio.views} vistas)`, 'info');
+    }
+};
+
 function loadJobs() {
     const list = document.getElementById('jobs-list');
     if (!list) return;
@@ -59,25 +88,12 @@ function loadJobs() {
     // Load jobs from localStorage + mock data
     const localJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
     const mockJobs = [
-        { id: 1, title: 'Senior Frontend Developer', company: 'TechCorp', type: 'Full-time', desc: 'Buscamos un desarrollador con experiencia en React y TypeScript...', postedDate: '2025-11-29' },
-        { id: 2, title: 'UI Designer', company: 'CreativeStudio', type: 'Freelance', desc: 'Diseño de interfaces para aplicaciones móviles...', postedDate: '2025-11-30' }
+        { id: 1, title: 'Senior Frontend Developer', company: 'TechCorp', type: 'Full-time', desc: 'Buscamos un desarrollador con experiencia en React y TypeScript...', postedDate: '2025-11-29', location: 'Madrid' },
+        { id: 2, title: 'UI Designer', company: 'CreativeStudio', type: 'Freelance', desc: 'Diseño de interfaces para aplicaciones móviles...', postedDate: '2025-11-30', location: 'Remoto' }
     ];
 
     const jobs = [...localJobs, ...mockJobs];
     const appliedJobs = JSON.parse(localStorage.getItem('applied_jobs') || '[]');
-
-    // Add "Publicar Oferta" button if not present
-    if (!document.getElementById('post-job-btn')) {
-        const header = document.querySelector('.communities-header .header-actions');
-        if (header) {
-            const btn = document.createElement('a');
-            btn.href = 'create_job.html';
-            btn.className = 'btn btn-primary';
-            btn.id = 'post-job-btn';
-            btn.textContent = 'Publicar Oferta';
-            header.appendChild(btn);
-        }
-    }
 
     list.innerHTML = jobs.map(j => {
         const isApplied = appliedJobs.includes(j.id);
@@ -106,19 +122,17 @@ function loadJobs() {
 window.applyToJob = (jobId, jobTitle, company) => {
     if (!confirm(`¿Quieres aplicar a la oferta de ${jobTitle} en ${company}?`)) return;
 
-    // Save application state
     const appliedJobs = JSON.parse(localStorage.getItem('applied_jobs') || '[]');
     appliedJobs.push(jobId);
     localStorage.setItem('applied_jobs', JSON.stringify(appliedJobs));
 
-    // Send system message to recruiter (simulated)
     const messages = JSON.parse(localStorage.getItem('messages') || '[]');
     const user = JSON.parse(localStorage.getItem('user'));
 
     messages.push({
         id: Date.now(),
         from: user.nombre,
-        to: company, // In real app, this would be the recruiter's ID
+        to: company,
         text: `Hola, he aplicado a tu oferta de ${jobTitle}. Aquí tienes mi portfolio.`,
         time: new Date().toLocaleTimeString(),
         type: 'application'
@@ -126,14 +140,13 @@ window.applyToJob = (jobId, jobTitle, company) => {
     localStorage.setItem('messages', JSON.stringify(messages));
 
     showToast('Has aplicado correctamente. Se ha enviado tu portfolio al reclutador.', 'success');
-    loadJobs(); // Refresh to show "Ya Aplicado"
+    loadJobs();
 };
 
 function loadGroups() {
     const grid = document.getElementById('groups-grid');
     if (!grid) return;
 
-    // Mock data
     const groups = [
         { id: 1, name: 'React Developers', members: 120, desc: 'Comunidad para compartir conocimientos sobre React.' },
         { id: 2, name: 'Freelancers España', members: 85, desc: 'Grupo de apoyo para freelancers en España.' },
@@ -161,14 +174,6 @@ function loadGroups() {
             ${isJoined ? '<div style="margin-top: 1rem; font-size: 0.85rem; color: var(--success-color);">✓ Eres miembro</div>' : ''}
         </div>
     `}).join('');
-
-    // Setup Create Community Button
-    const createBtn = document.getElementById('create-community-btn');
-    if (createBtn) {
-        createBtn.addEventListener('click', () => {
-            window.location.href = 'create_community.html';
-        });
-    }
 }
 
 function getGroupIcon(name) {
@@ -183,17 +188,15 @@ window.toggleGroupJoin = (groupId, groupName, baseMembers) => {
     const index = joinedGroups.indexOf(groupId);
 
     if (index === -1) {
-        // Join
         joinedGroups.push(groupId);
         showToast(`Te has unido a ${groupName}`, 'success');
     } else {
-        // Leave
         joinedGroups.splice(index, 1);
         showToast(`Has salido de ${groupName}`, 'info');
     }
 
     localStorage.setItem('joined_groups', JSON.stringify(joinedGroups));
-    loadGroups(); // Refresh UI
+    loadGroups();
 };
 
 function setupTabs() {
@@ -207,4 +210,20 @@ function setupTabs() {
             document.getElementById(`${tab.dataset.tab}-view`).classList.add('active');
         });
     });
+}
+
+function setupButtons() {
+    const createBtn = document.getElementById('create-community-btn');
+    if (createBtn) {
+        createBtn.addEventListener('click', () => {
+            window.location.href = 'create_community.html';
+        });
+    }
+
+    const postJobBtn = document.getElementById('post-job-btn');
+    if (postJobBtn) {
+        postJobBtn.addEventListener('click', () => {
+            window.location.href = 'create_job.html';
+        });
+    }
 }

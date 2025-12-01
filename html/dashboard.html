@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/notifications.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
 </head>
 
 <body>
@@ -60,10 +62,11 @@
                 <div class="card-desc">Chatea con otros usuarios de la plataforma.</div>
             </a>
 
-            <!-- Role Specific Links -->
-            <a href="admin_panel.html" class="dashboard-card" id="admin-link" style="display: none;">
-                <div class="card-title">Panel de Gestión</div>
-                <div class="card-desc">Administración de usuarios y reportes del sistema.</div>
+            <!-- Admin Card - Only for ADMIN role -->
+            <a href="admin_panel.html" class="dashboard-card dashboard-card-admin" id="admin-link"
+                style="display: none;">
+                <div class="card-title">Admin</div>
+                <div class="card-desc">Panel de administración del sistema.</div>
             </a>
 
             <a href="customer_support.html" class="dashboard-card" id="support-link">
@@ -75,17 +78,41 @@
 
     <footer class="footer">
         <div class="container footer-content">
-            <li><a href="../index.html">Inicio</a></li>
-            <li><a href="login.html">Iniciar Sesión</a></li>
-            <li><a href="register.html">Registrarse</a></li>
-            </ul>
-        </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="privacy.html">Política de Privacidad</a></li>
+                    <li><a href="terms.html">Términos de Servicio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="#" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">LinkedIn</a>
+                    <a href="#" target="_blank">Twitter</a>
+                </div>
+            </div>
+            <div class="footer-section footer-shortcuts">
+                <h3>Atajos</h3>
+                <div class="shortcuts-grid">
+                    <a href="portfolio_builder.html">Portfolio</a>
+                    <a href="profile.html">Perfil</a>
+                    <a href="skills.html">Skills</a>
+                    <a href="experience.html">Experiencia</a>
+                    <a href="communities.html">Comunidades</a>
+                    <a href="messages.html">Mensajes</a>
+                    <a href="customer_support.html">Atención al Cliente</a>
+                </div>
+            </div>
         </div>
         <div class="footer-bottom">
             <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
         </div>
     </footer>
 
+    <script src="../js/notifications.js"></script>
+    <script src="../js/tutorial.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const user = JSON.parse(localStorage.getItem('user'));
@@ -96,22 +123,30 @@
 
             document.getElementById('user-greeting').textContent = `Hola, ${user.nombre}`;
 
-            // Show links based on role
-            if (user.role === 'admin') {
-                document.getElementById('admin-link').style.display = 'block';
-                document.getElementById('support-link').querySelector('.card-title').textContent = 'Panel de Soporte';
-                document.getElementById('support-link').querySelector('.card-desc').textContent = 'Gestionar tickets de ayuda y atención al cliente.';
-            } else if (user.role === 'tecnico') {
-                document.getElementById('support-link').querySelector('.card-title').textContent = 'Panel de Soporte';
-                document.getElementById('support-link').querySelector('.card-desc').textContent = 'Gestionar tickets de ayuda y atención al cliente.';
+            // Show Admin link only for ADMIN role
+            if (user.role === 'admin' || user.role === 'tecnico') {
+                const adminLink = document.getElementById('admin-link');
+                adminLink.style.display = 'block';
+
+                // Add notification badge logic
+                const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+                const openTickets = tickets.filter(t => t.status !== 'closed').length;
+
+                if (openTickets > 0) {
+                    adminLink.classList.add('has-notifications');
+                    adminLink.setAttribute('data-count', openTickets);
+                }
+
+                if (user.role === 'tecnico') {
+                    adminLink.querySelector('.card-title').textContent = 'Panel de Soporte';
+                }
             }
-            // All users see the support link (already visible by default)
 
             document.getElementById('logout-btn').addEventListener('click', (e) => {
                 e.preventDefault();
                 localStorage.removeItem('user');
-                fetch('../api/auth/logout.php')
-                    .then(() => window.location.href = '../index.html');
+                // Simulate logout
+                window.location.href = '../index.html';
             });
         });
     </script>

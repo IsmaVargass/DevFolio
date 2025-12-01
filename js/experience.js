@@ -61,12 +61,12 @@ function createTimelineItem(item, type) {
                         <h3>${title}</h3>
                         <div class="timeline-subtitle">${subtitle}</div>
                     </div>
-                    <div class="timeline-date">${date}</div>
                 </div>
+                <div class="timeline-date">${date}</div>
                 <p class="timeline-desc">${item.description}</p>
                 <div class="timeline-actions">
-                    <button onclick="editEntry(${item.id}, '${type}')">✏️</button>
-                    <button class="delete-btn" onclick="deleteEntry(${item.id}, '${type}')">🗑️</button>
+                    <button class="btn-action btn-edit" onclick="editEntry(${item.id}, '${type}')">Editar</button>
+                    <button class="btn-action btn-delete" onclick="deleteEntry(${item.id}, '${type}')">Eliminar</button>
                 </div>
             </div>
         </div>

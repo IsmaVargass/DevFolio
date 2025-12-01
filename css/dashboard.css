@@ -56,3 +56,17 @@
     color: var(--text-muted);
     line-height: 1.5;
 }
+
+/* Admin Card Styling - Red theme */
+.dashboard-card-admin {
+    border-color: #dc2626;
+}
+
+.dashboard-card-admin:hover {
+    border-color: #b91c1c;
+    background-color: #fef2f2;
+}
+
+.dashboard-card-admin .card-title {
+    color: #dc2626;
+}

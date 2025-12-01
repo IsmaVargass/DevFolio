@@ -34,15 +34,34 @@
 
         <div class="builder-grid">
             <div class="builder-form">
-                <div class="info-box">
-                    <h3><span class="icon">ℹ️</span> Sección Predeterminada</h3>
-                    <p>Tu PDF incluirá automáticamente:</p>
+                <div class="info-box" id="validation-box">
+                    <h3>Sección Predeterminada</h3>
+                    <p>Tu portfolio incluirá automáticamente:</p>
                     <ul>
-                        <li><strong>Nombre y Apellidos:</strong> <span id="default-name">Cargando...</span></li>
-                        <li><strong>Sector:</strong> <span id="default-sector">Calculando...</span></li>
-                        <li><strong>Estudios:</strong> <span id="default-education">Cargando...</span></li>
+                        <li>
+                            <strong>Nombre y Apellidos:</strong>
+                            <span id="default-name">Cargando...</span>
+                            <span class="status-indicator" id="name-status"></span>
+                        </li>
+                        <li>
+                            <strong>Sector:</strong>
+                            <span id="default-sector">Calculando...</span>
+                            <span class="status-indicator" id="sector-status"></span>
+                        </li>
+                        <li>
+                            <strong>Estudios:</strong>
+                            <span id="default-education">Cargando...</span>
+                            <span class="status-indicator" id="education-status"></span>
+                        </li>
                     </ul>
-                    <p class="text-small text-muted">Estos datos se toman de tu perfil y experiencia.</p>
+                    <div id="missing-data-warning" style="display: none; margin-top: 1rem;">
+                        <p style="color: #dc2626; font-weight: 500;">Faltan datos requeridos para generar el portfolio.
+                        </p>
+                        <button id="go-to-profile-btn" class="btn btn-outline"
+                            style="margin-top: 0.5rem; border-color: #dc2626; color: #dc2626;">
+                            Completar Perfil
+                        </button>
+                    </div>
                 </div>
 
                 <section class="form-section">
@@ -78,6 +97,41 @@
             </div>
         </div>
     </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="privacy.html">Política de Privacidad</a></li>
+                    <li><a href="#">Términos de Servicio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="#" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">LinkedIn</a>
+                    <a href="#" target="_blank">Twitter</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Atajos</h3>
+                <div class="social-links">
+                    <a href="portfolio_builder.html">Portfolio</a>
+                    <a href="profile.html">Perfil</a>
+                    <a href="skills.html">Skills</a>
+                    <a href="experience.html">Experiencia</a>
+                    <a href="communities.html">Comunidades</a>
+                    <a href="messages.html">Mensajes</a>
+                    <a href="customer_support.html">Atención al Cliente</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <script src="../js/utils.js"></script>
     <script src="../js/portfolio_builder.js"></script>

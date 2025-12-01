@@ -34,15 +34,37 @@
             <button class="tab-btn" data-tab="hard">Hard Skills</button>
         </div>
 
+        <!-- Skills Overview Cards -->
+        <div class="skills-overview">
+            <div class="overview-card">
+                <div class="overview-number" id="total-skills">0</div>
+                <div class="overview-label">Total Skills</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-number" id="avg-level">0%</div>
+                <div class="overview-label">Nivel Promedio</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-number" id="expert-skills">0</div>
+                <div class="overview-label">Skills Expertas</div>
+            </div>
+        </div>
+
         <div class="skills-content">
-            <div id="technical-skills" class="skills-grid active">
-                <!-- Skills will be loaded here -->
+            <div id="technical-skills" class="skills-view active">
+                <div class="skills-grid" id="technical-grid">
+                    <!-- Technical skills will be loaded here -->
+                </div>
             </div>
-            <div id="soft-skills" class="skills-grid">
-                <!-- Skills will be loaded here -->
+            <div id="soft-skills" class="skills-view">
+                <div class="skills-grid" id="soft-grid">
+                    <!-- Soft skills will be loaded here -->
+                </div>
             </div>
-            <div id="hard-skills" class="skills-grid">
-                <!-- Skills will be loaded here -->
+            <div id="hard-skills" class="skills-view">
+                <div class="skills-grid" id="hard-grid">
+                    <!-- Hard skills will be loaded here -->
+                </div>
             </div>
         </div>
     </main>
@@ -69,12 +91,50 @@
                 <div class="form-group">
                     <label>Nivel (1-100)</label>
                     <input type="range" id="skill-level" min="1" max="100" value="50">
-                    <span id="skill-level-val">50%</span>
+                    <div class="level-display">
+                        <span id="skill-level-val">50%</span>
+                        <span id="skill-level-label" class="level-badge">Intermedio</span>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </form>
         </div>
     </div>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="privacy.html">Política de Privacidad</a></li>
+                    <li><a href="terms.html">Términos de Servicio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="#" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">LinkedIn</a>
+                    <a href="#" target="_blank">Twitter</a>
+                </div>
+            </div>
+            <div class="footer-section footer-shortcuts">
+                <h3>Atajos</h3>
+                <div class="shortcuts-grid">
+                    <a href="portfolio_builder.html">Portfolio</a>
+                    <a href="profile.html">Perfil</a>
+                    <a href="skills.html">Skills</a>
+                    <a href="experience.html">Experiencia</a>
+                    <a href="communities.html">Comunidades</a>
+                    <a href="messages.html">Mensajes</a>
+                    <a href="customer_support.html">Atención al Cliente</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <script src="../js/skills.js"></script>
 </body>

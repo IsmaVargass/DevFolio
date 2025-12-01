@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/notifications.css">
     <link rel="stylesheet" href="../css/messages.css">
 </head>
 
@@ -23,45 +24,95 @@
     </nav>
 
     <main class="container messages-container">
-        <div class="messages-layout">
-            <div class="conversations-sidebar">
+        <div class="chat-layout">
+            <!-- Sidebar: Conversations List -->
+            <div class="chat-sidebar">
                 <div class="sidebar-header">
                     <h2>Mensajes</h2>
-                    <button id="new-msg-btn" class="btn-icon" title="Nuevo Mensaje">+</button>
+                    <button class="btn-icon-new" title="Nuevo Mensaje">+</button>
                 </div>
                 <div class="search-box">
-                    <input type="text" placeholder="Buscar conversación...">
+                    <input type="text" placeholder="Buscar conversación..." id="search-conv">
                 </div>
-                <div id="conversations-list" class="conversations-list">
+                <div class="conversations-list" id="conversations-list">
                     <!-- Conversations will be loaded here -->
                 </div>
             </div>
 
-            <div class="chat-area">
-                <div id="chat-header" class="chat-header" style="display: none;">
-                    <div class="chat-user-info">
-                        <img src="../assets/default-avatar.png" alt="User" id="chat-avatar">
-                        <h3 id="chat-username">Nombre Usuario</h3>
-                    </div>
+            <!-- Main Chat Area -->
+            <div class="chat-main" id="chat-main">
+                <div class="chat-empty-state" id="chat-empty-state">
+                    <div class="empty-icon">💬</div>
+                    <h3>Tus mensajes</h3>
+                    <p>Selecciona una conversación para empezar a chatear</p>
                 </div>
 
-                <div id="messages-display" class="messages-display">
-                    <div class="empty-state">
-                        <p>Selecciona una conversación para empezar a chatear</p>
+                <div class="chat-content" id="chat-content" style="display: none;">
+                    <div class="chat-header">
+                        <div class="chat-user-info">
+                            <img src="" alt="" class="chat-avatar" id="current-chat-avatar">
+                            <div class="chat-user-details">
+                                <h3 id="current-chat-name">Nombre Usuario</h3>
+                                <span class="status-indicator online">En línea</span>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="btn-icon" title="Ver Perfil">👤</button>
+                            <button class="btn-icon" title="Opciones">⋮</button>
+                        </div>
                     </div>
-                </div>
 
-                <div id="chat-input-area" class="chat-input-area" style="display: none;">
-                    <form id="message-form">
-                        <input type="text" id="message-input" placeholder="Escribe un mensaje..." required>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </form>
+                    <div class="messages-area" id="messages-area">
+                        <!-- Messages will be loaded here -->
+                    </div>
+
+                    <div class="chat-input-area">
+                        <button class="btn-attach" title="Adjuntar archivo">📎</button>
+                        <input type="text" id="message-input" placeholder="Escribe un mensaje...">
+                        <button class="btn-send" id="send-btn">➤</button>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="privacy.html">Política de Privacidad</a></li>
+                    <li><a href="terms.html">Términos de Servicio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="#" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">LinkedIn</a>
+                    <a href="#" target="_blank">Twitter</a>
+                </div>
+            </div>
+            <div class="footer-section footer-shortcuts">
+                <h3>Atajos</h3>
+                <div class="shortcuts-grid">
+                    <a href="portfolio_builder.html">Portfolio</a>
+                    <a href="profile.html">Perfil</a>
+                    <a href="skills.html">Skills</a>
+                    <a href="experience.html">Experiencia</a>
+                    <a href="communities.html">Comunidades</a>
+                    <a href="messages.html">Mensajes</a>
+                    <a href="customer_support.html">Atención al Cliente</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
     <script src="../js/utils.js"></script>
+    <script src="../js/notifications.js"></script>
     <script src="../js/messages.js"></script>
 </body>
 

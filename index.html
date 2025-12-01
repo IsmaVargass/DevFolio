@@ -30,7 +30,7 @@
             <p>
                 Crea un portfolio profesional, limpio y directo. Sin distracciones. Solo tú y tus proyectos.
             </p>
-            <div class="hero-buttons" id="hero-btns">
+            <div class="hero-buttons-pyramid" id="hero-btns">
                 <a href="html/register.html" class="btn btn-primary">Crear Portfolio</a>
                 <a href="html/login.html" class="btn btn-outline">Entrar</a>
             </div>
@@ -43,7 +43,7 @@
                 <h3>Legal</h3>
                 <ul>
                     <li><a href="html/privacy.html">Política de Privacidad</a></li>
-                    <li><a href="#">Términos de Servicio</a></li>
+                    <li><a href="html/terms.html">Términos de Servicio</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -54,13 +54,17 @@
                     <a href="#" target="_blank">Twitter</a>
                 </div>
             </div>
-            <div class="footer-section">
+            <div class="footer-section footer-shortcuts">
                 <h3>Atajos</h3>
-                <ul>
-                    <li><a href="index.html">Inicio</a></li>
-                    <li><a href="html/login.html">Iniciar Sesión</a></li>
-                    <li><a href="html/register.html">Registrarse</a></li>
-                </ul>
+                <div class="shortcuts-grid">
+                    <a href="html/portfolio_builder.html">Portfolio</a>
+                    <a href="html/profile.html">Perfil</a>
+                    <a href="html/skills.html">Skills</a>
+                    <a href="html/experience.html">Experiencia</a>
+                    <a href="html/communities.html">Comunidades</a>
+                    <a href="html/messages.html">Mensajes</a>
+                    <a href="html/customer_support.html">Atención al Cliente</a>
+                </div>
             </div>
         </div>
         <div class="footer-bottom">
@@ -75,9 +79,11 @@
             const heroBtns = document.getElementById('hero-btns');
             if (heroBtns) {
                 heroBtns.innerHTML = `
-                    <p style="margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 500; color: var(--text-color);">Bienvenido de nuevo, ${user.nombre}</p>
-                    <a href="html/portfolio_builder.html" class="btn btn-primary">Crear Portfolio</a>
-                    <a href="html/dashboard.html" class="btn btn-outline">Ir al Dashboard</a>
+                    <p class="welcome-message">Bienvenido de nuevo, ${user.nombre}</p>
+                    <div class="logged-in-buttons">
+                        <a href="html/portfolio_builder.html" class="btn btn-primary">Crear Portfolio</a>
+                        <a href="html/dashboard.html" class="btn btn-outline">Ir al Dashboard</a>
+                    </div>
                 `;
             }
 
