@@ -33,6 +33,7 @@
 
         <div class="communities-tabs">
             <button class="tab-btn active" data-tab="portfolios">Portfolios Destacados</button>
+            <button class="tab-btn" data-tab="recent">Portfolios Recientes</button>
             <button class="tab-btn" data-tab="jobs">Ofertas de Trabajo</button>
             <button class="tab-btn" data-tab="groups">Grupos de Trabajo</button>
         </div>
@@ -40,24 +41,31 @@
         <div class="communities-content">
             <div id="portfolios-view" class="content-view active">
                 <div class="grid-layout" id="portfolios-grid">
-                    <!-- Portfolios will be loaded here -->
+                    <!-- Featured Portfolios will be loaded here -->
+                </div>
+            </div>
+
+            <div id="recent-view" class="content-view">
+                <div class="grid-layout" id="recent-portfolios-grid">
+                    <!-- Recent Portfolios will be loaded here -->
                 </div>
             </div>
 
             <div id="jobs-view" class="content-view">
                 <div class="list-layout" id="jobs-list">
-                    <!-- Job postings will be loaded here -->
+                    <!-- Jobs will be loaded here -->
                 </div>
             </div>
 
             <div id="groups-view" class="content-view">
                 <div class="grid-layout" id="groups-grid">
-                    <!-- Communities/Groups will be loaded here -->
+                    <!-- Groups will be loaded here -->
                 </div>
             </div>
         </div>
     </main>
 
+    <script src="../js/utils.js"></script>
     <script src="../js/communities.js"></script>
 </body>
 

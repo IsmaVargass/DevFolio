@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Comunidad - DevFolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/create_job.css"> <!-- Reusing job form styles -->
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="communities.html">Volver a Comunidades</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container create-job-container">
+        <div class="form-card">
+            <h1>Crear Nueva Comunidad</h1>
+            <p class="subtitle">Crea un espacio para compartir conocimientos y colaborar.</p>
+
+            <form id="create-community-form">
+                <div class="form-group">
+                    <label for="name">Nombre de la Comunidad</label>
+                    <input type="text" id="name" name="name" placeholder="Ej. Desarrolladores Python España" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Categoría</label>
+                    <select id="category" name="category" required>
+                        <option value="">Selecciona una categoría</option>
+                        <option value="development">Desarrollo Web</option>
+                        <option value="mobile">Desarrollo Móvil</option>
+                        <option value="design">Diseño UX/UI</option>
+                        <option value="data">Data Science</option>
+                        <option value="other">Otro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" name="description" rows="5"
+                        placeholder="¿De qué trata esta comunidad? ¿Qué temas se discutirán?" required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <a href="communities.html" class="btn btn-outline">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Crear Comunidad</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="../js/utils.js"></script>
+    <script>
+        document.getElementById('create-community-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) {
+                window.location.href = '../login.html';
+                return;
+            }
+
+            const name = document.getElementById('name').value;
+            const desc = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+
+            const newGroup = {
+                id: Date.now(),
+                name: name,
+                desc: desc,
+                category: category,
+                members: 1,
+                creator: user.nombre,
+                createdDate: new Date().toISOString()
+            };
+
+            const groups = JSON.parse(localStorage.getItem('groups') || '[]');
+            groups.push(newGroup);
+            localStorage.setItem('groups', JSON.stringify(groups));
+
+            // Auto-join creator
+            const joinedGroups = JSON.parse(localStorage.getItem('joined_groups') || '[]');
+            joinedGroups.push(newGroup.id);
+            localStorage.setItem('joined_groups', JSON.stringify(joinedGroups));
+
+            showToast('Comunidad creada con éxito', 'success');
+            setTimeout(() => {
+                window.location.href = 'communities.html';
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>

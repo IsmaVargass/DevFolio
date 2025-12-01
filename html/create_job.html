@@ -1,0 +1,96 @@
+<!-- html/create_job.html -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicar Oferta de Empleo - DevFolio</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/create_job.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="communities.html">Comunidades</a></li>
+                <li><a href="messages.html">Mensajes</a></li>
+                <li><a href="profile.html">Mi Perfil</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container job-creation-container">
+        <div class="job-creation-header">
+            <h1>Publicar Nueva Oferta</h1>
+            <p>Encuentra el talento perfecto para tu equipo</p>
+        </div>
+
+        <form id="create-job-form" class="job-form">
+            <div class="form-section">
+                <h2>Detalles del Puesto</h2>
+
+                <div class="form-group">
+                    <label for="job-title">Título del Puesto *</label>
+                    <input type="text" id="job-title" required placeholder="Ej. Senior React Developer">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="company">Empresa *</label>
+                        <input type="text" id="company" required placeholder="Nombre de tu empresa">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Ubicación *</label>
+                        <input type="text" id="location" required placeholder="Ej. Madrid, Remoto, Híbrido">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="job-type">Tipo de Contrato</label>
+                        <select id="job-type">
+                            <option value="Full-time">Jornada Completa</option>
+                            <option value="Part-time">Media Jornada</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Internship">Prácticas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="salary">Rango Salarial (Anual)</label>
+                        <input type="text" id="salary" placeholder="Ej. 30.000€ - 45.000€">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Descripción y Requisitos</h2>
+
+                <div class="form-group">
+                    <label for="description">Descripción de la Oferta *</label>
+                    <textarea id="description" rows="6" required
+                        placeholder="Describe las responsabilidades y lo que ofrecéis..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="requirements">Requisitos Técnicos</label>
+                    <textarea id="requirements" rows="4"
+                        placeholder="Lista las tecnologías y habilidades requeridas..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="communities.html" class="btn btn-outline">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Publicar Oferta</button>
+            </div>
+        </form>
+    </main>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/create_job.js"></script>
+</body>
+
+</html>

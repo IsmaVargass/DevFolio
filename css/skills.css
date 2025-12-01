@@ -51,28 +51,31 @@
 
 .skill-card {
     background: white;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1.5rem;
-    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 1.8rem;
+    transition: all 0.3s ease;
     position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 
 .skill-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    border-color: var(--primary-color);
 }
 
 .skill-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
 .skill-name {
-    font-weight: 600;
-    font-size: 1.1rem;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--text-color);
 }
 
 .skill-actions {
@@ -101,16 +104,39 @@
 }
 
 .skill-level-bar {
-    height: 6px;
+    height: 8px;
     background: #f0f0f0;
-    border-radius: 3px;
+    border-radius: 4px;
     overflow: hidden;
+    position: relative;
 }
 
 .skill-level-fill {
     height: 100%;
-    background: var(--primary-color);
-    border-radius: 3px;
+    background: linear-gradient(90deg, var(--primary-color), #444);
+    border-radius: 4px;
+    position: relative;
+}
+
+.skill-level-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 /* Modal Styles */

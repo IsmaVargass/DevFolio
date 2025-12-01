@@ -12,20 +12,19 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('change-avatar-btn').addEventListener('click', () => {
         document.getElementById('avatar-upload').click();
     });
-    document.getElementById('avatar-upload').addEventListener('change', handleAvatarUpload);
+    // Social links would be loaded here
 });
 
 function loadProfileData(user) {
-    document.getElementById('display-name').textContent = user.nombre;
-    document.getElementById('display-email').textContent = user.email;
+    document.getElementById('display-name').textContent = user.nombre || 'Usuario';
+    document.getElementById('display-email').textContent = user.email || 'usuario@example.com';
+    document.getElementById('current-avatar').src = getUserAvatar(user);
 
     // Form fields
-    document.getElementById('nombre').value = user.nombre;
+    document.getElementById('nombre').value = user.nombre || '';
     document.getElementById('bio').value = user.bio || '';
     document.getElementById('location').value = user.location || '';
     document.getElementById('phone').value = user.phone || '';
-
-    // Social links would be loaded here
 }
 
 function handleProfileUpdate(e) {

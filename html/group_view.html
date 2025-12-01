@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidad - DevFolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .group-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .group-info h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.8rem;
+        }
+
+        .group-meta {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .forum-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        .forum-main {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .forum-controls {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topic-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .topic-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 1rem;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .topic-item:hover {
+            background: #f9f9f9;
+        }
+
+        .topic-item:last-child {
+            border-bottom: none;
+        }
+
+        .topic-icon {
+            font-size: 1.5rem;
+        }
+
+        .topic-content {
+            flex: 1;
+        }
+
+        .topic-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: var(--text-color);
+        }
+
+        .topic-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .group-sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        .member-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .member-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="communities.html">Volver a Comunidades</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top: 2rem;">
+        <div id="group-content">
+            <!-- Content loaded via JS -->
+            <div style="text-align: center; padding: 3rem;">Cargando comunidad...</div>
+        </div>
+    </main>
+
+    <script src="../js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const groupId = urlParams.get('id');
+
+            if (!groupId) {
+                window.location.href = 'communities.html';
+                return;
+            }
+
+            loadGroupDetails(groupId);
+        });
+
+        function loadGroupDetails(id) {
+            // Try to find in localStorage, else use mock
+            const groups = JSON.parse(localStorage.getItem('groups') || '[]');
+            let group = groups.find(g => g.id == id);
+
+            if (!group) {
+                // Mock groups fallback
+                const mockGroups = [
+                    { id: 1, name: 'React Developers', members: 120, desc: 'Comunidad para compartir conocimientos sobre React.' },
+                    { id: 2, name: 'Freelancers España', members: 85, desc: 'Grupo de apoyo para freelancers en España.' },
+                    { id: 3, name: 'Diseño UX/UI', members: 240, desc: 'Comparte tus diseños y recibe feedback.' }
+                ];
+                group = mockGroups.find(g => g.id == id);
+            }
+
+            if (!group) {
+                document.getElementById('group-content').innerHTML = '<div style="text-align: center;">Comunidad no encontrada</div>';
+                return;
+            }
+
+            const container = document.getElementById('group-content');
+            container.innerHTML = `
+                <div class="group-header">
+                    <div class="group-info">
+                        <h1>${group.name}</h1>
+                        <div class="group-meta">${group.desc} • ${group.members} miembros</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="alert('Funcionalidad de crear tema próximamente')">Nuevo Tema</button>
+                </div>
+                
+                <div class="forum-container">
+                    <div class="forum-main">
+                        <div class="forum-controls">
+                            <h3>Discusiones Recientes</h3>
+                            <select style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ddd;">
+                                <option>Más recientes</option>
+                                <option>Más populares</option>
+                            </select>
+                        </div>
+                        <ul class="topic-list">
+                            <li class="topic-item">
+                                <div class="topic-icon">💬</div>
+                                <div class="topic-content">
+                                    <div class="topic-title">Bienvenidos a la comunidad</div>
+                                    <div class="topic-meta">Publicado por Admin • hace 2 días • 5 respuestas</div>
+                                </div>
+                            </li>
+                            <li class="topic-item">
+                                <div class="topic-icon">❓</div>
+                                <div class="topic-content">
+                                    <div class="topic-title">¿Mejores recursos para aprender?</div>
+                                    <div class="topic-meta">Publicado por Juan • hace 5 horas • 12 respuestas</div>
+                                </div>
+                            </li>
+                            <li class="topic-item">
+                                <div class="topic-icon">💡</div>
+                                <div class="topic-content">
+                                    <div class="topic-title">Comparto mi último proyecto</div>
+                                    <div class="topic-meta">Publicado por Maria • hace 1 hora • 3 respuestas</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <aside class="group-sidebar">
+                        <div class="sidebar-section">
+                            <h3>Miembros Destacados</h3>
+                            <div class="member-list">
+                                <div class="member-item">
+                                    <div class="member-avatar" style="background: #e3f2fd; color: #1976d2;">AD</div>
+                                    <span>Admin User</span>
+                                </div>
+                                <div class="member-item">
+                                    <div class="member-avatar" style="background: #e8f5e9; color: #2e7d32;">JS</div>
+                                    <span>Juan Soto</span>
+                                </div>
+                                <div class="member-item">
+                                    <div class="member-avatar" style="background: #fff3e0; color: #ef6c00;">MG</div>
+                                    <span>Maria Garcia</span>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            `;
+        }
+    </script>
+</body>
+
+</html>
