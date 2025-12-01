@@ -30,34 +30,34 @@
         </div>
 
         <div class="dashboard-grid">
-            <a href="#" class="dashboard-card">
+            <a href="portfolio_builder.html" class="dashboard-card">
                 <div class="card-title">Portfolio</div>
-                <div class="card-desc">Gestiona tus proyectos y muéstralos al mundo.</div>
+                <div class="card-desc">Crea y gestiona tu CV profesional.</div>
             </a>
 
-            <a href="#" class="dashboard-card">
+            <a href="profile.html" class="dashboard-card">
                 <div class="card-title">Perfil</div>
                 <div class="card-desc">Edita tu información personal y redes sociales.</div>
             </a>
 
-            <a href="#" class="dashboard-card">
+            <a href="skills.html" class="dashboard-card">
                 <div class="card-title">Skills</div>
-                <div class="card-desc">Añade y actualiza tus habilidades técnicas.</div>
+                <div class="card-desc">Gestiona tus habilidades técnicas y soft skills.</div>
             </a>
 
-            <a href="#" class="dashboard-card">
+            <a href="experience.html" class="dashboard-card">
                 <div class="card-title">Experiencia</div>
                 <div class="card-desc">Gestiona tu experiencia laboral y educación.</div>
             </a>
 
-            <a href="#" class="dashboard-card">
+            <a href="communities.html" class="dashboard-card">
                 <div class="card-title">Comunidades</div>
                 <div class="card-desc">Únete a grupos y colabora con otros desarrolladores.</div>
             </a>
 
-            <a href="#" class="dashboard-card">
+            <a href="messages.html" class="dashboard-card">
                 <div class="card-title">Mensajes</div>
-                <div class="card-desc">Revisa los mensajes de contacto recibidos.</div>
+                <div class="card-desc">Chatea con otros usuarios de la plataforma.</div>
             </a>
 
             <!-- Role Specific Links -->
@@ -66,7 +66,7 @@
                 <div class="card-desc">Administración de usuarios y reportes del sistema.</div>
             </a>
 
-            <a href="support.html" class="dashboard-card" id="support-link" style="display: none;">
+            <a href="customer_support.html" class="dashboard-card" id="support-link">
                 <div class="card-title">Atención al Cliente</div>
                 <div class="card-desc">Centro de ayuda y soporte técnico.</div>
             </a>
@@ -114,17 +114,16 @@
 
             document.getElementById('user-greeting').textContent = `Hola, ${user.nombre}`;
 
-            // Show links based on role (without displaying the role badge)
+            // Show links based on role
             if (user.role === 'admin') {
                 document.getElementById('admin-link').style.display = 'block';
-                document.getElementById('support-link').style.display = 'block';
-            } else if (user.role === 'tecnico') {
-                document.getElementById('support-link').style.display = 'block';
                 document.getElementById('support-link').querySelector('.card-title').textContent = 'Panel de Soporte';
                 document.getElementById('support-link').querySelector('.card-desc').textContent = 'Gestionar tickets de ayuda y atención al cliente.';
-            } else {
-                document.getElementById('support-link').style.display = 'block';
+            } else if (user.role === 'tecnico') {
+                document.getElementById('support-link').querySelector('.card-title').textContent = 'Panel de Soporte';
+                document.getElementById('support-link').querySelector('.card-desc').textContent = 'Gestionar tickets de ayuda y atención al cliente.';
             }
+            // All users see the support link (already visible by default)
 
             document.getElementById('logout-btn').addEventListener('click', (e) => {
                 e.preventDefault();

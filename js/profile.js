@@ -1,93 +1,72 @@
-// js/profile.js
-import { apiFetch } from './api.js';
-import { showAlert } from './utils.js';
+/* js/profile.js */
+document.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
 
-// --- TESTIMONIALS ---
-export async function loadTestimonials() {
-    const list = document.getElementById('testimonials-list');
-    try {
-        const items = await apiFetch('/testimonials/list.php');
-        list.innerHTML = items.map(item => `
-            <div class="cv-item">
-                <h3>${item.author_name} <small>(${item.author_position})</small></h3>
-                <p>"${item.content}"</p>
-                <button class="btn btn-sm btn-danger btn-delete-test" data-id="${item.id}">Borrar</button>
-            </div>
-        `).join('');
+    loadProfileData(user);
 
-        document.querySelectorAll('.btn-delete-test').forEach(btn => {
-            btn.addEventListener('click', () => deleteTestimonial(btn.dataset.id));
-        });
-    } catch (error) {
-        console.error(error);
+    document.getElementById('profile-form').addEventListener('submit', handleProfileUpdate);
+    document.getElementById('change-avatar-btn').addEventListener('click', () => {
+        document.getElementById('avatar-upload').click();
+    });
+    document.getElementById('avatar-upload').addEventListener('change', handleAvatarUpload);
+});
+
+function loadProfileData(user) {
+    document.getElementById('display-name').textContent = user.nombre;
+    document.getElementById('display-email').textContent = user.email;
+
+    // Form fields
+    document.getElementById('nombre').value = user.nombre;
+    document.getElementById('bio').value = user.bio || '';
+    document.getElementById('location').value = user.location || '';
+    document.getElementById('phone').value = user.phone || '';
+
+    // Social links would be loaded here
+}
+
+function handleProfileUpdate(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    // Simulate API call
+    console.log('Updating profile:', data);
+
+    // Update local storage for demo purposes
+    const user = JSON.parse(localStorage.getItem('user'));
+    const updatedUser = { ...user, ...data };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+
+    // Update display
+    document.getElementById('display-name').textContent = data.nombre;
+
+    showToast('Perfil actualizado correctamente', 'success');
+}
+
+function handleAvatarUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('current-avatar').src = e.target.result;
+            // Here you would upload to server
+        };
+        reader.readAsDataURL(file);
     }
 }
 
-export async function createTestimonial() {
-    const author_name = prompt('Nombre del Autor:');
-    const author_position = prompt('Cargo del Autor:');
-    const content = prompt('Testimonio:');
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type} show`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
 
-    if (!author_name || !content) return;
-
-    try {
-        await apiFetch('/testimonials/create.php', 'POST', { author_name, author_position, content });
-        loadTestimonials();
-    } catch (error) {
-        showAlert(error.message, 'error');
-    }
-}
-
-async function deleteTestimonial(id) {
-    if (!confirm('¿Borrar testimonio?')) return;
-    try {
-        await apiFetch('/testimonials/delete.php', 'DELETE', { id });
-        loadTestimonials();
-    } catch (error) {
-        showAlert(error.message, 'error');
-    }
-}
-
-// --- SOCIAL LINKS ---
-export async function loadSocialLinks() {
-    const list = document.getElementById('social-list');
-    try {
-        const items = await apiFetch('/social_links/list.php');
-        list.innerHTML = items.map(item => `
-            <div class="skill-tag">
-                <a href="${item.url}" target="_blank">${item.platform}</a>
-                <button class="btn-delete-social" data-id="${item.id}">&times;</button>
-            </div>
-        `).join('');
-
-        document.querySelectorAll('.btn-delete-social').forEach(btn => {
-            btn.addEventListener('click', () => deleteSocialLink(btn.dataset.id));
-        });
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-export async function createSocialLink() {
-    const platform = prompt('Plataforma (ej. LinkedIn):');
-    const url = prompt('URL:');
-
-    if (!platform || !url) return;
-
-    try {
-        await apiFetch('/social_links/create.php', 'POST', { platform, url });
-        loadSocialLinks();
-    } catch (error) {
-        showAlert(error.message, 'error');
-    }
-}
-
-async function deleteSocialLink(id) {
-    if (!confirm('¿Borrar red social?')) return;
-    try {
-        await apiFetch('/social_links/delete.php', 'DELETE', { id });
-        loadSocialLinks();
-    } catch (error) {
-        showAlert(error.message, 'error');
-    }
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - DevFolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Volver al Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container profile-container">
+        <h1>Mi Perfil</h1>
+
+        <div class="profile-grid">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar-container">
+                        <img src="../assets/default-avatar.png" alt="Profile" id="current-avatar">
+                        <button class="btn-icon" id="change-avatar-btn" title="Cambiar foto">📷</button>
+                        <input type="file" id="avatar-upload" hidden accept="image/*">
+                    </div>
+                    <h2 id="display-name">Usuario</h2>
+                    <p id="display-email">usuario@example.com</p>
+                </div>
+            </div>
+
+            <div class="profile-form-card">
+                <form id="profile-form">
+                    <h3>Información Personal</h3>
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Bio</label>
+                        <textarea id="bio" name="bio" rows="3" placeholder="Cuéntanos sobre ti..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Ubicación</label>
+                        <input type="text" id="location" name="location" placeholder="Ciudad, País">
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+
+                    <h3>Redes Sociales</h3>
+                    <div class="form-group">
+                        <label>GitHub</label>
+                        <input type="url" id="github" name="github">
+                    </div>
+                    <div class="form-group">
+                        <label>LinkedIn</label>
+                        <input type="url" id="linkedin" name="linkedin">
+                    </div>
+                    <div class="form-group">
+                        <label>Twitter / X</label>
+                        <input type="url" id="twitter" name="twitter">
+                    </div>
+                    <div class="form-group">
+                        <label>Website Personal</label>
+                        <input type="url" id="website" name="website">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+
+                <div class="security-section">
+                    <h3>Seguridad</h3>
+                    <button id="change-password-btn" class="btn btn-outline">Cambiar Contraseña</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/profile.js"></script>
+</body>
+
+</html>

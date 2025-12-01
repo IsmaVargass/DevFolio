@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experiencia y Educación - DevFolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/experience.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Volver al Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container experience-container">
+        <h1>Experiencia y Educación</h1>
+
+        <div class="timeline-section">
+            <div class="section-header">
+                <h2>Experiencia Laboral</h2>
+                <button id="add-experience-btn" class="btn btn-primary btn-sm">Añadir Trabajo</button>
+            </div>
+            <div id="work-timeline" class="timeline">
+                <!-- Work experience items will be loaded here -->
+            </div>
+        </div>
+
+        <div class="timeline-section">
+            <div class="section-header">
+                <h2>Educación</h2>
+                <button id="add-education-btn" class="btn btn-primary btn-sm">Añadir Estudios</button>
+            </div>
+            <div id="education-timeline" class="timeline">
+                <!-- Education items will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Experience Modal -->
+    <div id="experience-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="exp-modal-title">Añadir Experiencia</h2>
+            <form id="experience-form">
+                <input type="hidden" id="exp-id">
+                <input type="hidden" id="exp-type" value="work"> <!-- work or education -->
+
+                <div class="form-group">
+                    <label id="org-label">Empresa</label>
+                    <input type="text" id="exp-org" required>
+                </div>
+                <div class="form-group">
+                    <label id="role-label">Cargo</label>
+                    <input type="text" id="exp-role" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Fecha Inicio</label>
+                        <input type="date" id="exp-start" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha Fin</label>
+                        <input type="date" id="exp-end">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="exp-current">
+                            <label for="exp-current">Actualmente</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="exp-desc" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/experience.js"></script>
+</body>
+
+</html>

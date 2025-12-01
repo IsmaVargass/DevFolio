@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constructor de Portfolio - DevFolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/portfolio_builder.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Volver al Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container builder-container">
+        <div class="builder-header">
+            <h1>Constructor de Portfolio</h1>
+            <div class="builder-actions">
+                <button id="preview-btn" class="btn btn-outline">Vista Previa</button>
+                <button id="save-btn" class="btn btn-outline">Guardar Borrador</button>
+                <button id="export-pdf-btn" class="btn btn-primary">Descargar PDF</button>
+                <button id="publish-btn" class="btn btn-primary">Publicar</button>
+            </div>
+        </div>
+
+        <div class="builder-grid">
+            <div class="builder-form">
+                <section class="form-section">
+                    <h2>Información Personal</h2>
+                    <div class="form-group">
+                        <label>Foto de Perfil</label>
+                        <input type="file" id="profile-photo" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" id="full-name" placeholder="Tu nombre">
+                    </div>
+                    <div class="form-group">
+                        <label>Título Profesional</label>
+                        <input type="text" id="professional-title" placeholder="ej. Full Stack Developer">
+                    </div>
+                    <div class="form-group">
+                        <label>Resumen Profesional</label>
+                        <textarea id="professional-summary" rows="4"
+                            placeholder="Breve descripción de tu perfil..."></textarea>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <h2>Experiencia y Educación</h2>
+                    <p class="text-muted">Estos datos se importan de tu perfil de Experiencia.</p>
+                    <div id="experience-list" class="data-list"></div>
+                    <div id="education-list" class="data-list"></div>
+                    <a href="experience.html" class="btn-link">Gestionar Experiencia</a>
+                </section>
+
+                <section class="form-section">
+                    <h2>Habilidades</h2>
+                    <p class="text-muted">Selecciona las habilidades que quieres mostrar.</p>
+                    <div id="skills-selector" class="skills-grid"></div>
+                    <a href="skills.html" class="btn-link">Gestionar Skills</a>
+                </section>
+            </div>
+
+            <div class="builder-preview" id="portfolio-preview">
+                <!-- Preview content will be rendered here -->
+                <div class="preview-placeholder">
+                    <p>La vista previa de tu portfolio aparecerá aquí</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/portfolio_builder.js"></script>
+</body>
+
+</html>

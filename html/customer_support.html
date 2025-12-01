@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atención al Cliente - DevFolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/customer_support.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Volver al Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container support-container">
+        <div class="support-header">
+            <h1>Centro de Ayuda</h1>
+            <p>Estamos aquí para ayudarte. Envía un ticket y te responderemos lo antes posible.</p>
+        </div>
+
+        <div class="support-grid">
+            <div class="support-actions">
+                <div class="action-card">
+                    <h3>Crear Nuevo Ticket</h3>
+                    <p>¿Tienes un problema? Abre un nuevo caso de soporte.</p>
+                    <button id="new-ticket-btn" class="btn btn-primary">Abrir Ticket</button>
+                </div>
+
+                <div class="faq-section">
+                    <h3>Preguntas Frecuentes</h3>
+                    <div class="accordion" id="faq-accordion">
+                        <div class="accordion-item">
+                            <button class="accordion-header">¿Cómo exporto mi portfolio?</button>
+                            <div class="accordion-content">
+                                <p>Ve al Constructor de Portfolio y haz clic en el botón "Descargar PDF" en la parte
+                                    superior derecha.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <button class="accordion-header">¿Cómo cambio mi contraseña?</button>
+                            <div class="accordion-content">
+                                <p>Puedes cambiar tu contraseña desde la sección de Seguridad en tu Perfil.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tickets-list-section">
+                <h3>Mis Tickets</h3>
+                <div id="tickets-list" class="tickets-list">
+                    <!-- Tickets will be loaded here -->
+                    <div class="loading-state">Cargando tickets...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- New Ticket Modal -->
+    <div id="ticket-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Nuevo Ticket de Soporte</h2>
+            <form id="ticket-form">
+                <div class="form-group">
+                    <label>Asunto</label>
+                    <input type="text" id="ticket-subject" required placeholder="Resumen del problema">
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="ticket-category" required>
+                        <option value="technical">Problema Técnico</option>
+                        <option value="account">Cuenta y Acceso</option>
+                        <option value="billing">Facturación</option>
+                        <option value="feature_request">Sugerencia</option>
+                        <option value="other">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Prioridad</label>
+                    <select id="ticket-priority" required>
+                        <option value="low">Baja</option>
+                        <option value="medium" selected>Media</option>
+                        <option value="high">Alta</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Descripción Detallada</label>
+                    <textarea id="ticket-desc" rows="5" required
+                        placeholder="Describe tu problema con detalle..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar Ticket</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/customer_support.js"></script>
+</body>
+
+</html>

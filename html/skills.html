@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Skills - DevFolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/skills.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Volver al Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container skills-container">
+        <div class="page-header">
+            <h1>Mis Habilidades</h1>
+            <button id="add-skill-btn" class="btn btn-primary">Añadir Skill</button>
+        </div>
+
+        <div class="skills-tabs">
+            <button class="tab-btn active" data-tab="technical">Technical Skills</button>
+            <button class="tab-btn" data-tab="soft">Soft Skills</button>
+            <button class="tab-btn" data-tab="hard">Hard Skills</button>
+        </div>
+
+        <div class="skills-content">
+            <div id="technical-skills" class="skills-grid active">
+                <!-- Skills will be loaded here -->
+            </div>
+            <div id="soft-skills" class="skills-grid">
+                <!-- Skills will be loaded here -->
+            </div>
+            <div id="hard-skills" class="skills-grid">
+                <!-- Skills will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Skill Modal -->
+    <div id="skill-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">Añadir Habilidad</h2>
+            <form id="skill-form">
+                <input type="hidden" id="skill-id">
+                <div class="form-group">
+                    <label>Nombre de la Habilidad</label>
+                    <input type="text" id="skill-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select id="skill-type" required>
+                        <option value="technical">Technical Skill</option>
+                        <option value="soft">Soft Skill</option>
+                        <option value="hard">Hard Skill</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nivel (1-100)</label>
+                    <input type="range" id="skill-level" min="1" max="100" value="50">
+                    <span id="skill-level-val">50%</span>
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/skills.js"></script>
+</body>
+
+</html>

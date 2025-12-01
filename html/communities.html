@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidades - DevFolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/communities.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Volver al Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container communities-container">
+        <div class="communities-header">
+            <h1>Comunidades y Empleo</h1>
+            <div class="header-actions">
+                <button id="create-community-btn" class="btn btn-outline">Crear Comunidad</button>
+                <button id="post-job-btn" class="btn btn-primary">Publicar Oferta</button>
+            </div>
+        </div>
+
+        <div class="communities-tabs">
+            <button class="tab-btn active" data-tab="portfolios">Portfolios Destacados</button>
+            <button class="tab-btn" data-tab="jobs">Ofertas de Trabajo</button>
+            <button class="tab-btn" data-tab="groups">Grupos de Trabajo</button>
+        </div>
+
+        <div class="communities-content">
+            <div id="portfolios-view" class="content-view active">
+                <div class="grid-layout" id="portfolios-grid">
+                    <!-- Portfolios will be loaded here -->
+                </div>
+            </div>
+
+            <div id="jobs-view" class="content-view">
+                <div class="list-layout" id="jobs-list">
+                    <!-- Job postings will be loaded here -->
+                </div>
+            </div>
+
+            <div id="groups-view" class="content-view">
+                <div class="grid-layout" id="groups-grid">
+                    <!-- Communities/Groups will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/communities.js"></script>
+</body>
+
+</html>
