@@ -26,24 +26,54 @@
         <div class="builder-header">
             <h1>Constructor de Portfolio</h1>
             <div class="builder-actions">
-                <button id="preview-btn" class="btn btn-outline">Vista Previa</button>
-                <button id="save-btn" class="btn btn-outline">Guardar Borrador</button>
+                <button id="preview-btn" class="btn btn-outline">Actualizar Vista</button>
                 <button id="export-pdf-btn" class="btn btn-primary">Descargar PDF</button>
-                <a href="experience.html" class="btn-link">Gestionar Experiencia</a>
-                </section>
+                <button id="publish-btn" class="btn btn-primary">Publicar</button>
+            </div>
+        </div>
+
+        <div class="builder-grid">
+            <div class="builder-form">
+                <div class="info-box">
+                    <h3><span class="icon">ℹ️</span> Sección Predeterminada</h3>
+                    <p>Tu PDF incluirá automáticamente:</p>
+                    <ul>
+                        <li><strong>Nombre y Apellidos:</strong> <span id="default-name">Cargando...</span></li>
+                        <li><strong>Sector:</strong> <span id="default-sector">Calculando...</span></li>
+                        <li><strong>Estudios:</strong> <span id="default-education">Cargando...</span></li>
+                    </ul>
+                    <p class="text-small text-muted">Estos datos se toman de tu perfil y experiencia.</p>
+                </div>
 
                 <section class="form-section">
-                    <h2>Habilidades</h2>
-                    <p class="text-muted">Selecciona las habilidades que quieres mostrar.</p>
-                    <div id="skills-selector" class="skills-grid"></div>
-                    <a href="skills.html" class="btn-link">Gestionar Skills</a>
+                    <h2>Contenido Adicional</h2>
+                    <p class="text-muted">Añade más información para personalizar tu portfolio.</p>
+
+                    <div class="form-group">
+                        <label>Color del Tema</label>
+                        <input type="color" id="theme-color" value="#2563eb" style="width: 100%; height: 40px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sobre Mí (Adicional)</label>
+                        <textarea id="about-me" rows="4"
+                            placeholder="Añade una descripción extra si lo deseas..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Proyectos Destacados</label>
+                        <div id="projects-container">
+                            <textarea id="projects-text" rows="4"
+                                placeholder="Describe tus proyectos principales..."></textarea>
+                        </div>
+                    </div>
                 </section>
             </div>
 
             <div class="builder-preview" id="portfolio-preview">
                 <!-- Preview content will be rendered here -->
                 <div class="preview-placeholder">
-                    <p>La vista previa de tu portfolio aparecerá aquí</p>
+                    <p>Cargando vista previa...</p>
                 </div>
             </div>
         </div>

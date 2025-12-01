@@ -1,163 +1,137 @@
 /* js/portfolio_builder.js */
 document.addEventListener('DOMContentLoaded', () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) {
-        window.location.href = 'login.html';
-        return;
-    }
+    /* js/portfolio_builder.js */
+    document.addEventListener('DOMContentLoaded', () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            window.location.href = 'login.html';
+            return;
+        }
 
-    // Load initial data
-    loadUserData();
-    loadExperience();
-    loadEducation();
-    loadSkills();
+        // Initialize
+        loadDefaultData();
 
-    // Event Listeners
-    document.getElementById('preview-btn').addEventListener('click', updatePreview);
-    document.getElementById('export-pdf-btn').addEventListener('click', exportPDF);
-    document.getElementById('publish-btn').addEventListener('click', publishPortfolio);
+        // Event Listeners
+        document.getElementById('preview-btn').addEventListener('click', updatePreview);
+        document.getElementById('export-pdf-btn').addEventListener('click', exportPDF);
+        document.getElementById('publish-btn').addEventListener('click', publishPortfolio);
 
-    // Theme color listener
-    const themeInput = document.getElementById('theme-color');
-    if (themeInput) {
-        themeInput.addEventListener('input', updatePreview);
-        themeInput.addEventListener('change', updatePreview);
-    }
+        const themeInput = document.getElementById('theme-color');
+        if (themeInput) {
+            themeInput.addEventListener('input', updatePreview);
+        }
 
-    // Live preview updates for other inputs
-    const inputs = document.querySelectorAll('input:not(#theme-color), textarea');
-    inputs.forEach(input => {
-        input.addEventListener('input', updatePreview);
+        document.getElementById('about-me').addEventListener('input', updatePreview);
+        document.getElementById('projects-text').addEventListener('input', updatePreview);
+
+        // Initial preview
+        setTimeout(updatePreview, 500);
     });
 
-    // Initial preview
-    setTimeout(updatePreview, 500);
-});
+    function loadDefaultData() {
+        const user = JSON.parse(localStorage.getItem('user'));
 
-function loadUserData() {
-    // No longer loading into inputs, but we use this to verify user exists
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) return;
-}
+        // 1. Name
+        document.getElementById('default-name').textContent = user.nombre || 'Usuario';
 
-function loadExperience() {
-    // In a real app, this would fetch from API/localStorage
-    // For now, we just show a link if no experience is found
-    const experienceList = document.getElementById('experience-list');
-    if (experienceList) {
-        experienceList.innerHTML = '<p class="text-muted">La experiencia se cargará automáticamente de tu perfil.</p>';
+        // 2. Sector (Derived from Experience)
+        const experience = JSON.parse(localStorage.getItem('experience') || '[]');
+        const currentJob = experience.find(exp => !exp.endDate || exp.endDate.toLowerCase() === 'presente' || exp.endDate.toLowerCase() === 'actualidad');
+
+        let sector = 'Sin experiencia registrada';
+        if (currentJob) {
+            sector = currentJob.title + ' en ' + currentJob.company;
+        } else if (experience.length > 0) {
+            // Use most recent if not current
+            const lastJob = experience[0]; // Assuming sorted or just taking first
+            sector = lastJob.title + ' (Ex-' + lastJob.company + ')';
+        }
+        document.getElementById('default-sector').textContent = sector;
+        document.getElementById('default-sector').dataset.value = sector; // Store for preview
+
+        // 3. Studies
+        const education = JSON.parse(localStorage.getItem('education') || '[]');
+        let educationText = 'Sin estudios registrados';
+        if (education.length > 0) {
+            educationText = education.map(edu => `${edu.degree} en ${edu.school}`).join(', ');
+        }
+        document.getElementById('default-education').textContent = educationText;
+        document.getElementById('default-education').dataset.value = JSON.stringify(education); // Store for preview
     }
-}
 
-function loadEducation() {
-    const educationList = document.getElementById('education-list');
-    if (educationList) {
-        educationList.innerHTML = '<p class="text-muted">La educación se cargará automáticamente de tu perfil.</p>';
-    }
-}
+    function updatePreview() {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const themeColor = document.getElementById('theme-color').value;
+        const aboutMe = document.getElementById('about-me').value;
+        const projects = document.getElementById('projects-text').value;
 
-function loadSkills() {
-    const skillsSelector = document.getElementById('skills-selector');
-    // Mock skills - in real app, fetch from user's skills
-    const skills = [
-        { id: 1, name: 'HTML5', type: 'technical' },
-        { id: 2, name: 'CSS3', type: 'technical' },
-        { id: 3, name: 'JavaScript', type: 'technical' },
-        { id: 4, name: 'React', type: 'technical' },
-        { id: 5, name: 'Liderazgo', type: 'soft' },
-        { id: 6, name: 'Comunicación', type: 'soft' }
-    ];
+        const sector = document.getElementById('default-sector').dataset.value || 'Sector no definido';
+        const education = JSON.parse(document.getElementById('default-education').dataset.value || '[]');
 
-    if (skillsSelector) {
-        skillsSelector.innerHTML = skills.map(skill => `
-            <div>
-                <input type="checkbox" id="skill-${skill.id}" class="skill-checkbox" value="${skill.name}" checked>
-                <label for="skill-${skill.id}" class="skill-label">${skill.name}</label>
-            </div>
-        `).join('');
+        const preview = document.getElementById('portfolio-preview');
 
-        // Add event listeners to new checkboxes
-        document.querySelectorAll('.skill-checkbox').forEach(cb => {
-            cb.addEventListener('change', updatePreview);
-        });
-    }
-}
-
-function updatePreview() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const preview = document.getElementById('portfolio-preview');
-    const themeColor = document.getElementById('theme-color') ? document.getElementById('theme-color').value : '#000000';
-
-    const data = {
-        name: user.nombre,
-        title: document.getElementById('professional-title').value,
-        summary: document.getElementById('professional-summary').value,
-        photo: getUserAvatar(user),
-        skills: Array.from(document.querySelectorAll('.skill-checkbox:checked')).map(cb => cb.value)
-    };
-
-    preview.innerHTML = `
-        <div class="preview-content" style="padding: 3rem; background: white; max-width: 800px; margin: 0 auto; font-family: 'Inter', sans-serif; color: #333;">
-            <div style="text-align: center; margin-bottom: 3rem;">
-                <img src="${data.photo}" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 1.5rem; border: 4px solid ${themeColor}; padding: 3px;">
-                <h1 style="margin: 0; color: #111; font-size: 2.5rem; font-weight: 700; letter-spacing: -1px;">${data.name}</h1>
-                <p style="color: ${themeColor}; font-size: 1.2rem; margin-top: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">${data.title || 'Título Profesional'}</p>
+        preview.innerHTML = `
+        <div class="pdf-container" style="background: white; padding: 3rem; max-width: 800px; margin: 0 auto; font-family: 'Inter', sans-serif; color: #333;">
+            <!-- Header / Default Section -->
+            <div style="border-bottom: 4px solid ${themeColor}; padding-bottom: 2rem; margin-bottom: 2rem;">
+                <h1 style="font-size: 2.5rem; margin: 0; color: #111;">${user.nombre}</h1>
+                <h2 style="font-size: 1.2rem; color: ${themeColor}; margin: 0.5rem 0 0 0; font-weight: 600; text-transform: uppercase;">${sector}</h2>
+                
+                <div style="margin-top: 1.5rem;">
+                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Formación Académica</h3>
+                    ${education.length > 0 ?
+                `<ul style="margin: 0; padding-left: 1.2rem;">
+                            ${education.map(edu => `<li style="margin-bottom: 0.3rem;"><strong>${edu.degree}</strong> - ${edu.school} <span style="color:#777; font-size:0.9em;">(${edu.year})</span></li>`).join('')}
+                        </ul>`
+                : '<p style="font-style: italic; color: #888;">No hay estudios registrados.</p>'}
+                </div>
             </div>
 
-            ${data.summary ? `
-            <div style="margin-bottom: 3rem;">
-                <h3 style="border-bottom: 2px solid ${themeColor}30; padding-bottom: 0.8rem; margin-bottom: 1.2rem; color: #111; font-size: 1.4rem;">Perfil Profesional</h3>
-                <p style="line-height: 1.8; color: #555; font-size: 1.05rem;">${data.summary}</p>
+            <!-- User Added Content -->
+            ${aboutMe ? `
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: ${themeColor}; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Sobre Mí</h3>
+                <p style="line-height: 1.6; white-space: pre-line;">${aboutMe}</p>
             </div>
             ` : ''}
 
-            ${data.skills.length > 0 ? `
-            <div style="margin-bottom: 3rem;">
-                <h3 style="border-bottom: 2px solid ${themeColor}30; padding-bottom: 0.8rem; margin-bottom: 1.2rem; color: #111; font-size: 1.4rem;">Habilidades</h3>
-                <div style="display: flex; flex-wrap: wrap; gap: 0.8rem;">
-                    ${data.skills.map(skill => `
-                        <span style="background: ${themeColor}10; color: ${themeColor}; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.95rem; font-weight: 600; border: 1px solid ${themeColor}30;">
-                            ${skill}
-                        </span>
-                    `).join('')}
-                </div>
+            ${projects ? `
+            <div style="margin-bottom: 2rem;">
+                <h3 style="color: ${themeColor}; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Proyectos Destacados</h3>
+                <p style="line-height: 1.6; white-space: pre-line;">${projects}</p>
             </div>
             ` : ''}
             
-            <div style="margin-top: 4rem; text-align: center; color: #888; font-size: 0.9rem;">
-                <p>&copy; ${new Date().getFullYear()} ${data.name}. Creado con DevFolio.</p>
+            <div style="margin-top: 4rem; text-align: center; font-size: 0.8rem; color: #aaa; border-top: 1px solid #eee; padding-top: 1rem;">
+                Generado con DevFolio
             </div>
         </div>
     `;
-}
+    }
 
-function exportPDF() {
-    window.print();
-}
+    function exportPDF() {
+        window.print();
+    }
 
-function publishPortfolio() {
-    if (!confirm('¿Estás seguro de que quieres publicar tu portfolio en la comunidad?')) return;
+    function publishPortfolio() {
+        if (!confirm('¿Estás seguro de que quieres publicar tu portfolio?')) return;
 
-    const user = JSON.parse(localStorage.getItem('user'));
-    const themeColor = document.getElementById('theme-color') ? document.getElementById('theme-color').value : '#000000';
+        const user = JSON.parse(localStorage.getItem('user'));
+        const sector = document.getElementById('default-sector').dataset.value;
 
-    const data = {
-        id: Date.now(),
-        title: document.getElementById('professional-title').value || 'Portfolio de ' + user.nombre,
-        author: user.nombre,
-        tags: Array.from(document.querySelectorAll('.skill-checkbox:checked')).map(cb => cb.value).slice(0, 3),
-        photo: getUserAvatar(user), // Use the utility function
-        publishedDate: new Date().toISOString(),
-        themeColor: themeColor
-    };
+        const data = {
+            id: Date.now(),
+            title: `Portfolio de ${user.nombre}`,
+            author: user.nombre,
+            tags: [sector.split(' ')[0], 'Profesional'], // Simple tag generation
+            photo: getUserAvatar(user),
+            publishedDate: new Date().toISOString()
+        };
 
-    const published = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
-    published.unshift(data);
-    localStorage.setItem('published_portfolios', JSON.stringify(published));
+        const published = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
+        published.unshift(data);
+        localStorage.setItem('published_portfolios', JSON.stringify(published));
 
-    showToast('¡Portfolio publicado con éxito! Ahora es visible en la comunidad.', 'success');
-
-    setTimeout(() => {
-        window.location.href = 'communities.html';
-    }, 1500);
-}
+        showToast('Portfolio publicado con éxito', 'success');
+        setTimeout(() => window.location.href = 'communities.html', 1500);
+    }
