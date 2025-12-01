@@ -67,73 +67,33 @@
             </a>
 
             <a href="support.html" class="dashboard-card" id="support-link" style="display: none;">
-                <div class="card-title">Atención al Cliente</div>
-                <div class="card-desc">Centro de ayuda y soporte técnico.</div>
-            </a>
-        </div>
-    </main>
-
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="privacy.html">Política de Privacidad</a></li>
-                    <li><a href="#">Términos de Servicio</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Síguenos</h3>
-                <div class="social-links">
-                    <a href="#" target="_blank">GitHub</a>
-                    <a href="#" target="_blank">LinkedIn</a>
-                    <a href="#" target="_blank">Twitter</a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h3>Atajos</h3>
-                <ul>
-                    <li><a href="../index.html">Inicio</a></li>
-                    <li><a href="login.html">Iniciar Sesión</a></li>
-                    <li><a href="register.html">Registrarse</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (!user) {
                 window.location.href = 'login.html';
                 return;
-            }
+                }
 
-            document.getElementById('user-greeting').textContent = `Hola, ${user.nombre}`;
+                document.getElementById('user-greeting').textContent = `Hola, ${user.nombre}`;
 
-            // Show links based on role (without displaying the role badge)
-            if (user.role === 'admin') {
+                // Show links based on role (without displaying the role badge)
+                if (user.role === 'admin') {
                 document.getElementById('admin-link').style.display = 'block';
                 document.getElementById('support-link').style.display = 'block';
-            } else if (user.role === 'tecnico') {
+                } else if (user.role === 'tecnico') {
                 document.getElementById('support-link').style.display = 'block';
                 document.getElementById('support-link').querySelector('.card-title').textContent = 'Panel de Soporte';
-                document.getElementById('support-link').querySelector('.card-desc').textContent = 'Gestionar tickets de ayuda y atención al cliente.';
-            } else {
+                document.getElementById('support-link').querySelector('.card-desc').textContent = 'Gestionar tickets de
+                ayuda y atención al cliente.';
+                } else {
                 document.getElementById('support-link').style.display = 'block';
-            }
+                }
 
-            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                document.getElementById('logout-btn').addEventListener('click', (e) => {
                 e.preventDefault();
                 localStorage.removeItem('user');
                 fetch('../api/auth/logout.php')
-                    .then(() => window.location.href = '../index.html');
-            });
-        });
-    </script>
+                .then(() => window.location.href = '../index.html');
+                });
+                });
+                </script>
 </body>
 
 </html>

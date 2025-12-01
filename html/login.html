@@ -29,16 +29,80 @@
                     <label for="login-password">Contraseña</label>
                     <input type="password" id="login-password" name="password" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-full-width">Entrar</button>
-                <p class="auth-switch">
-                    ¿No tienes cuenta? <a href="register.html">Regístrate</a>
-                </p>
-            </form>
-        </div>
-    </main>
+                <!DOCTYPE html>
+                <html lang="es">
 
-    <script src="../js/toast.js"></script>
-    <script src="../js/auth.js"></script>
-</body>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Login - DevFolio</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+                        rel="stylesheet">
+                    <link rel="stylesheet" href="../css/style.css">
+                    <link rel="stylesheet" href="../css/login.css">
+                </head>
 
-</html>
+                <body>
+                    <nav class="navbar">
+                        <div class="container nav-container">
+                            <a href="../index.html" class="logo">DevFolio</a>
+                        </div>
+                    </nav>
+
+                    <main class="container">
+                        <div class="auth-container">
+                            <h2>Bienvenido de nuevo</h2>
+                            <form id="login-form">
+                                <div class="form-group">
+                                    <label for="login-email">Email</label>
+                                    <input type="email" id="login-email" name="email" required
+                                        placeholder="tu@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="login-password">Contraseña</label>
+                                    <input type="password" id="login-password" name="password" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-full-width">Entrar</button>
+                                <p class="auth-switch">
+                                    ¿No tienes cuenta? <a href="register.html">Regístrate</a>
+                                </p>
+                            </form>
+                        </div>
+                    </main>
+
+                    <footer class="footer">
+                        <div class="footer-bottom">
+                            <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
+                        </div>
+                        <div class="container footer-content">
+                            <div class="footer-section">
+                                <h3>Legal</h3>
+                                <ul>
+                                    <li><a href="privacy.html">Política de Privacidad</a></li>
+                                    <li><a href="#">Términos de Servicio</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-section">
+                                <h3>Síguenos</h3>
+                                <div class="social-links">
+                                    <a href="#" target="_blank">GitHub</a>
+                                    <a href="#" target="_blank">LinkedIn</a>
+                                    <a href="#" target="_blank">Twitter</a>
+                                </div>
+                            </div>
+                            <div class="footer-section">
+                                <h3>Atajos</h3>
+                                <ul>
+                                    <li><a href="../index.html">Inicio</a></li>
+                                    <li><a href="login.html">Iniciar Sesión</a></li>
+                                    <li><a href="register.html">Registrarse</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </footer>
+
+                    <script src="../js/toast.js"></script>
+                    <script src="../js/auth.js"></script>
+                </body>
+
+                </html>
