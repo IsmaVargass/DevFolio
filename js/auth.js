@@ -1,53 +1,73 @@
 // js/auth.js
-import { apiFetch } from './api.js';
-import { showAlert } from './utils.js';
+// Authentication handling with toast notifications
 
-export async function checkSession() {
-    try {
-        const result = await apiFetch('/auth/session.php');
-        if (!result.authenticated) {
-            window.location.href = 'login.html';
-        }
-    } catch (error) {
-        console.error('Error verificando sesión:', error);
-        window.location.href = 'login.html';
-    }
-}
+document.addEventListener('DOMContentLoaded', () => {
+    // Register
+    const registerForm = document.getElementById('register-form');
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-export async function login(email, password) {
-    if (!email || !password) {
-        showAlert('Rellena todos los campos', 'error');
-        return;
+            const nombre = document.getElementById('register-nombre').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            try {
+                const response = await fetch('../api/auth/register.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, email, password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    showToast('¡Registro exitoso! Redirigiendo...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    showToast(result.error || 'Error al registrarse', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error de conexión. Verifica que el servidor esté corriendo.', 'error');
+            }
+        });
     }
 
-    try {
-        await apiFetch('/auth/login.php', 'POST', { email, password });
-        window.location.href = 'dashboard.html';
-    } catch (error) {
-        showAlert(error.message, 'error');
-    }
-}
+    // Login
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-export async function register(nombre, email, password) {
-    if (!nombre || !email || !password) {
-        showAlert('Rellena todos los campos', 'error');
-        return;
-    }
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
 
-    try {
-        await apiFetch('/auth/register.php', 'POST', { nombre, email, password });
-        alert('Registro exitoso. Inicia sesión.');
-        window.location.href = 'login.html';
-    } catch (error) {
-        showAlert(error.message, 'error');
-    }
-}
+            try {
+                const response = await fetch('../api/auth/login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
 
-export async function logout() {
-    try {
-        await apiFetch('/auth/logout.php');
-        window.location.href = 'index.html';
-    } catch (error) {
-        console.error('Error al cerrar sesión:', error);
+                const result = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    showToast('¡Bienvenido! Redirigiendo...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    showToast(result.error || 'Credenciales incorrectas', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error de conexión. Verifica que el servidor esté corriendo.', 'error');
+            }
+        });
     }
-}
+});

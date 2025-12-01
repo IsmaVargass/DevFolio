@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Gestión - DevFolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="dashboard.html" class="logo">DevFolio Admin</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Volver al Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container admin-container">
+        <div class="admin-header">
+            <h1>Gestión de Usuarios</h1>
+            <button class="btn btn-primary">Descargar Reporte</button>
+        </div>
+
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Placeholder data - In real app, fetch from API -->
+                <tr>
+                    <td>1</td>
+                    <td>Ismael Vargas</td>
+                    <td>ismael@example.com</td>
+                    <td><span class="role-badge">ADMIN</span></td>
+                    <td><span class="status-badge">Activo</span></td>
+                    <td><button class="btn btn-sm btn-outline">Editar</button></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Usuario Test</td>
+                    <td>test@example.com</td>
+                    <td>User</td>
+                    <td><span class="status-badge">Activo</span></td>
+                    <td><button class="btn btn-sm btn-outline">Editar</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        // Security check
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || user.role !== 'admin') {
+            alert('Acceso denegado');
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+
+</html>

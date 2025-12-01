@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - DevFolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
@@ -13,106 +15,125 @@
 <body>
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="dashboard.html" class="logo">DevFolio</a>
+            <a href="../index.html" class="logo">DevFolio</a>
             <ul class="nav-links">
-                <li><a href="#" id="btn-logout">Cerrar Sesión</a></li>
+                <li><span id="user-greeting">Hola, Usuario</span></li>
+                <li><a href="#" id="logout-btn">Cerrar Sesión</a></li>
             </ul>
         </div>
     </nav>
 
-    <main class="container">
-        <h1 style="margin-bottom: 3rem;">Tu Portfolio</h1>
+    <main class="container dashboard-container">
+        <div class="dashboard-welcome">
+            <h1>Tu espacio de trabajo</h1>
+            <p>Gestiona tu portfolio, conecta con la comunidad y muestra tu trabajo al mundo.</p>
+        </div>
 
-        <!-- PROYECTOS -->
-        <section style="margin-bottom: 4rem;">
-            <div class="dashboard-header">
-                <h2>Proyectos</h2>
-                <button class="btn btn-primary" id="btn-new-project">Nuevo Proyecto</button>
-            </div>
-            <div id="projects-grid" class="projects-grid">
-                <p>Cargando...</p>
-            </div>
-        </section>
+        <div class="dashboard-grid">
+            <a href="#" class="dashboard-card">
+                <div class="card-title">Portfolio</div>
+                <div class="card-desc">Gestiona tus proyectos y muéstralos al mundo.</div>
+            </a>
 
-        <!-- SKILLS -->
-        <section style="margin-bottom: 4rem;">
-            <div class="dashboard-header">
-                <h2>Habilidades</h2>
-                <button class="btn btn-outline btn-sm" id="btn-new-skill">Añadir</button>
-            </div>
-            <div id="skills-grid" class="skills-grid"></div>
-        </section>
+            <a href="#" class="dashboard-card">
+                <div class="card-title">Perfil</div>
+                <div class="card-desc">Edita tu información personal y redes sociales.</div>
+            </a>
 
-        <!-- EXPERIENCIA -->
-        <section style="margin-bottom: 4rem;">
-            <div class="dashboard-header">
-                <h2>Experiencia</h2>
-                <button class="btn btn-outline btn-sm" id="btn-new-experience">Añadir</button>
-            </div>
-            <div id="experience-list" class="list-container"></div>
-        </section>
+            <a href="#" class="dashboard-card">
+                <div class="card-title">Skills</div>
+                <div class="card-desc">Añade y actualiza tus habilidades técnicas.</div>
+            </a>
 
-        <!-- EDUCACIÓN -->
-        <section style="margin-bottom: 4rem;">
-            <div class="dashboard-header">
-                <h2>Educación</h2>
-                <button class="btn btn-outline btn-sm" id="btn-new-education">Añadir</button>
-            </div>
-            <div id="education-list" class="list-container"></div>
-        </section>
+            <a href="#" class="dashboard-card">
+                <div class="card-title">Experiencia</div>
+                <div class="card-desc">Gestiona tu experiencia laboral y educación.</div>
+            </a>
 
-        <!-- TESTIMONIOS -->
-        <section style="margin-bottom: 4rem;">
-            <div class="dashboard-header">
-                <h2>Testimonios</h2>
-                <button class="btn btn-outline btn-sm" id="btn-new-testimonial">Añadir</button>
-            </div>
-            <div id="testimonials-list" class="list-container"></div>
-        </section>
+            <a href="#" class="dashboard-card">
+                <div class="card-title">Comunidades</div>
+                <div class="card-desc">Únete a grupos y colabora con otros desarrolladores.</div>
+            </a>
 
-        <!-- REDES -->
-        <section style="margin-bottom: 4rem;">
-            <div class="dashboard-header">
-                <h2>Redes Sociales</h2>
-                <button class="btn btn-outline btn-sm" id="btn-new-social">Añadir</button>
-            </div>
-            <div id="social-list" class="skills-grid"></div>
-        </section>
+            <a href="#" class="dashboard-card">
+                <div class="card-title">Mensajes</div>
+                <div class="card-desc">Revisa los mensajes de contacto recibidos.</div>
+            </a>
+
+            <!-- Role Specific Links -->
+            <a href="admin_panel.html" class="dashboard-card" id="admin-link" style="display: none;">
+                <div class="card-title">Panel de Gestión</div>
+                <div class="card-desc">Administración de usuarios y reportes del sistema.</div>
+            </a>
+
+            <a href="support.html" class="dashboard-card" id="support-link" style="display: none;">
+                <div class="card-title">Atención al Cliente</div>
+                <div class="card-desc">Centro de ayuda y soporte técnico.</div>
+            </a>
+        </div>
     </main>
 
-    <!-- MODAL PROYECTO -->
-    <div id="project-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 id="modal-title">Proyecto</h2>
-            <form id="project-form">
-                <input type="hidden" id="project-id" />
-                <div class="form-group">
-                    <label for="project-titulo">Título</label>
-                    <input type="text" id="project-titulo" required />
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="privacy.html">Política de Privacidad</a></li>
+                    <li><a href="#">Términos de Servicio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="#" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">LinkedIn</a>
+                    <a href="#" target="_blank">Twitter</a>
                 </div>
-                <div class="form-group">
-                    <label for="project-descripcion">Descripción</label>
-                    <textarea id="project-descripcion" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="project-tecnologias">Tecnologías</label>
-                    <input type="text" id="project-tecnologias" />
-                </div>
-                <div class="form-group">
-                    <label for="project-imagen">Imagen URL</label>
-                    <input type="url" id="project-imagen" />
-                </div>
-                <div class="form-group">
-                    <label for="project-enlace">Enlace</label>
-                    <input type="url" id="project-enlace" />
-                </div>
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </form>
+            </div>
+            <div class="footer-section">
+                <h3>Atajos</h3>
+                <ul>
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="login.html">Iniciar Sesión</a></li>
+                    <li><a href="register.html">Registrarse</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
-    <script type="module" src="../js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('user-greeting').textContent = `Hola, ${user.nombre}`;
+
+            // Show links based on role (without displaying the role badge)
+            if (user.role === 'admin') {
+                document.getElementById('admin-link').style.display = 'block';
+                document.getElementById('support-link').style.display = 'block';
+            } else if (user.role === 'tecnico') {
+                document.getElementById('support-link').style.display = 'block';
+                document.getElementById('support-link').querySelector('.card-title').textContent = 'Panel de Soporte';
+                document.getElementById('support-link').querySelector('.card-desc').textContent = 'Gestionar tickets de ayuda y atención al cliente.';
+            } else {
+                document.getElementById('support-link').style.display = 'block';
+            }
+
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('user');
+                fetch('../api/auth/logout.php')
+                    .then(() => window.location.href = '../index.html');
+            });
+        });
+    </script>
 </body>
 
 </html>

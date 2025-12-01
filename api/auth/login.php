@@ -24,7 +24,7 @@ $email = trim($data['email']);
 $password = $data['password'];
 
 try {
-    $stmt = $conn->prepare("SELECT id, nombre, password FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT id, nombre, password, role FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $user = $stmt->fetch();
 
@@ -32,13 +32,15 @@ try {
         // Login exitoso
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_nombre'] = $user['nombre'];
+        $_SESSION['user_role'] = $user['role'];
 
         echo json_encode([
             'message' => 'Login exitoso',
             'user' => [
                 'id' => $user['id'],
                 'nombre' => $user['nombre'],
-                'email' => $email
+                'email' => $email,
+                'role' => $user['role']
             ]
         ]);
     } else {

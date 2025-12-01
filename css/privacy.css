@@ -1,0 +1,24 @@
+/* css/privacy.css */
+
+.privacy-content {
+    max-width: 800px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    line-height: 1.6;
+}
+
+.privacy-content h1 {
+    margin-bottom: 2rem;
+    color: var(--primary-color);
+}
+
+.privacy-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.privacy-content p {
+    margin-bottom: 1rem;
+    color: #666;
+}

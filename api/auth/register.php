@@ -50,8 +50,24 @@ try {
     // Insertar usuario
     $stmt = $conn->prepare("INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)");
     if ($stmt->execute([$nombre, $email, $passwordHash])) {
+        $userId = $conn->lastInsertId();
+
+        // Iniciar sesión automáticamente
+        session_start();
+        $_SESSION['user_id'] = $userId;
+        $_SESSION['user_nombre'] = $nombre;
+        $_SESSION['user_role'] = 'user'; // Default role
+
         http_response_code(201);
-        echo json_encode(['message' => 'Usuario registrado exitosamente']);
+        echo json_encode([
+            'message' => 'Usuario registrado exitosamente',
+            'user' => [
+                'id' => $userId,
+                'nombre' => $nombre,
+                'email' => $email,
+                'role' => 'user'
+            ]
+        ]);
     } else {
         throw new Exception("Error al insertar usuario");
     }
