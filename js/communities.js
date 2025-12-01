@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadGroups();
     setupTabs();
     setupButtons();
+    checkNotifications();
 });
 
 function loadRecentPortfolios() {
@@ -15,7 +16,6 @@ function loadRecentPortfolios() {
     const portfolios = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
 
     if (portfolios.length > 0) {
-        // Sort by published date (most recent first)
         portfolios.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
         grid.innerHTML = renderPortfolioCards(portfolios);
     } else {
@@ -30,11 +30,10 @@ function loadFeaturedPortfolios() {
     const portfolios = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
 
     if (portfolios.length > 0) {
-        // Sort by views (most viewed first) - Featured portfolios
         const featured = portfolios
             .filter(p => p.views > 0)
             .sort((a, b) => b.views - a.views)
-            .slice(0, 10); // Top 10
+            .slice(0, 10);
 
         if (featured.length > 0) {
             grid.innerHTML = renderPortfolioCards(featured, true);
@@ -65,18 +64,13 @@ function renderPortfolioCards(portfolios, showViews = false) {
 }
 
 window.viewPortfolio = (portfolioId) => {
-    // Increment view count
     const portfolios = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
     const portfolio = portfolios.find(p => p.id === portfolioId);
 
     if (portfolio) {
         portfolio.views = (portfolio.views || 0) + 1;
         localStorage.setItem('published_portfolios', JSON.stringify(portfolios));
-
-        // Refresh featured portfolios if we're on that tab
         loadFeaturedPortfolios();
-
-        // Show portfolio details (you can implement a modal or redirect)
         showToast(`Viendo portfolio de ${portfolio.author} (${portfolio.views} vistas)`, 'info');
     }
 };
@@ -85,18 +79,28 @@ function loadJobs() {
     const list = document.getElementById('jobs-list');
     if (!list) return;
 
-    // Load jobs from localStorage + mock data
     const localJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
     const mockJobs = [
-        { id: 1, title: 'Senior Frontend Developer', company: 'TechCorp', type: 'Full-time', desc: 'Buscamos un desarrollador con experiencia en React y TypeScript...', postedDate: '2025-11-29', location: 'Madrid' },
-        { id: 2, title: 'UI Designer', company: 'CreativeStudio', type: 'Freelance', desc: 'Diseño de interfaces para aplicaciones móviles...', postedDate: '2025-11-30', location: 'Remoto' }
+        { id: 1, title: 'Senior Frontend Developer', company: 'TechCorp', type: 'Full-time', desc: 'Buscamos un desarrollador con experiencia en React y TypeScript...', postedDate: '2025-11-29', location: 'Madrid', authorId: 'system' },
+        { id: 2, title: 'UI Designer', company: 'CreativeStudio', type: 'Freelance', desc: 'Diseño de interfaces para aplicaciones móviles...', postedDate: '2025-11-30', location: 'Remoto', authorId: 'system' }
     ];
 
+    // Merge local jobs and mock jobs, avoiding duplicates if mock jobs were saved previously (though here we just concat)
+    // In a real app, we wouldn't mix like this.
     const jobs = [...localJobs, ...mockJobs];
-    const appliedJobs = JSON.parse(localStorage.getItem('applied_jobs') || '[]');
+    // Deduplicate by ID just in case
+    const uniqueJobs = Array.from(new Map(jobs.map(item => [item.id, item])).values());
 
-    list.innerHTML = jobs.map(j => {
+    // Sort by date
+    uniqueJobs.sort((a, b) => new Date(b.postedDate) - new Date(a.postedDate));
+
+    const appliedJobs = JSON.parse(localStorage.getItem('applied_jobs') || '[]');
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    list.innerHTML = uniqueJobs.map(j => {
         const isApplied = appliedJobs.includes(j.id);
+        const isAuthor = user && (j.authorId === user.id || j.authorId === user.email); // Handle both ID formats
+
         return `
         <div class="job-card">
             <div class="job-header">
@@ -107,17 +111,34 @@ function loadJobs() {
             <div class="job-desc">${j.desc}</div>
             <div class="job-footer">
                 <span>Publicado: ${formatDate(j.postedDate)}</span>
-                <button 
-                    class="btn ${isApplied ? 'btn-success' : 'btn-primary'} btn-sm" 
-                    onclick="applyToJob(${j.id}, '${j.title}', '${j.company}')"
-                    ${isApplied ? 'disabled' : ''}
-                >
-                    ${isApplied ? 'Ya Aplicado' : 'Aplicar'}
-                </button>
+                <div class="job-actions">
+                    ${isAuthor ? `
+                        <button class="btn btn-danger btn-sm" onclick="deleteJob(${j.id})">Eliminar</button>
+                    ` : `
+                        <button 
+                            class="btn ${isApplied ? 'btn-success' : 'btn-primary'} btn-sm" 
+                            onclick="applyToJob(${j.id}, '${j.title}', '${j.company}')"
+                            ${isApplied ? 'disabled' : ''}
+                        >
+                            ${isApplied ? 'Ya Aplicado' : 'Aplicar'}
+                        </button>
+                    `}
+                </div>
             </div>
         </div>
     `}).join('');
 }
+
+window.deleteJob = (jobId) => {
+    if (!confirm('¿Estás seguro de que quieres eliminar esta oferta?')) return;
+
+    let jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+    jobs = jobs.filter(j => j.id !== jobId);
+    localStorage.setItem('jobs', JSON.stringify(jobs));
+
+    loadJobs();
+    showToast('Oferta eliminada correctamente', 'success');
+};
 
 window.applyToJob = (jobId, jobTitle, company) => {
     if (!confirm(`¿Quieres aplicar a la oferta de ${jobTitle} en ${company}?`)) return;
@@ -177,10 +198,11 @@ function loadGroups() {
 }
 
 function getGroupIcon(name) {
-    if (name.includes('React')) return '⚛️';
-    if (name.includes('Design') || name.includes('Diseño')) return '🎨';
-    if (name.includes('Freelance')) return '💼';
-    return '👥';
+    // Replaced emojis with simple text or could use SVGs. Using text for now as requested "remove emojis" usually implies replacing with icons, but text is safer if no icons available.
+    // Actually, let's use simple generic icons if possible, or just the first letter.
+    // But the user specifically asked to remove emojis.
+    // I will use a simple div with a color and initial.
+    return `<div style="width: 40px; height: 40px; background: #e0e7ff; color: #4f46e5; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">${name.substring(0, 2).toUpperCase()}</div>`;
 }
 
 window.toggleGroupJoin = (groupId, groupName, baseMembers) => {
@@ -210,6 +232,14 @@ function setupTabs() {
             document.getElementById(`${tab.dataset.tab}-view`).classList.add('active');
         });
     });
+
+    // Check URL params for tab
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    if (tabParam) {
+        const tabBtn = document.querySelector(`.tab-btn[data-tab="${tabParam}"]`);
+        if (tabBtn) tabBtn.click();
+    }
 }
 
 function setupButtons() {
@@ -226,4 +256,27 @@ function setupButtons() {
             window.location.href = 'create_job.html';
         });
     }
+}
+
+function checkNotifications() {
+    // Simple mock notification check
+    const lastVisit = localStorage.getItem('last_visit_communities');
+    const now = new Date().toISOString();
+
+    if (lastVisit) {
+        // Check if there are new jobs since last visit
+        const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+        const newJobs = jobs.filter(j => j.postedDate > lastVisit);
+
+        if (newJobs.length > 0) {
+            showToast(`Hay ${newJobs.length} nuevas ofertas de trabajo`, 'info');
+            // Add badge to jobs tab
+            const jobsTab = document.querySelector('.tab-btn[data-tab="jobs"]');
+            if (jobsTab) {
+                jobsTab.innerHTML += ` <span class="badge-new" style="background: #ef4444; color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem;">${newJobs.length}</span>`;
+            }
+        }
+    }
+
+    localStorage.setItem('last_visit_communities', now);
 }

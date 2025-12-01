@@ -1,72 +1,169 @@
-/* css/dashboard.css - Professional Minimalist Design */
-
+/* css/dashboard.css */
 .dashboard-container {
-    padding: 4rem 0;
-    min-height: 80vh;
+    padding-top: 2rem;
+    padding-bottom: 4rem;
 }
 
 .dashboard-welcome {
-    text-align: center;
-    max-width: 700px;
-    margin: 0 auto 4rem;
+    margin-bottom: 3rem;
+    animation: slideDown 0.6s ease-out;
 }
 
 .dashboard-welcome h1 {
     font-size: 2.5rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-.dashboard-welcome p {
-    font-size: 1.1rem;
-    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    max-width: 900px;
-    margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    animation: fadeIn 0.8s ease-out;
 }
 
 .dashboard-card {
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    padding: 2rem;
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
     text-decoration: none;
     color: var(--text-color);
-    transition: all 0.2s;
-    display: block;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
 }
 
 .dashboard-card:hover {
-    border-color: var(--text-color);
-    transform: translateY(-2px);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    border-color: var(--primary-color);
+}
+
+.card-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover .card-icon {
+    transform: scale(1.1) rotate(5deg);
+    background: var(--primary-light);
+}
+
+.card-content {
+    flex: 1;
 }
 
 .card-title {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
+    color: var(--text-color);
 }
 
 .card-desc {
     font-size: 0.9rem;
     color: var(--text-muted);
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
-/* Admin Card Styling - Red theme */
+.card-arrow {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--primary-color);
+}
+
+/* Specific Card Styles */
 .dashboard-card-admin {
-    border-color: #dc2626;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    color: white;
+    border: none;
+}
+
+.dashboard-card-admin .card-title,
+.dashboard-card-admin .card-desc,
+.dashboard-card-admin .card-arrow {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.dashboard-card-admin .card-icon {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .dashboard-card-admin:hover {
-    border-color: #b91c1c;
-    background-color: #fef2f2;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.3);
 }
 
-.dashboard-card-admin .card-title {
-    color: #dc2626;
+/* Animations */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Notification Badge on Admin Card */
+.dashboard-card.has-notifications::after {
+    content: attr(data-count);
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }

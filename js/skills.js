@@ -56,6 +56,8 @@ function renderSkills(type) {
 function createSkillCard(skill) {
     const levelLabel = getLevelLabel(skill.level);
     const levelClass = getLevelClass(skill.level);
+    const strokeColor = getLevelColor(skill.level);
+
     const circumference = 2 * Math.PI * 54;
     const offset = circumference - (skill.level / 100) * circumference;
 
@@ -66,12 +68,12 @@ function createSkillCard(skill) {
                     <circle class="progress-bg" cx="60" cy="60" r="54"
                         fill="none" stroke="#e5e7eb" stroke-width="8"></circle>
                     <circle class="progress-bar" cx="60" cy="60" r="54"
-                        fill="none" stroke="#10b981" stroke-width="8"
+                        fill="none" stroke="${strokeColor}" stroke-width="8"
                         stroke-dasharray="${circumference}"
                         stroke-dashoffset="${offset}"
                         transform="rotate(-90 60 60)"></circle>
                 </svg>
-                <div class="progress-text">${skill.level}%</div>
+                <div class="progress-text" style="color: ${strokeColor}">${skill.level}%</div>
             </div>
             <div class="skill-name">${skill.name}</div>
             <span class="skill-level-badge ${levelClass}">${levelLabel}</span>
@@ -95,6 +97,13 @@ function getLevelClass(level) {
     if (level >= 60) return 'level-advanced';
     if (level >= 40) return 'level-intermediate';
     return 'level-beginner';
+}
+
+function getLevelColor(level) {
+    if (level >= 80) return '#22c55e'; // Green
+    if (level >= 60) return '#3b82f6'; // Blue
+    if (level >= 40) return '#eab308'; // Yellow
+    return '#9ca3af'; // Gray
 }
 
 function updateOverview() {
@@ -137,6 +146,9 @@ function setupModal() {
         form.reset();
         document.getElementById('skill-id').value = '';
         modal.classList.add('show');
+        // Reset range input visual
+        levelInput.value = 50;
+        levelInput.dispatchEvent(new Event('input'));
     });
 
     closeBtn.addEventListener('click', () => {
@@ -214,6 +226,8 @@ window.editSkill = (id) => {
 };
 
 window.deleteSkill = (id) => {
+    if (!confirm('¿Estás seguro de que quieres eliminar esta habilidad?')) return;
+
     for (let type in skillsData) {
         skillsData[type] = skillsData[type].filter(s => s.id !== id);
     }

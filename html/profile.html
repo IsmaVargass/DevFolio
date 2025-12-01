@@ -31,9 +31,28 @@
                     <div class="profile-avatar-container">
                         <img src="../assets/default-avatar.png" alt="Profile" id="current-avatar">
                         <div class="avatar-actions">
-                            <button class="btn-icon" id="change-avatar-btn" title="Cambiar foto">📷</button>
-                            <button class="btn-icon btn-icon-danger" id="delete-avatar-btn"
-                                title="Eliminar foto">🗑️</button>
+                            <button class="btn-icon" id="change-avatar-btn" title="Cambiar foto">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                    </path>
+                                    <circle cx="12" cy="13" r="4"></circle>
+                                </svg>
+                            </button>
+                            <button class="btn-icon btn-icon-danger" id="delete-avatar-btn" title="Eliminar foto">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path
+                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                    </path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
                         </div>
                         <input type="file" id="avatar-upload" hidden accept="image/*">
                     </div>
@@ -119,7 +138,7 @@
                     <a href="experience.html">Experiencia</a>
                     <a href="communities.html">Comunidades</a>
                     <a href="messages.html">Mensajes</a>
-                    <a href="customer_support.html">Atención al Cliente</a>
+                    <a href="customer_support.html">Ayuda</a>
                 </div>
             </div>
         </div>

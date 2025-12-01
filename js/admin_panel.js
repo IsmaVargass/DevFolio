@@ -30,7 +30,7 @@ function loadStatistics() {
     // Load from localStorage
     const users = JSON.parse(localStorage.getItem('all_users') || '[]');
     const portfolios = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
-    const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+    const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
     const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
 
     document.getElementById('total-users').textContent = users.length || 1; // At least current user
@@ -48,50 +48,18 @@ function loadStatistics() {
 }
 
 function loadTickets() {
-    const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+    const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
 
     // Add some mock tickets if none exist
     if (tickets.length === 0) {
-        const mockTickets = [
-            {
-                id: 1,
-                userId: 'user1',
-                userName: 'Juan Pérez',
-                title: 'No puedo subir mi foto de perfil',
-                description: 'Cuando intento subir una imagen, me sale un error.',
-                status: 'open',
-                priority: 'high',
-                category: 'Técnico',
-                createdAt: new Date(Date.now() - 2 * 3600000).toISOString(),
-                responses: []
-            },
-            {
-                id: 2,
-                userId: 'user2',
-                userName: 'María García',
-                title: 'Pregunta sobre portfolios',
-                description: '¿Cómo puedo hacer que mi portfolio sea destacado?',
-                status: 'in_progress',
-                priority: 'medium',
-                category: 'Consulta',
-                createdAt: new Date(Date.now() - 5 * 3600000).toISOString(),
-                responses: [
-                    {
-                        author: 'Admin',
-                        text: 'Los portfolios destacados se ordenan por número de vistas.',
-                        date: new Date(Date.now() - 3 * 3600000).toISOString()
-                    }
-                ]
-            }
-        ];
-        localStorage.setItem('tickets', JSON.stringify(mockTickets));
+        // No mock tickets for now, let's rely on real data or empty state
     }
 
     renderTickets();
 }
 
 function renderTickets(filter = 'all') {
-    const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+    const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
     const list = document.getElementById('tickets-list');
 
     let filtered = tickets;
@@ -105,7 +73,7 @@ function renderTickets(filter = 'all') {
     }
 
     // Sort by date, most recent first
-    filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    filtered.sort((a, b) => new Date(b.created || b.createdAt) - new Date(a.created || a.createdAt));
 
     list.innerHTML = filtered.map(ticket => `
         <div class="ticket-item" onclick="viewTicket(${ticket.id})">
@@ -113,12 +81,12 @@ function renderTickets(filter = 'all') {
                 <span class="ticket-id">Ticket #${ticket.id}</span>
                 <span class="ticket-status status-${ticket.status}">${getStatusLabel(ticket.status)}</span>
             </div>
-            <div class="ticket-title">${ticket.title}</div>
+            <div class="ticket-title">${ticket.subject || ticket.title}</div>
             <div class="ticket-description">${ticket.description}</div>
             <div class="ticket-meta">
                 <span>Usuario: <strong>${ticket.userName}</strong></span>
                 <span class="ticket-priority priority-${ticket.priority}">Prioridad: ${getPriorityLabel(ticket.priority)}</span>
-                <span>${formatDate(ticket.createdAt)}</span>
+                <span>${formatDate(ticket.created || ticket.createdAt)}</span>
             </div>
         </div>
     `).join('');
@@ -128,7 +96,8 @@ function getStatusLabel(status) {
     const labels = {
         'open': 'Abierto',
         'in_progress': 'En Progreso',
-        'closed': 'Cerrado'
+        'closed': 'Cerrado',
+        'resolved': 'Resuelto'
     };
     return labels[status] || status;
 }
@@ -137,12 +106,14 @@ function getPriorityLabel(priority) {
     const labels = {
         'high': 'Alta',
         'medium': 'Media',
-        'low': 'Baja'
+        'low': 'Baja',
+        'urgent': 'Urgente'
     };
     return labels[priority] || priority;
 }
 
 function formatDate(dateStr) {
+    if (!dateStr) return '';
     const date = new Date(dateStr);
     const now = new Date();
     const diff = now - date;
@@ -156,7 +127,7 @@ function formatDate(dateStr) {
 }
 
 window.viewTicket = (ticketId) => {
-    const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+    const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
     const ticket = tickets.find(t => t.id === ticketId);
 
     if (!ticket) return;
@@ -165,7 +136,7 @@ window.viewTicket = (ticketId) => {
     const title = document.getElementById('ticket-modal-title');
     const content = document.getElementById('ticket-detail-content');
 
-    title.textContent = `Ticket #${ticket.id} - ${ticket.title}`;
+    title.textContent = `Ticket #${ticket.id} - ${ticket.subject || ticket.title}`;
 
     content.innerHTML = `
         <div class="ticket-detail-section">
@@ -174,7 +145,7 @@ window.viewTicket = (ticketId) => {
             <p><strong>Estado:</strong> <span class="ticket-status status-${ticket.status}">${getStatusLabel(ticket.status)}</span></p>
             <p><strong>Prioridad:</strong> <span class="priority-${ticket.priority}">${getPriorityLabel(ticket.priority)}</span></p>
             <p><strong>Categoría:</strong> ${ticket.category}</p>
-            <p><strong>Creado:</strong> ${new Date(ticket.createdAt).toLocaleString()}</p>
+            <p><strong>Creado:</strong> ${new Date(ticket.created || ticket.createdAt).toLocaleString()}</p>
         </div>
 
         <div class="ticket-detail-section">
@@ -183,9 +154,9 @@ window.viewTicket = (ticketId) => {
         </div>
 
         <div class="ticket-detail-section">
-            <h3>Respuestas (${ticket.responses.length})</h3>
+            <h3>Respuestas (${(ticket.responses || []).length})</h3>
             <div class="ticket-responses">
-                ${ticket.responses.map(r => `
+                ${(ticket.responses || []).map(r => `
                     <div class="response-item">
                         <div class="response-header">
                             <span class="response-author">${r.author}</span>
@@ -209,6 +180,7 @@ window.viewTicket = (ticketId) => {
                         <option value="open" ${ticket.status === 'open' ? 'selected' : ''}>Abierto</option>
                         <option value="in_progress" ${ticket.status === 'in_progress' ? 'selected' : ''}>En Progreso</option>
                         <option value="closed" ${ticket.status === 'closed' ? 'selected' : ''}>Cerrado</option>
+                        <option value="resolved" ${ticket.status === 'resolved' ? 'selected' : ''}>Resuelto</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Enviar Respuesta</button>
@@ -226,10 +198,12 @@ window.respondTicket = (e, ticketId) => {
     const newStatus = document.getElementById('ticket-status-update').value;
     const user = JSON.parse(localStorage.getItem('user'));
 
-    const tickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+    const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
     const ticket = tickets.find(t => t.id === ticketId);
 
     if (ticket) {
+        if (!ticket.responses) ticket.responses = [];
+
         ticket.responses.push({
             author: user.nombre,
             text: responseText,
@@ -237,12 +211,7 @@ window.respondTicket = (e, ticketId) => {
         });
         ticket.status = newStatus;
 
-        localStorage.setItem('tickets', JSON.stringify(tickets));
-
-        // Send notification to ticket creator
-        if (window.addNotification) {
-            window.addNotification('ticket', `Tu ticket #${ticketId} ha sido actualizado`, { ticketId });
-        }
+        localStorage.setItem('support_tickets', JSON.stringify(tickets));
 
         document.getElementById('ticket-modal').classList.remove('show');
         loadTickets();
@@ -278,12 +247,10 @@ function loadApplications() {
 }
 
 window.viewProfile = (userId) => {
-    // Navigate to user profile or portfolio
     window.location.href = `profile.html?user=${userId}`;
 };
 
 window.contactApplicant = (userId) => {
-    // Navigate to messages with this user
     window.location.href = `messages.html?user=${userId}`;
 };
 
@@ -292,7 +259,11 @@ function loadUsers() {
     const table = document.getElementById('users-table');
 
     const currentUser = JSON.parse(localStorage.getItem('user'));
-    const allUsers = users.length > 0 ? users : [currentUser];
+    // If no users in all_users, at least show current user
+    let allUsers = users;
+    if (allUsers.length === 0 && currentUser) {
+        allUsers = [currentUser];
+    }
 
     table.innerHTML = `
         <div class="user-row header">
@@ -317,7 +288,7 @@ function loadUsers() {
 }
 
 window.editUser = (email) => {
-    alert(`Editar usuario: ${email} (funcionalidad en desarrollo)`);
+    showToast(`Editar usuario: ${email} (funcionalidad en desarrollo)`, 'info');
 };
 
 function setupTabs() {
@@ -377,6 +348,7 @@ function showToast(message, type = 'info') {
     toast.textContent = message;
     document.body.appendChild(toast);
 
+    // Trigger reflow
     toast.offsetHeight;
     toast.classList.add('show');
 

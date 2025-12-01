@@ -6,212 +6,150 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Initialize
-    const validationResult = loadDefaultData();
-    
-    // Event Listeners
-    document.getElementById('preview-btn').addEventListener('click', updatePreview);
-    document.getElementById('export-pdf-btn').addEventListener('click', exportPDF);
-    document.getElementById('publish-btn').addEventListener('click', publishPortfolio);
+    // Load initial data
+    loadInitialData(user);
 
-    const goToProfileBtn = document.getElementById('go-to-profile-btn');
-    if (goToProfileBtn) {
-        goToProfileBtn.addEventListener('click', () => {
-            // Determine where to send user based on what's missing
-            const experience = JSON.parse(localStorage.getItem('experience') || '[]');
-            const education = JSON.parse(localStorage.getItem('education') || '[]');
-            
-            if (!user.nombre || user.nombre === 'Usuario') {
-                window.location.href = 'profile.html';
-            } else if (experience.length === 0 || education.length === 0) {
-                window.location.href = 'experience.html';
-            } else {
-                window.location.href = 'profile.html';
-            }
-        });
-    }
+    // Event Listeners for Inputs
+    const inputs = [
+        'input-name', 'input-title', 'input-email', 
+        'input-about', 'input-projects', 'input-color',
+        'check-experience', 'check-education'
+    ];
 
-    const themeInput = document.getElementById('theme-color');
-    if (themeInput) {
-        themeInput.addEventListener('input', updatePreview);
-    }
+    inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', updatePreview);
+            el.addEventListener('change', updatePreview);
+        }
+    });
 
-    document.getElementById('about-me').addEventListener('input', updatePreview);
-    document.getElementById('projects-text').addEventListener('input', updatePreview);
+    // Action Buttons
+    document.getElementById('btn-export').addEventListener('click', exportPDF);
+    document.getElementById('btn-publish').addEventListener('click', publishPortfolio);
 
-    // Initial preview
-    setTimeout(updatePreview, 500);
-
-    // Disable publish/export if validation fails
-    if (!validationResult.isValid) {
-        document.getElementById('publish-btn').disabled = true;
-        document.getElementById('export-pdf-btn').disabled = true;
-        document.getElementById('publish-btn').style.opacity = '0.5';
-        document.getElementById('export-pdf-btn').style.opacity = '0.5';
-        document.getElementById('publish-btn').title = 'Completa todos los datos requeridos primero';
-        document.getElementById('export-pdf-btn').title = 'Completa todos los datos requeridos primero';
-    }
+    // Initial Preview
+    updatePreview();
 });
 
-function loadDefaultData() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    let isValid = true;
-    let missingFields = [];
+function toggleAccordion(header) {
+    const item = header.parentElement;
+    const isActive = item.classList.contains('active');
+    
+    // Close all items
+    document.querySelectorAll('.accordion-item').forEach(i => {
+        i.classList.remove('active');
+    });
 
-    // 1. Name
-    const nameElement = document.getElementById('default-name');
-    const nameStatus = document.getElementById('name-status');
-    if (user.nombre && user.nombre !== 'Usuario') {
-        nameElement.textContent = user.nombre;
-        nameStatus.textContent = '✓';
-        nameStatus.style.color = '#10b981';
-    } else {
-        nameElement.textContent = 'Sin nombre';
-        nameStatus.textContent = '✗';
-        nameStatus.style.color = '#dc2626';
-        isValid = false;
-        missingFields.push('nombre');
+    // Open clicked item if it wasn't active
+    if (!isActive) {
+        item.classList.add('active');
     }
+}
 
-    // 2. Sector (Derived from Experience)
+function loadInitialData(user) {
+    // Basic Info
+    document.getElementById('input-name').value = user.nombre || '';
+    document.getElementById('input-email').value = user.email || '';
+
+    // Try to derive title from experience
     const experience = JSON.parse(localStorage.getItem('experience') || '[]');
     const currentJob = experience.find(exp => !exp.endDate || exp.endDate.toLowerCase() === 'presente' || exp.endDate.toLowerCase() === 'actualidad');
-
-    const sectorElement = document.getElementById('default-sector');
-    const sectorStatus = document.getElementById('sector-status');
-    let sector = '';
     
     if (currentJob) {
-        sector = currentJob.title + ' en ' + currentJob.company;
-        sectorElement.textContent = sector;
-        sectorStatus.textContent = '✓';
-        sectorStatus.style.color = '#10b981';
+        document.getElementById('input-title').value = `${currentJob.title} en ${currentJob.company}`;
     } else if (experience.length > 0) {
-        const lastJob = experience[0];
-        sector = lastJob.title + ' (Ex-' + lastJob.company + ')';
-        sectorElement.textContent = sector;
-        sectorStatus.textContent = '✓';
-        sectorStatus.style.color = '#10b981';
-    } else {
-        sectorElement.textContent = 'Sin experiencia registrada';
-        sectorStatus.textContent = '✗';
-        sectorStatus.style.color = '#dc2626';
-        isValid = false;
-        missingFields.push('experiencia');
+        document.getElementById('input-title').value = experience[0].title;
     }
-    sectorElement.dataset.value = sector;
-
-    // 3. Studies
-    const education = JSON.parse(localStorage.getItem('education') || '[]');
-    const educationElement = document.getElementById('default-education');
-    const educationStatus = document.getElementById('education-status');
-    
-    if (education.length > 0) {
-        const educationText = education.map(edu => `${edu.degree} en ${edu.school}`).join(', ');
-        educationElement.textContent = educationText;
-        educationStatus.textContent = '✓';
-        educationStatus.style.color = '#10b981';
-    } else {
-        educationElement.textContent = 'Sin estudios registrados';
-        educationStatus.textContent = '✗';
-        educationStatus.style.color = '#dc2626';
-        isValid = false;
-        missingFields.push('educación');
-    }
-    educationElement.dataset.value = JSON.stringify(education);
-
-    // Show/hide warning
-    const warningBox = document.getElementById('missing-data-warning');
-    if (!isValid) {
-        warningBox.style.display = 'block';
-        const validationBox = document.getElementById('validation-box');
-        validationBox.style.borderColor = '#dc2626';
-        validationBox.style.backgroundColor = '#fef2f2';
-    } else {
-        warningBox.style.display = 'none';
-    }
-
-    return { isValid, missingFields };
 }
 
 function updatePreview() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const themeColor = document.getElementById('theme-color').value;
-    const aboutMe = document.getElementById('about-me').value;
-    const projects = document.getElementById('projects-text').value;
+    const data = {
+        name: document.getElementById('input-name').value || 'Tu Nombre',
+        title: document.getElementById('input-title').value || 'Tu Título Profesional',
+        email: document.getElementById('input-email').value || 'tu@email.com',
+        about: document.getElementById('input-about').value,
+        projects: document.getElementById('input-projects').value,
+        color: document.getElementById('input-color').value,
+        showExp: document.getElementById('check-experience').checked,
+        showEdu: document.getElementById('check-education').checked
+    };
 
-    const sector = document.getElementById('default-sector').dataset.value || 'Sector no definido';
-    const education = JSON.parse(document.getElementById('default-education').dataset.value || '[]');
+    const experience = JSON.parse(localStorage.getItem('experience') || '[]');
+    const education = JSON.parse(localStorage.getItem('education') || '[]');
 
-    const preview = document.getElementById('portfolio-preview');
-
+    const preview = document.getElementById('preview-paper');
+    
     preview.innerHTML = `
-        <div class="pdf-container" style="background: white; padding: 3rem; max-width: 800px; margin: 0 auto; font-family: 'Inter', sans-serif; color: #333;">
-            <!-- Header / Default Section -->
-            <div style="border-bottom: 4px solid ${themeColor}; padding-bottom: 2rem; margin-bottom: 2rem;">
-                <h1 style="font-size: 2.5rem; margin: 0; color: #111;">${user.nombre}</h1>
-                <h2 style="font-size: 1.2rem; color: ${themeColor}; margin: 0.5rem 0 0 0; font-weight: 600; text-transform: uppercase;">${sector}</h2>
-                
-                <div style="margin-top: 1.5rem;">
-                    <h3 style="font-size: 1rem; color: #666; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Formación Académica</h3>
-                    ${education.length > 0 ?
-                        `<ul style="margin: 0; padding-left: 1.2rem;">
-                            ${education.map(edu => `<li style="margin-bottom: 0.3rem;"><strong>${edu.degree}</strong> - ${edu.school} <span style="color:#777; font-size:0.9em;">(${edu.year})</span></li>`).join('')}
-                        </ul>`
-                        : '<p style="font-style: italic; color: #888;">No hay estudios registrados.</p>'}
-                </div>
-            </div>
-
-            <!-- User Added Content -->
-            ${aboutMe ? `
-            <div style="margin-bottom: 2rem;">
-                <h3 style="color: ${themeColor}; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Sobre Mí</h3>
-                <p style="line-height: 1.6; white-space: pre-line;">${aboutMe}</p>
-            </div>
-            ` : ''}
-
-            ${projects ? `
-            <div style="margin-bottom: 2rem;">
-                <h3 style="color: ${themeColor}; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Proyectos Destacados</h3>
-                <p style="line-height: 1.6; white-space: pre-line;">${projects}</p>
-            </div>
-            ` : ''}
-            
-            <div style="margin-top: 4rem; text-align: center; font-size: 0.8rem; color: #aaa; border-top: 1px solid #eee; padding-top: 1rem;">
-                Generado con DevFolio
-            </div>
+        <div class="preview-header" style="border-color: ${data.color}">
+            <h1 class="preview-name">${data.name}</h1>
+            <h2 class="preview-title" style="color: ${data.color}">${data.title}</h2>
+            <p style="margin-top: 0.5rem; color: #666;">${data.email}</p>
         </div>
+
+        ${data.about ? `
+        <div class="preview-section">
+            <h3 class="preview-section-title">Sobre Mí</h3>
+            <p style="line-height: 1.6; color: #4b5563;">${data.about.replace(/\n/g, '<br>')}</p>
+        </div>
+        ` : ''}
+
+        ${data.showExp && experience.length > 0 ? `
+        <div class="preview-section">
+            <h3 class="preview-section-title">Experiencia Laboral</h3>
+            ${experience.map(exp => `
+                <div class="preview-item">
+                    <div class="preview-item-title">${exp.title}</div>
+                    <div class="preview-item-subtitle">${exp.company} • ${exp.startDate} - ${exp.endDate}</div>
+                    <p style="margin-top: 0.25rem; font-size: 0.9rem; color: #4b5563;">${exp.description || ''}</p>
+                </div>
+            `).join('')}
+        </div>
+        ` : ''}
+
+        ${data.showEdu && education.length > 0 ? `
+        <div class="preview-section">
+            <h3 class="preview-section-title">Formación Académica</h3>
+            ${education.map(edu => `
+                <div class="preview-item">
+                    <div class="preview-item-title">${edu.degree}</div>
+                    <div class="preview-item-subtitle">${edu.school} • ${edu.year}</div>
+                </div>
+            `).join('')}
+        </div>
+        ` : ''}
+
+        ${data.projects ? `
+        <div class="preview-section">
+            <h3 class="preview-section-title">Proyectos Destacados</h3>
+            <p style="line-height: 1.6; color: #4b5563;">${data.projects.replace(/\n/g, '<br>')}</p>
+        </div>
+        ` : ''}
     `;
 }
 
 function exportPDF() {
-    // Use browser's print functionality
     window.print();
 }
 
 function publishPortfolio() {
-    if (!confirm('¿Estás seguro de que quieres publicar tu portfolio?')) return;
-
     const user = JSON.parse(localStorage.getItem('user'));
-    const sector = document.getElementById('default-sector').dataset.value;
+    if (!confirm('¿Estás seguro de que quieres publicar tu portfolio?')) return;
 
     const data = {
         id: Date.now(),
         userId: user.id || user.email,
-        title: `Portfolio de ${user.nombre}`,
-        author: user.nombre,
-        tags: [sector.split(' ')[0], 'Profesional'],
+        title: `Portfolio de ${document.getElementById('input-name').value}`,
+        author: document.getElementById('input-name').value,
+        tags: [document.getElementById('input-title').value.split(' ')[0] || 'Dev', 'Profesional'],
         photo: getUserAvatar(user),
         publishedDate: new Date().toISOString(),
         views: 0
     };
 
     const published = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
-    
-    // Remove previous portfolio from same user
     const filtered = published.filter(p => p.userId !== data.userId);
     filtered.unshift(data);
-    
     localStorage.setItem('published_portfolios', JSON.stringify(filtered));
 
     showToast('Portfolio publicado con éxito', 'success');

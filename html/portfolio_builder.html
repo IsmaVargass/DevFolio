@@ -22,80 +22,117 @@
         </div>
     </nav>
 
-    <main class="container builder-container">
-        <div class="builder-header">
-            <h1>Constructor de Portfolio</h1>
-            <div class="builder-actions">
-                <button id="preview-btn" class="btn btn-outline">Actualizar Vista</button>
-                <button id="export-pdf-btn" class="btn btn-primary">Descargar PDF</button>
-                <button id="publish-btn" class="btn btn-primary">Publicar</button>
+    <main class="builder-container">
+        <!-- Sidebar - Editor -->
+        <aside class="builder-sidebar">
+            <div class="sidebar-header">
+                <h2>Constructor de Portfolio</h2>
             </div>
-        </div>
 
-        <div class="builder-grid">
-            <div class="builder-form">
-                <div class="info-box" id="validation-box">
-                    <h3>Sección Predeterminada</h3>
-                    <p>Tu portfolio incluirá automáticamente:</p>
-                    <ul>
-                        <li>
-                            <strong>Nombre y Apellidos:</strong>
-                            <span id="default-name">Cargando...</span>
-                            <span class="status-indicator" id="name-status"></span>
-                        </li>
-                        <li>
-                            <strong>Sector:</strong>
-                            <span id="default-sector">Calculando...</span>
-                            <span class="status-indicator" id="sector-status"></span>
-                        </li>
-                        <li>
-                            <strong>Estudios:</strong>
-                            <span id="default-education">Cargando...</span>
-                            <span class="status-indicator" id="education-status"></span>
-                        </li>
-                    </ul>
-                    <div id="missing-data-warning" style="display: none; margin-top: 1rem;">
-                        <p style="color: #dc2626; font-weight: 500;">Faltan datos requeridos para generar el portfolio.
-                        </p>
-                        <button id="go-to-profile-btn" class="btn btn-outline"
-                            style="margin-top: 0.5rem; border-color: #dc2626; color: #dc2626;">
-                            Completar Perfil
-                        </button>
+            <div class="sidebar-content">
+                <!-- Section 1: Basic Info -->
+                <div class="accordion-item active">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Información Básica</span>
+                        <span class="accordion-icon">▼</span>
                     </div>
-                </div>
-
-                <section class="form-section">
-                    <h2>Contenido Adicional</h2>
-                    <p class="text-muted">Añade más información para personalizar tu portfolio.</p>
-
-                    <div class="form-group">
-                        <label>Color del Tema</label>
-                        <input type="color" id="theme-color" value="#2563eb" style="width: 100%; height: 40px;">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Sobre Mí (Adicional)</label>
-                        <textarea id="about-me" rows="4"
-                            placeholder="Añade una descripción extra si lo deseas..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Proyectos Destacados</label>
-                        <div id="projects-container">
-                            <textarea id="projects-text" rows="4"
-                                placeholder="Describe tus proyectos principales..."></textarea>
+                    <div class="accordion-content">
+                        <div class="form-group">
+                            <label>Nombre Completo</label>
+                            <input type="text" id="input-name" class="form-control" placeholder="Tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label>Título Profesional</label>
+                            <input type="text" id="input-title" class="form-control"
+                                placeholder="Ej. Desarrollador Web Full Stack">
+                        </div>
+                        <div class="form-group">
+                            <label>Email de Contacto</label>
+                            <input type="email" id="input-email" class="form-control" placeholder="tu@email.com">
                         </div>
                     </div>
-                </section>
-            </div>
+                </div>
 
-            <div class="builder-preview" id="portfolio-preview">
-                <!-- Preview content will be rendered here -->
-                <div class="preview-placeholder">
-                    <p>Cargando vista previa...</p>
+                <!-- Section 2: About Me -->
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Sobre Mí</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="form-group">
+                            <label>Descripción Profesional</label>
+                            <textarea id="input-about" class="form-control"
+                                placeholder="Escribe un breve resumen de tu perfil..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Experience & Education -->
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Experiencia y Educación</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                            Estos datos se cargan automáticamente de tu perfil.
+                            <a href="experience.html" style="color: var(--primary-color);">Editar en Experiencia</a>
+                        </p>
+                        <div class="form-group">
+                            <label>Mostrar Experiencia</label>
+                            <input type="checkbox" id="check-experience" checked>
+                        </div>
+                        <div class="form-group">
+                            <label>Mostrar Educación</label>
+                            <input type="checkbox" id="check-education" checked>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Projects -->
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Proyectos Destacados</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="form-group">
+                            <label>Descripción de Proyectos</label>
+                            <textarea id="input-projects" class="form-control"
+                                placeholder="Describe tus proyectos más importantes..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Styles -->
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Personalización</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="form-group">
+                            <label>Color Principal</label>
+                            <input type="color" id="input-color" class="form-control" value="#2563eb"
+                                style="height: 50px;">
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <div class="sidebar-footer">
+                <button id="btn-export" class="btn btn-secondary btn-full">Descargar PDF</button>
+                <button id="btn-publish" class="btn btn-primary btn-full">Publicar</button>
+            </div>
+        </aside>
+
+        <!-- Preview Area -->
+        <section class="builder-preview">
+            <div id="preview-paper" class="preview-paper">
+                <!-- Content will be injected here via JS -->
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -104,7 +141,7 @@
                 <h3>Legal</h3>
                 <ul>
                     <li><a href="privacy.html">Política de Privacidad</a></li>
-                    <li><a href="#">Términos de Servicio</a></li>
+                    <li><a href="terms.html">Términos de Servicio</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -115,16 +152,16 @@
                     <a href="#" target="_blank">Instagram</a>
                 </div>
             </div>
-            <div class="footer-section">
+            <div class="footer-section footer-shortcuts">
                 <h3>Atajos</h3>
-                <div class="social-links">
+                <div class="shortcuts-grid">
                     <a href="portfolio_builder.html">Portfolio</a>
                     <a href="profile.html">Perfil</a>
                     <a href="skills.html">Skills</a>
                     <a href="experience.html">Experiencia</a>
                     <a href="communities.html">Comunidades</a>
                     <a href="messages.html">Mensajes</a>
-                    <a href="customer_support.html">Atención al Cliente</a>
+                    <a href="customer_support.html">Ayuda</a>
                 </div>
             </div>
         </div>
