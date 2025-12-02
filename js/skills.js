@@ -1,11 +1,12 @@
 /* js/skills.js - Enhanced Dynamic Skills System with Green Circles */
+
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    loadSkills();
-    setupTabs();
-    setupModal();
-    updateOverview();
+    console.log('Skills page loaded, initializing...');
+    initializeSkills();
 });
 
+// Default skills data
 let skillsData = {
     technical: [
         { id: 1, name: 'JavaScript', level: 90, type: 'technical' },
@@ -24,15 +25,36 @@ let skillsData = {
     ]
 };
 
+/* ============================================
+   INITIALIZATION
+   ============================================ */
+function initializeSkills() {
+    loadSkills();
+    setupTabs();
+    setupModal();
+    updateOverview();
+}
+
 function loadSkills() {
+    console.log('Loading skills from localStorage...');
     const stored = localStorage.getItem('skills');
+
     if (stored) {
-        const allSkills = JSON.parse(stored);
-        skillsData = {
-            technical: allSkills.filter(s => s.type === 'technical'),
-            soft: allSkills.filter(s => s.type === 'soft'),
-            hard: allSkills.filter(s => s.type === 'hard')
-        };
+        try {
+            const allSkills = JSON.parse(stored);
+            skillsData = {
+                technical: allSkills.filter(s => s.type === 'technical'),
+                soft: allSkills.filter(s => s.type === 'soft'),
+                hard: allSkills.filter(s => s.type === 'hard')
+            };
+            console.log('Skills loaded from localStorage');
+        } catch (e) {
+            console.error('Error parsing skills from localStorage:', e);
+            saveDefaultSkills();
+        }
+    } else {
+        console.log('No skills in localStorage, using defaults');
+        saveDefaultSkills();
     }
 
     renderSkills('technical');
@@ -41,8 +63,22 @@ function loadSkills() {
     updateOverview();
 }
 
+function saveDefaultSkills() {
+    const allSkills = [...skillsData.technical, ...skillsData.soft, ...skillsData.hard];
+    localStorage.setItem('skills', JSON.stringify(allSkills));
+    console.log('Default skills saved to localStorage');
+}
+
+/* ============================================
+   RENDERING
+   ============================================ */
 function renderSkills(type) {
     const grid = document.getElementById(`${type}-grid`);
+    if (!grid) {
+        console.error(`Grid not found for type: ${type}`);
+        return;
+    }
+
     const skills = skillsData[type];
 
     if (skills.length === 0) {
@@ -62,7 +98,7 @@ function createSkillCard(skill) {
     const offset = circumference - (skill.level / 100) * circumference;
 
     return `
-        <div class="skill-card">
+        <div class="skill-card" id="skill-card-${skill.id}" data-skill-id="${skill.id}">
             <div class="skill-progress-circle">
                 <svg width="120" height="120">
                     <circle class="progress-bg" cx="60" cy="60" r="54"
@@ -85,6 +121,9 @@ function createSkillCard(skill) {
     `;
 }
 
+/* ============================================
+   HELPER FUNCTIONS
+   ============================================ */
 function getLevelLabel(level) {
     if (level >= 80) return 'Experto';
     if (level >= 60) return 'Avanzado';
@@ -119,6 +158,9 @@ function updateOverview() {
     document.getElementById('expert-skills').textContent = expertSkills;
 }
 
+/* ============================================
+   TABS
+   ============================================ */
 function setupTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
     tabs.forEach(tab => {
@@ -132,6 +174,9 @@ function setupTabs() {
     });
 }
 
+/* ============================================
+   MODAL
+   ============================================ */
 function setupModal() {
     const modal = document.getElementById('skill-modal');
     const addBtn = document.getElementById('add-skill-btn');
@@ -140,6 +185,11 @@ function setupModal() {
     const levelInput = document.getElementById('skill-level');
     const levelVal = document.getElementById('skill-level-val');
     const levelLabel = document.getElementById('skill-level-label');
+
+    if (!modal || !addBtn || !closeBtn || !form) {
+        console.error('Modal elements not found');
+        return;
+    }
 
     addBtn.addEventListener('click', () => {
         document.getElementById('modal-title').textContent = 'Añadir Habilidad';
@@ -183,14 +233,22 @@ function saveSkill() {
     const level = parseInt(document.getElementById('skill-level').value);
 
     if (id) {
+        // Edit existing skill
         const allSkills = [...skillsData.technical, ...skillsData.soft, ...skillsData.hard];
         const skill = allSkills.find(s => s.id == id);
         if (skill) {
+            // Remove from old category
+            for (let t in skillsData) {
+                skillsData[t] = skillsData[t].filter(s => s.id != id);
+            }
+            // Update and add to new category
             skill.name = name;
             skill.type = type;
             skill.level = level;
+            skillsData[type].push(skill);
         }
     } else {
+        // Add new skill
         const newSkill = {
             id: Date.now(),
             name,
@@ -208,7 +266,11 @@ function saveSkill() {
     showToast('Skill guardada correctamente', 'success');
 }
 
-window.editSkill = (id) => {
+/* ============================================
+   EDIT SKILL - GLOBAL FUNCTION
+   ============================================ */
+window.editSkill = function (id) {
+    console.log('editSkill called for id:', id);
     const allSkills = [...skillsData.technical, ...skillsData.soft, ...skillsData.hard];
     const skill = allSkills.find(s => s.id === id);
 
@@ -222,23 +284,61 @@ window.editSkill = (id) => {
         document.getElementById('skill-level').dispatchEvent(new Event('input'));
 
         document.getElementById('skill-modal').classList.add('show');
+    } else {
+        console.error('Skill not found:', id);
     }
 };
 
-window.deleteSkill = (id) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta habilidad?')) return;
+/* ============================================
+   DELETE SKILL - GLOBAL FUNCTION WITH ANIMATION
+   ============================================ */
+window.deleteSkill = function (id) {
+    console.log('deleteSkill called for id:', id);
 
-    for (let type in skillsData) {
-        skillsData[type] = skillsData[type].filter(s => s.id !== id);
+    // Find the skill card element
+    const skillCard = document.getElementById(`skill-card-${id}`);
+
+    if (!skillCard) {
+        console.error('Skill card not found for id:', id);
+        return;
     }
 
-    const allSkills = [...skillsData.technical, ...skillsData.soft, ...skillsData.hard];
-    localStorage.setItem('skills', JSON.stringify(allSkills));
+    console.log('Hiding skill card with animation...');
 
-    loadSkills();
-    showToast('Skill eliminada correctamente', 'success');
+    // Add fade-out and scale-down animation
+    skillCard.style.transition = 'all 0.3s ease-out';
+    skillCard.style.opacity = '0';
+    skillCard.style.transform = 'scale(0.8)';
+    skillCard.style.pointerEvents = 'none';
+
+    // After animation completes, remove from data and DOM
+    setTimeout(() => {
+        console.log('Removing skill from data...');
+
+        // Remove skill from all categories
+        for (let type in skillsData) {
+            const beforeLength = skillsData[type].length;
+            skillsData[type] = skillsData[type].filter(s => s.id !== id);
+            if (skillsData[type].length < beforeLength) {
+                console.log(`Removed skill from ${type} category`);
+            }
+        }
+
+        // Save to localStorage
+        const allSkills = [...skillsData.technical, ...skillsData.soft, ...skillsData.hard];
+        localStorage.setItem('skills', JSON.stringify(allSkills));
+
+        console.log('Skill deleted successfully, reloading...');
+
+        // Reload and update
+        loadSkills();
+        showToast('Skill eliminada correctamente', 'success');
+    }, 300);
 };
 
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
 function showToast(message, type = 'info') {
     const existingToast = document.querySelector('.toast');
     if (existingToast) existingToast.remove();
