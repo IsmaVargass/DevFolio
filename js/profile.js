@@ -320,18 +320,25 @@ function compressImage(dataUrl, callback) {
 }
 
 function handleAvatarDelete() {
-    if (!confirm('¿Estás seguro de que quieres eliminar tu foto de perfil?')) return;
-
+    console.log('handleAvatarDelete called - restoring default avatar');
+    
     const user = JSON.parse(localStorage.getItem('user'));
+    
+    // Remove the custom photo to restore default
     delete user.profile_photo;
     localStorage.setItem('user', JSON.stringify(user));
 
-    document.getElementById('current-avatar').src = getUserAvatar(user);
-
+    // Update the avatar image to default (initials-based)
+    const avatarImg = document.getElementById('current-avatar');
+    if (avatarImg) {
+        avatarImg.src = getUserAvatar(user);
+        console.log('Avatar restored to default (initials)');
+    }
+    
     // Update profile completion
     calculateProfileCompletion(user);
 
-    showToast('Foto de perfil eliminada correctamente', 'success');
+    showToast('Foto restaurada al avatar predeterminado', 'success');
 }
 
 /* ============================================
