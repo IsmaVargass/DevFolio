@@ -12,22 +12,22 @@ let currentPortfolioId = null;
 // Use window.onload to ensure all resources are loaded
 window.onload = () => {
     console.log('Communities page loaded');
-    try { loadRecentPortfolios(); } catch(e) { console.error('Error loading recent:', e); }
-    try { loadFeaturedPortfolios(); } catch(e) { console.error('Error loading featured:', e); }
-    try { loadJobs(); } catch(e) { console.error('Error loading jobs:', e); }
-    try { loadGroups(); } catch(e) { console.error('Error loading groups:', e); }
-    
+    try { loadRecentPortfolios(); } catch (e) { console.error('Error loading recent:', e); }
+    try { loadFeaturedPortfolios(); } catch (e) { console.error('Error loading featured:', e); }
+    try { loadJobs(); } catch (e) { console.error('Error loading jobs:', e); }
+    try { loadGroups(); } catch (e) { console.error('Error loading groups:', e); }
+
     // Setup tabs with logging
-    try { 
-        setupTabs(); 
+    try {
+        setupTabs();
         console.log('Tabs setup complete');
-    } catch(e) { 
-        console.error('Error setting up tabs:', e); 
+    } catch (e) {
+        console.error('Error setting up tabs:', e);
     }
-    
-    try { setupButtons(); } catch(e) { console.error('Error setting up buttons:', e); }
-    try { checkNotifications(); } catch(e) { console.error('Error checking notifications:', e); }
-    try { setupJobFilters(); } catch(e) { console.error('Error setting up filters:', e); }
+
+    try { setupButtons(); } catch (e) { console.error('Error setting up buttons:', e); }
+    try { checkNotifications(); } catch (e) { console.error('Error checking notifications:', e); }
+    try { setupJobFilters(); } catch (e) { console.error('Error setting up filters:', e); }
 };
 
 // Global function for direct onclick access
@@ -38,7 +38,7 @@ window.switchTab = (tabName) => {
 
     const tabBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
     if (tabBtn) tabBtn.classList.add('active');
-    
+
     const view = document.getElementById(`${tabName}-view`);
     if (view) view.classList.add('active');
 };
@@ -131,14 +131,14 @@ window.viewPortfolio = (portfolioId) => {
         // Increment views
         portfolio.views = (portfolio.views || 0) + 1;
         localStorage.setItem('published_portfolios', JSON.stringify(portfolios));
-        
+
         // Store for messaging
         messageRecipient = portfolio.author;
         currentPortfolioId = portfolioId;
-        
+
         // Show modal with complete portfolio
         showPortfolioModal(portfolio);
-        
+
         // Reload featured to update view counts
         loadFeaturedPortfolios();
     }
@@ -147,9 +147,9 @@ window.viewPortfolio = (portfolioId) => {
 function showPortfolioModal(portfolio) {
     const modal = document.getElementById('portfolio-modal');
     const content = document.getElementById('portfolio-modal-content');
-    
+
     const color = portfolio.color || '#2563eb';
-    
+
     content.innerHTML = `
         <div class="portfolio-modal-header" style="border-color: ${color}">
             <h1 class="portfolio-modal-name">${portfolio.author}</h1>
@@ -202,7 +202,7 @@ function showPortfolioModal(portfolio) {
             <button class="btn btn-primary" onclick="openMessageModal('${portfolio.author}')">Enviar Mensaje</button>
         </div>
     `;
-    
+
     modal.classList.add('active');
 }
 
@@ -217,7 +217,7 @@ window.openMessageModal = (recipient) => {
     document.getElementById('message-recipient').textContent = recipient;
     document.getElementById('message-text').value = '';
     modal.classList.add('active');
-    
+
     // Close portfolio modal if open
     closePortfolioModal();
 };
@@ -229,20 +229,20 @@ window.closeMessageModal = () => {
 
 window.sendMessageToOwner = () => {
     const messageText = document.getElementById('message-text').value.trim();
-    
+
     if (!messageText) {
         showToast('Por favor escribe un mensaje', 'error');
         return;
     }
-    
+
     if (!messageRecipient) {
         showToast('No se pudo identificar al destinatario', 'error');
         return;
     }
-    
+
     const messages = JSON.parse(localStorage.getItem('messages') || '[]');
     const user = JSON.parse(localStorage.getItem('user'));
-    
+
     messages.push({
         id: Date.now(),
         from: user.nombre || user.email,
@@ -252,9 +252,9 @@ window.sendMessageToOwner = () => {
         date: new Date().toLocaleDateString(),
         type: 'portfolio_inquiry'
     });
-    
+
     localStorage.setItem('messages', JSON.stringify(messages));
-    
+
     showToast(`Mensaje enviado a ${messageRecipient}`, 'success');
     closeMessageModal();
 };
@@ -263,12 +263,12 @@ window.sendMessageToOwner = () => {
 async function loadJobs(keyword = '', location = '') {
     const list = document.getElementById('jobs-list');
     if (!list) return;
-    
+
     list.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div><p>Cargando ofertas de trabajo...</p></div>';
-    
+
     try {
         const jobs = await fetchAdzunaJobs(keyword, location);
-        
+
         if (jobs.length > 0) {
             list.innerHTML = jobs.map(j => `
                 <div class="job-card external" onclick="window.open('${j.redirect_url}', '_blank')">
@@ -305,27 +305,27 @@ async function loadJobs(keyword = '', location = '') {
 async function fetchAdzunaJobs(keyword = '', location = '') {
     const page = 1;
     const resultsPerPage = 20;
-    
+
     // Category filter for IT/Programming jobs only
     // Adzuna category: it-jobs
     const category = 'it-jobs';
-    
+
     let url = `${ADZUNA_API_BASE}/${page}?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_APP_KEY}&results_per_page=${resultsPerPage}&content-type=application/json&category=${category}`;
-    
+
     if (keyword) {
         url += `&what=${encodeURIComponent(keyword)}`;
     }
-    
+
     if (location) {
         url += `&where=${encodeURIComponent(location)}`;
     }
-    
+
     const response = await fetch(url);
-    
+
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data.results || [];
 }
@@ -339,7 +339,7 @@ function setupJobFilters() {
             loadJobs(keyword, location);
         });
     }
-    
+
     // Allow Enter key in keyword field
     const keywordInput = document.getElementById('job-keyword');
     if (keywordInput) {
@@ -358,7 +358,7 @@ function formatJobDate(dateString) {
     const now = new Date();
     const diffTime = Math.abs(now - date);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) return 'Hoy';
     if (diffDays === 1) return 'Ayer';
     if (diffDays < 7) return `Hace ${diffDays} días`;
@@ -404,7 +404,7 @@ function getGroupIcon(name) {
     const colors = ['#e0e7ff', '#fce7f3', '#dbeafe', '#d1fae5', '#fee2e2'];
     const textColors = ['#4f46e5', '#ec4899', '#3b82f6', '#10b981', '#ef4444'];
     const index = name.length % colors.length;
-    
+
     return `<div style="width: 40px; height: 40px; background: ${colors[index]}; color: ${textColors[index]}; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1rem;">${name.substring(0, 2).toUpperCase()}</div>`;
 }
 

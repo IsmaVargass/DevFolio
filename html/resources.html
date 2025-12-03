@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursos - DevFolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/resources.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">DevFolio</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Volver al Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container resources-container">
+        <div class="resources-header">
+            <h1>📚 Recursos y Documentación</h1>
+            <p class="resources-subtitle">Aprende, mejora y mantente actualizado con los mejores recursos para impulsar
+                tu carrera</p>
+        </div>
+
+        <div class="resources-tabs">
+            <button class="tab-btn active" data-tab="tutorials" onclick="switchTab('tutorials')">Tutoriales</button>
+            <button class="tab-btn" data-tab="templates" onclick="switchTab('templates')">Plantillas</button>
+            <button class="tab-btn" data-tab="tools" onclick="switchTab('tools')">Herramientas</button>
+            <button class="tab-btn" data-tab="articles" onclick="switchTab('articles')">Artículos</button>
+        </div>
+
+        <div class="resources-content">
+            <!-- Tutoriales Tab -->
+            <div id="tutorials-view" class="content-view active">
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon">🎓</div>
+                        <h3>Cómo Crear un Portfolio Profesional</h3>
+                        <p>Guía completa paso a paso para crear un portfolio que destaque y atraiga empleadores.</p>
+                        <div class="resource-meta">
+                            <span class="resource-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                15 min
+                            </span>
+                            <span class="resource-level level-beginner">Principiante</span>
+                        </div>
+                        <a href="#" class="btn btn-outline btn-small" onclick="showComingSoon(); return false;">Ver
+                            Tutorial</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon">💼</div>
+                        <h3>Optimiza tu Perfil de LinkedIn</h3>
+                        <p>Consejos y trucos para mejorar tu presencia profesional en LinkedIn y conseguir más
+                            oportunidades.</p>
+                        <div class="resource-meta">
+                            <span class="resource-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                20 min
+                            </span>
+                            <span class="resource-level level-intermediate">Intermedio</span>
+                        </div>
+                        <a href="#" class="btn btn-outline btn-small" onclick="showComingSoon(); return false;">Ver
+                            Tutorial</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon">🚀</div>
+                        <h3>Skills que Todo Dev Debe Tener en 2025</h3>
+                        <p>Descubre las tecnologías y habilidades más demandadas por las empresas este año.</p>
+                        <div class="resource-meta">
+                            <span class="resource-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                12 min
+                            </span>
+                            <span class="resource-level level-all">Todos</span>
+                        </div>
+                        <a href="#" class="btn btn-outline btn-small" onclick="showComingSoon(); return false;">Ver
+                            Tutorial</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon">📝</div>
+                        <h3>Cómo Redactar un CV que Destaque</h3>
+                        <p>Aprende a estructurar y escribir un currículum vitae que llame la atención de los
+                            reclutadores.</p>
+                        <div class="resource-meta">
+                            <span class="resource-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                18 min
+                            </span>
+                            <span class="resource-level level-beginner">Principiante</span>
+                        </div>
+                        <a href="#" class="btn btn-outline btn-small" onclick="showComingSoon(); return false;">Ver
+                            Tutorial</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon">🎯</div>
+                        <h3>Preparación para Entrevistas Técnicas</h3>
+                        <p>Domina las entrevistas técnicas con estrategias probadas, ejemplos y ejercicios prácticos.
+                        </p>
+                        <div class="resource-meta">
+                            <span class="resource-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                30 min
+                            </span>
+                            <span class="resource-level level-advanced">Avanzado</span>
+                        </div>
+                        <a href="#" class="btn btn-outline btn-small" onclick="showComingSoon(); return false;">Ver
+                            Tutorial</a>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon">🌐</div>
+                        <h3>Construye tu Marca Personal Online</h3>
+                        <p>Estrategias para crear y mantener una identidad profesional sólida en internet.</p>
+                        <div class="resource-meta">
+                            <span class="resource-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                25 min
+                            </span>
+                            <span class="resource-level level-intermediate">Intermedio</span>
+                        </div>
+                        <a href="#" class="btn btn-outline btn-small" onclick="showComingSoon(); return false;">Ver
+                            Tutorial</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plantillas Tab -->
+            <div id="templates-view" class="content-view">
+                <div class="resources-grid">
+                    <div class="resource-card template-card">
+                        <div class="template-preview">
+                            <div class="preview-placeholder">📄</div>
+                        </div>
+                        <h3>CV Moderno - Desarrollador</h3>
+                        <p>Plantilla minimalista y profesional diseñada específicamente para desarrolladores.</p>
+                        <div class="template-tags">
+                            <span class="tag">Word</span>
+                            <span class="tag">PDF</span>
+                        </div>
+                        <a href="#" class="btn btn-primary btn-small"
+                            onclick="showComingSoon(); return false;">Descargar</a>
+                    </div>
+
+                    <div class="resource-card template-card">
+                        <div class="template-preview">
+                            <div class="preview-placeholder">🎨</div>
+                        </div>
+                        <h3>Portfolio Web - Landing Page</h3>
+                        <p>Template HTML/CSS listo para personalizar y hospedar tu portfolio online.</p>
+                        <div class="template-tags">
+                            <span class="tag">HTML</span>
+                            <span class="tag">CSS</span>
+                        </div>
+                        <a href="#" class="btn btn-primary btn-small"
+                            onclick="showComingSoon(); return false;">Descargar</a>
+                    </div>
+
+                    <div class="resource-card template-card">
+                        <div class="template-preview">
+                            <div class="preview-placeholder">📊</div>
+                        </div>
+                        <h3>Carta de Presentación Tech</h3>
+                        <p>Modelo de carta de presentación optimizada para posiciones tecnológicas.</p>
+                        <div class="template-tags">
+                            <span class="tag">Word</span>
+                            <span class="tag">Google Docs</span>
+                        </div>
+                        <a href="#" class="btn btn-primary btn-small"
+                            onclick="showComingSoon(); return false;">Descargar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Herramientas Tab -->
+            <div id="tools-view" class="content-view">
+                <div class="tools-list">
+                    <div class="tool-item">
+                        <div class="tool-info">
+                            <div class="tool-icon">🖼️</div>
+                            <div>
+                                <h3>Canva</h3>
+                                <p>Diseño gráfico fácil e intuitivo para crear CVs, portfolios y presentaciones
+                                    profesionales.</p>
+                                <span class="tool-category">Diseño</span>
+                            </div>
+                        </div>
+                        <a href="https://www.canva.com" target="_blank" class="btn btn-outline btn-small">Visitar</a>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-info">
+                            <div class="tool-icon">💻</div>
+                            <div>
+                                <h3>GitHub Pages</h3>
+                                <p>Hosting gratuito para tu portfolio web directamente desde tu repositorio de GitHub.
+                                </p>
+                                <span class="tool-category">Hosting</span>
+                            </div>
+                        </div>
+                        <a href="https://pages.github.com" target="_blank" class="btn btn-outline btn-small">Visitar</a>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-info">
+                            <div class="tool-icon">📝</div>
+                            <div>
+                                <h3>Grammarly</h3>
+                                <p>Corrector gramatical y de estilo para que tu contenido esté libre de errores.</p>
+                                <span class="tool-category">Escritura</span>
+                            </div>
+                        </div>
+                        <a href="https://www.grammarly.com" target="_blank"
+                            class="btn btn-outline btn-small">Visitar</a>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-info">
+                            <div class="tool-icon">🎨</div>
+                            <div>
+                                <h3>Coolors</h3>
+                                <p>Generador de paletas de colores para dar vida visual a tu portfolio.</p>
+                                <span class="tool-category">Diseño</span>
+                            </div>
+                        </div>
+                        <a href="https://coolors.co" target="_blank" class="btn btn-outline btn-small">Visitar</a>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-info">
+                            <div class="tool-icon">📸</div>
+                            <div>
+                                <h3>Unsplash</h3>
+                                <p>Banco de imágenes de alta calidad y gratuitas para usar en tus proyectos.</p>
+                                <span class="tool-category">Recursos</span>
+                            </div>
+                        </div>
+                        <a href="https://unsplash.com" target="_blank" class="btn btn-outline btn-small">Visitar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Artículos Tab -->
+            <div id="articles-view" class="content-view">
+                <div class="articles-list">
+                    <div class="article-card">
+                        <div class="article-date">3 Dic 2024</div>
+                        <h3>Las 10 Soft Skills Más Valoradas por Empresas en 2025</h3>
+                        <p>Más allá de las habilidades técnicas, descubre qué buscan realmente los empleadores en los
+                            candidatos modernos.</p>
+                        <div class="article-footer">
+                            <span class="article-reading-time">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                </svg>
+                                8 min de lectura
+                            </span>
+                            <a href="#" onclick="showComingSoon(); return false;" class="article-link">Leer más →</a>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-date">1 Dic 2024</div>
+                        <h3>Cómo Negociar tu Salario: Guía para Programadores</h3>
+                        <p>Estrategias comprobadas para conseguir el salario que mereces en tu próxima oferta laboral.
+                        </p>
+                        <div class="article-footer">
+                            <span class="article-reading-time">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                </svg>
+                                12 min de lectura
+                            </span>
+                            <a href="#" onclick="showComingSoon(); return false;" class="article-link">Leer más →</a>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-date">28 Nov 2024</div>
+                        <h3>Remote Work: Pros, Contras y Mejores Prácticas</h3>
+                        <p>Todo lo que necesitas saber sobre el trabajo remoto para decidir si es para ti.</p>
+                        <div class="article-footer">
+                            <span class="article-reading-time">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                </svg>
+                                10 min de lectura
+                            </span>
+                            <a href="#" onclick="showComingSoon(); return false;" class="article-link">Leer más →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="privacy.html">Política de Privacidad</a></li>
+                    <li><a href="terms.html">Términos de Servicio</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="#" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">LinkedIn</a>
+                    <a href="#" target="_blank">Instagram</a>
+                </div>
+            </div>
+            <div class="footer-section footer-shortcuts">
+                <h3>Atajos</h3>
+                <div class="shortcuts-grid">
+                    <a href="portfolio_builder.html">Portfolio</a>
+                    <a href="profile.html">Perfil</a>
+                    <a href="skills.html">Skills</a>
+                    <a href="experience.html">Experiencia</a>
+                    <a href="communities.html">Comunidades</a>
+                    <a href="resources.html">Recursos</a>
+                    <a href="customer_support.html">Ayuda</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/resources.js"></script>
+    <script src="../js/auth-guard.js"></script>
+</body>
+
+</html>
