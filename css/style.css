@@ -650,3 +650,4 @@ p {
         opacity: 1;
     }
 }
+.modal.active { display: flex !important; }

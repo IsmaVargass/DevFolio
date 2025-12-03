@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event Listeners for Inputs
     const inputs = [
-        'input-name', 'input-title', 'input-email', 
+        'input-name', 'input-title', 'input-email',
         'input-about', 'input-projects', 'input-color',
         'check-experience', 'check-education'
     ];
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function toggleAccordion(header) {
     const item = header.parentElement;
     const isActive = item.classList.contains('active');
-    
+
     // Close all items
     document.querySelectorAll('.accordion-item').forEach(i => {
         i.classList.remove('active');
@@ -55,7 +55,7 @@ function loadInitialData(user) {
     // Try to derive title from experience
     const experience = JSON.parse(localStorage.getItem('experience') || '[]');
     const currentJob = experience.find(exp => !exp.endDate || exp.endDate.toLowerCase() === 'presente' || exp.endDate.toLowerCase() === 'actualidad');
-    
+
     if (currentJob) {
         document.getElementById('input-title').value = `${currentJob.title} en ${currentJob.company}`;
     } else if (experience.length > 0) {
@@ -79,7 +79,7 @@ function updatePreview() {
     const education = JSON.parse(localStorage.getItem('education') || '[]');
 
     const preview = document.getElementById('preview-paper');
-    
+
     preview.innerHTML = `
         <div class="preview-header" style="border-color: ${data.color}">
             <h1 class="preview-name">${data.name}</h1>
@@ -136,11 +136,24 @@ function publishPortfolio() {
     const user = JSON.parse(localStorage.getItem('user'));
     if (!confirm('¿Estás seguro de que quieres publicar tu portfolio?')) return;
 
+    // Get all portfolio data
+    const experience = JSON.parse(localStorage.getItem('experience') || '[]');
+    const education = JSON.parse(localStorage.getItem('education') || '[]');
+
     const data = {
         id: Date.now(),
         userId: user.id || user.email,
         title: `Portfolio de ${document.getElementById('input-name').value}`,
         author: document.getElementById('input-name').value,
+        professionalTitle: document.getElementById('input-title').value,
+        email: document.getElementById('input-email').value,
+        about: document.getElementById('input-about').value,
+        projects: document.getElementById('input-projects').value,
+        color: document.getElementById('input-color').value,
+        showExperience: document.getElementById('check-experience').checked,
+        showEducation: document.getElementById('check-education').checked,
+        experience: experience,
+        education: education,
         tags: [document.getElementById('input-title').value.split(' ')[0] || 'Dev', 'Profesional'],
         photo: getUserAvatar(user),
         publishedDate: new Date().toISOString(),

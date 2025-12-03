@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=2">
     <link rel="stylesheet" href="../css/communities.css">
 </head>
 
@@ -25,17 +25,13 @@
     <main class="container communities-container">
         <div class="communities-header">
             <h1>Comunidades y Empleo</h1>
-            <div class="header-actions">
-                <button id="create-community-btn" class="btn btn-outline">Crear Comunidad</button>
-                <button id="post-job-btn" class="btn btn-primary">Publicar Oferta</button>
-            </div>
         </div>
 
         <div class="communities-tabs">
-            <button class="tab-btn active" data-tab="recent">Portfolios Recientes</button>
-            <button class="tab-btn" data-tab="featured">Portfolios Destacados</button>
-            <button class="tab-btn" data-tab="jobs">Ofertas de Trabajo</button>
-            <button class="tab-btn" data-tab="groups">Grupos de Trabajo</button>
+            <button class="tab-btn active" data-tab="recent" onclick="switchTab('recent')">Portfolios Recientes</button>
+            <button class="tab-btn" data-tab="featured" onclick="switchTab('featured')">Portfolios Destacados</button>
+            <button class="tab-btn" data-tab="jobs" onclick="switchTab('jobs')">Ofertas de Trabajo</button>
+            <button class="tab-btn" data-tab="groups" onclick="switchTab('groups')">Grupos de Trabajo</button>
         </div>
 
         <div class="communities-content">
@@ -52,6 +48,19 @@
             </div>
 
             <div id="jobs-view" class="content-view">
+                <div class="jobs-filters">
+                    <input type="text" id="job-keyword" class="filter-input"
+                        placeholder="Palabras clave (ej. developer, javascript)">
+                    <select id="job-location" class="filter-select">
+                        <option value="">Toda EspaÃ±a</option>
+                        <option value="Madrid">Madrid</option>
+                        <option value="Barcelona">Barcelona</option>
+                        <option value="Valencia">Valencia</option>
+                        <option value="Sevilla">Sevilla</option>
+                        <option value="Bilbao">Bilbao</option>
+                    </select>
+                    <button id="search-jobs-btn" class="btn btn-primary">Buscar</button>
+                </div>
                 <div class="list-layout" id="jobs-list">
                     <!-- Jobs will be loaded here -->
                 </div>
@@ -63,6 +72,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- Portfolio Detail Modal -->
+        <div id="portfolio-modal" class="modal">
+            <div class="modal-content modal-large">
+                <span class="modal-close" onclick="closePortfolioModal()">&times;</span>
+                <div id="portfolio-modal-content">
+                    <!-- Portfolio details will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Modal -->
+        <div id="message-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeMessageModal()">&times;</span>
+                <h2>Enviar Mensaje</h2>
+                <div class="form-group">
+                    <label>Para: <span id="message-recipient"></span></label>
+                </div>
+                <div class="form-group">
+                    <label>Mensaje:</label>
+                    <textarea id="message-text" class="form-control" rows="5"
+                        placeholder="Escribe tu mensaje..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeMessageModal()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="sendMessageToOwner()">Enviar</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="footer">
@@ -70,12 +109,12 @@
             <div class="footer-section">
                 <h3>Legal</h3>
                 <ul>
-                    <li><a href="privacy.html">Política de Privacidad</a></li>
-                    <li><a href="terms.html">Términos de Servicio</a></li>
+                    <li><a href="privacy.html">PolÃ­tica de Privacidad</a></li>
+                    <li><a href="terms.html">TÃ©rminos de Servicio</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h3>Síguenos</h3>
+                <h3>SÃ­guenos</h3>
                 <div class="social-links">
                     <a href="#" target="_blank">GitHub</a>
                     <a href="#" target="_blank">LinkedIn</a>
@@ -99,10 +138,12 @@
             <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
         </div>
     </footer>
-
-    <script src="../js/utils.js"></script>
-    <script src="../js/communities.js"></script>
-    <script src="../js/auth-guard.js"></script>
 </body>
 
+<script src="../js/utils.js"></script>
+<script src="../js/communities.js?v=3"></script>
+<script src="../js/auth-guard.js"></script>
+
 </html>
+
+
