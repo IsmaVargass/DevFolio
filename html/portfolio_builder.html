@@ -7,9 +7,12 @@
     <title>Constructor de Portfolio - DevFolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/portfolio_builder.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
@@ -17,158 +20,185 @@
         <div class="container nav-container">
             <a href="../index.html" class="logo">DevFolio</a>
             <ul class="nav-links">
-                <li><a href="dashboard.html">Volver al Dashboard</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
             </ul>
         </div>
     </nav>
 
-    <main class="builder-container">
-        <!-- Sidebar - Editor -->
+    <main class="builder-main">
         <aside class="builder-sidebar">
             <div class="sidebar-header">
-                <h2>Constructor de Portfolio</h2>
+                <h2>Portfolio Builder</h2>
             </div>
 
-            <div class="sidebar-content">
-                <!-- Section 1: Basic Info -->
-                <div class="accordion-item active">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <span>Información Básica</span>
-                        <span class="accordion-icon">▼</span>
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="colors">Colores</button>
+                <button class="tab-btn" data-tab="typography">Tipografía</button>
+                <button class="tab-btn" data-tab="content">Contenido</button>
+                <button class="tab-btn" data-tab="sections">Secciones</button>
+            </div>
+
+            <!-- Tab: Colors -->
+            <div class="tab-content active" id="tab-colors">
+                <h3>Color Principal</h3>
+                <input type="color" id="primaryColor" value="#2563eb">
+
+                <h3>Color Secundario</h3>
+                <input type="color" id="secondaryColor" value="#1e40af">
+
+                <h3>Color de Fondo</h3>
+                <input type="color" id="bgColor" value="#ffffff">
+
+                <h3>Color de Texto</h3>
+                <input type="color" id="textColor" value="#1f2937">
+            </div>
+
+            <!-- Tab: Typography -->
+            <div class="tab-content" id="tab-typography">
+                <h3>Fuente de Títulos</h3>
+                <select id="headingFont" class="form-control">
+                    <option value="Inter">Inter</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Lato">Lato</option>
+                </select>
+
+                <h3>Fuente del Cuerpo</h3>
+                <select id="bodyFont" class="form-control">
+                    <option value="Inter">Inter</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Montserrat">Montserrat</option>
+                </select>
+
+                <h3>Tamaño de Fuente: <span id="fontSizeValue">16px</span></h3>
+                <input type="range" id="fontSize" min="12" max="20" value="16" step="1" class="slider">
+            </div>
+
+            <!-- Tab: Content -->
+            <div class="tab-content" id="tab-content">
+                <div class="content-block">
+                    <h3>Objetivo Profesional</h3>
+                    <div class="source-selector">
+                        <label class="radio-label">
+                            <input type="radio" name="objectiveSource" value="profile">
+                            Del Perfil
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="objectiveSource" value="custom" checked>
+                            Personalizado
+                        </label>
                     </div>
-                    <div class="accordion-content">
-                        <div class="form-group">
-                            <label>Nombre Completo</label>
-                            <input type="text" id="input-name" class="form-control" placeholder="Tu nombre">
-                        </div>
-                        <div class="form-group">
-                            <label>Título Profesional</label>
-                            <input type="text" id="input-title" class="form-control"
-                                placeholder="Ej. Desarrollador Web Full Stack">
-                        </div>
-                        <div class="form-group">
-                            <label>Email de Contacto</label>
-                            <input type="email" id="input-email" class="form-control" placeholder="tu@email.com">
-                        </div>
-                    </div>
+                    <textarea id="objectiveText" rows="3" placeholder="Describe tu objetivo profesional..."></textarea>
                 </div>
 
-                <!-- Section 2: About Me -->
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <span>Sobre Mí</span>
-                        <span class="accordion-icon">▼</span>
+                <div class="content-block">
+                    <h3>Sobre Mí</h3>
+                    <div class="source-selector">
+                        <label class="radio-label">
+                            <input type="radio" name="aboutSource" value="profile">
+                            Del Perfil
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="aboutSource" value="custom" checked>
+                            Personalizado
+                        </label>
                     </div>
-                    <div class="accordion-content">
-                        <div class="form-group">
-                            <label>Descripción Profesional</label>
-                            <textarea id="input-about" class="form-control"
-                                placeholder="Escribe un breve resumen de tu perfil..."></textarea>
-                        </div>
-                    </div>
+                    <textarea id="aboutText" rows="4" placeholder="Escribe sobre ti..."></textarea>
                 </div>
 
-                <!-- Section 3: Experience & Education -->
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <span>Experiencia y Educación</span>
-                        <span class="accordion-icon">▼</span>
+                <div class="content-block">
+                    <h3>Proyectos</h3>
+                    <div class="source-selector">
+                        <label class="radio-label">
+                            <input type="radio" name="projectsSource" value="profile">
+                            Del Perfil
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="projectsSource" value="custom" checked>
+                            Personalizado
+                        </label>
                     </div>
-                    <div class="accordion-content">
-                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
-                            Estos datos se cargan automáticamente de tu perfil.
-                            <a href="experience.html" style="color: var(--primary-color);">Editar en Experiencia</a>
-                        </p>
-                        <div class="form-group">
-                            <label>Mostrar Experiencia</label>
-                            <input type="checkbox" id="check-experience" checked>
-                        </div>
-                        <div class="form-group">
-                            <label>Mostrar Educación</label>
-                            <input type="checkbox" id="check-education" checked>
-                        </div>
-                    </div>
+                    <textarea id="projectsText" rows="4" placeholder="Describe tus proyectos..."></textarea>
                 </div>
 
-                <!-- Section 4: Projects -->
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <span>Proyectos Destacados</span>
-                        <span class="accordion-icon">▼</span>
+                <div class="content-block">
+                    <h3>Idiomas</h3>
+                    <div class="source-selector">
+                        <label class="radio-label">
+                            <input type="radio" name="languagesSource" value="profile">
+                            Del Perfil
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="languagesSource" value="custom" checked>
+                            Personalizado
+                        </label>
                     </div>
-                    <div class="accordion-content">
-                        <div class="form-group">
-                            <label>Descripción de Proyectos</label>
-                            <textarea id="input-projects" class="form-control"
-                                placeholder="Describe tus proyectos más importantes..."></textarea>
-                        </div>
-                    </div>
+                    <textarea id="languagesText" rows="3"
+                        placeholder="Ejemplo: Español (Nativo), Inglés (Avanzado)"></textarea>
                 </div>
+            </div>
 
-                <!-- Section 5: Styles -->
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <span>Personalización</span>
-                        <span class="accordion-icon">▼</span>
+            <!-- Tab: Sections -->
+            <div class="tab-content" id="tab-sections">
+                <div class="toggles-list">
+                    <div class="toggle-item">
+                        <span>Mostrar Objetivo</span>
+                        <button class="toggle-btn" id="toggleObjective">
+                            <span class="toggle-slider"></span>
+                        </button>
                     </div>
-                    <div class="accordion-content">
-                        <div class="form-group">
-                            <label>Color Principal</label>
-                            <input type="color" id="input-color" class="form-control" value="#2563eb"
-                                style="height: 50px;">
-                        </div>
+
+                    <div class="toggle-item">
+                        <span>Mostrar Experiencia</span>
+                        <button class="toggle-btn active" id="toggleExp">
+                            <span class="toggle-slider"></span>
+                        </button>
+                    </div>
+
+                    <div class="toggle-item">
+                        <span>Mostrar Educación</span>
+                        <button class="toggle-btn active" id="toggleEdu">
+                            <span class="toggle-slider"></span>
+                        </button>
+                    </div>
+
+                    <div class="toggle-item">
+                        <span>Mostrar Habilidades</span>
+                        <button class="toggle-btn active" id="toggleSkills">
+                            <span class="toggle-slider"></span>
+                        </button>
+                    </div>
+
+                    <div class="toggle-item">
+                        <span>Mostrar Proyectos</span>
+                        <button class="toggle-btn active" id="toggleProjects">
+                            <span class="toggle-slider"></span>
+                        </button>
+                    </div>
+
+                    <div class="toggle-item">
+                        <span>Mostrar Idiomas</span>
+                        <button class="toggle-btn" id="toggleLanguages">
+                            <span class="toggle-slider"></span>
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div class="sidebar-footer">
-                <button id="btn-export" class="btn btn-secondary btn-full">Descargar PDF</button>
-                <button id="btn-publish" class="btn btn-primary btn-full">Publicar</button>
+                <button id="downloadBtn" class="btn btn-primary btn-block">Descargar PDF</button>
+                <button id="publishBtn" class="btn btn-secondary btn-block">Publicar</button>
             </div>
         </aside>
 
-        <!-- Preview Area -->
-        <section class="builder-preview">
-            <div id="preview-paper" class="preview-paper">
-                <!-- Content will be injected here via JS -->
+        <div class="builder-preview-area">
+            <div id="portfolioPreview" class="portfolio-paper">
+                <!-- Preview content -->
             </div>
-        </section>
+        </div>
     </main>
-
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="privacy.html">Política de Privacidad</a></li>
-                    <li><a href="terms.html">Términos de Servicio</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Síguenos</h3>
-                <div class="social-links">
-                    <a href="#" target="_blank">GitHub</a>
-                    <a href="#" target="_blank">LinkedIn</a>
-                    <a href="#" target="_blank">Instagram</a>
-                </div>
-            </div>
-            <div class="footer-section footer-shortcuts">
-                <h3>Atajos</h3>
-                <div class="shortcuts-grid">
-                    <a href="portfolio_builder.html">Portfolio</a>
-                    <a href="profile.html">Perfil</a>
-                    <a href="skills.html">Skills</a>
-                    <a href="experience.html">Experiencia</a>
-                    <a href="communities.html">Comunidades</a>
-                    <a href="resources.html">Recursos</a>
-                    <a href="customer_support.html">Ayuda</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
-        </div>
-    </footer>
 
     <script src="../js/utils.js"></script>
     <script src="../js/portfolio_builder.js"></script>
