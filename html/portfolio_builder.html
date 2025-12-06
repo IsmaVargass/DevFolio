@@ -80,16 +80,6 @@
             <div class="tab-content" id="tab-content">
                 <div class="content-block">
                     <h3>Objetivo Profesional</h3>
-                    <div class="source-selector">
-                        <label class="radio-label">
-                            <input type="radio" name="objectiveSource" value="profile">
-                            Del Perfil
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" name="objectiveSource" value="custom" checked>
-                            Personalizado
-                        </label>
-                    </div>
                     <textarea id="objectiveText" rows="3" placeholder="Describe tu objetivo profesional..."></textarea>
                 </div>
 
@@ -125,18 +115,10 @@
 
                 <div class="content-block">
                     <h3>Idiomas</h3>
-                    <div class="source-selector">
-                        <label class="radio-label">
-                            <input type="radio" name="languagesSource" value="profile">
-                            Del Perfil
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" name="languagesSource" value="custom" checked>
-                            Personalizado
-                        </label>
+                    <p class="helper-text">Selecciona los idiomas que dominas:</p>
+                    <div id="languagesCheckboxes" class="languages-grid">
+                        <!-- Language checkboxes will be rendered here by JS -->
                     </div>
-                    <textarea id="languagesText" rows="3"
-                        placeholder="Ejemplo: Español (Nativo), Inglés (Avanzado)"></textarea>
                 </div>
             </div>
 

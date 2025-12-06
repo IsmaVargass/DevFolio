@@ -1,18 +1,24 @@
-/* Portfolio Builder - Complete Enhanced Version */
+/* Portfolio Builder - Final Fixed Version */
 
 document.addEventListener('DOMContentLoaded', init);
 
 let portfolioData = {
     colors: { primary: '#2563eb', secondary: '#1e40af', bg: '#ffffff', text: '#1f2937' },
     fonts: { heading: 'Inter', body: 'Inter', size: '16' },
-    content: { about: '', projects: '', objective: '', languages: '' },
-    dataSource: { about: 'custom', projects: 'custom', objective: 'custom', languages: 'custom' },
+    content: { about: '', projects: '', objective: '' },
+    languages: [],
+    dataSource: { about: 'custom', projects: 'custom' },
     visibility: { exp: true, edu: true, skills: true, projects: true, objective: false, languages: false },
     user: {},
     experience: [],
     education: [],
     skills: []
 };
+
+const availableLanguages = [
+    'Español', 'Inglés', 'Francés', 'Alemán', 'Italiano', 'Portugués',
+    'Chino', 'Japonés', 'Coreano', 'Árabe', 'Ruso', 'Holandés'
+];
 
 function init() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -33,6 +39,7 @@ function init() {
 
     setupTabs();
     setupControls();
+    renderLanguageCheckboxes();
     updatePreview();
 }
 
@@ -75,17 +82,14 @@ function setupControls() {
         });
     }
 
-    // Data source switches
+    // Data source switches (only for About and Projects)
     setupDataSourceSwitch('aboutSource', 'about');
     setupDataSourceSwitch('projectsSource', 'projects');
-    setupDataSourceSwitch('objectiveSource', 'objective');
-    setupDataSourceSwitch('languagesSource', 'languages');
 
     // Content textareas
     setupTextarea('aboutText', 'about');
     setupTextarea('projectsText', 'projects');
     setupTextarea('objectiveText', 'objective');
-    setupTextarea('languagesText', 'languages');
 
     // Toggle buttons
     setupToggle('toggleObjective', 'objective');
@@ -101,6 +105,32 @@ function setupControls() {
 
     const publishBtn = document.getElementById('publishBtn');
     if (publishBtn) publishBtn.addEventListener('click', publishPortfolio);
+}
+
+function renderLanguageCheckboxes() {
+    const container = document.getElementById('languagesCheckboxes');
+    if (!container) return;
+
+    container.innerHTML = availableLanguages.map(lang => `
+        <label class="language-checkbox">
+            <input type="checkbox" value="${lang}" ${portfolioData.languages.includes(lang) ? 'checked' : ''}>
+            <span>${lang}</span>
+        </label>
+    `).join('');
+
+    // Add event listeners
+    container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', e => {
+            if (e.target.checked) {
+                if (!portfolioData.languages.includes(e.target.value)) {
+                    portfolioData.languages.push(e.target.value);
+                }
+            } else {
+                portfolioData.languages = portfolioData.languages.filter(lang => lang !== e.target.value);
+            }
+            updatePreview();
+        });
+    });
 }
 
 function setupColorControl(elementId, colorKey) {
@@ -127,12 +157,10 @@ function setupDataSourceSwitch(elementId, contentKey) {
             if (e.target.checked) {
                 portfolioData.dataSource[contentKey] = e.target.value;
 
-                // Update content based on source
                 if (e.target.value === 'profile') {
                     loadProfileData(contentKey);
                 }
 
-                // Update textarea state
                 const textarea = document.getElementById(`${contentKey}Text`);
                 if (textarea) {
                     textarea.disabled = (e.target.value === 'profile');
@@ -155,22 +183,9 @@ function loadProfileData(key) {
             break;
 
         case 'projects':
-            // Could load from a projects field if it exists
             portfolioData.content.projects = user.projects || '';
             const projectsTextarea = document.getElementById('projectsText');
             if (projectsTextarea) projectsTextarea.value = portfolioData.content.projects;
-            break;
-
-        case 'objective':
-            portfolioData.content.objective = user.objective || '';
-            const objectiveTextarea = document.getElementById('objectiveText');
-            if (objectiveTextarea) objectiveTextarea.value = portfolioData.content.objective;
-            break;
-
-        case 'languages':
-            portfolioData.content.languages = user.languages || '';
-            const languagesTextarea = document.getElementById('languagesText');
-            if (languagesTextarea) languagesTextarea.value = portfolioData.content.languages;
             break;
     }
 }
@@ -188,7 +203,6 @@ function setupTextarea(elementId, contentKey) {
 function setupToggle(elementId, visibilityKey) {
     const element = document.getElementById(elementId);
     if (element) {
-        // Set initial state
         if (portfolioData.visibility[visibilityKey]) {
             element.classList.add('active');
         }
@@ -211,7 +225,7 @@ function updatePreview() {
     const preview = document.getElementById('portfolioPreview');
     if (!preview) return;
 
-    const { colors, fonts, content, visibility, user, experience, education, skills } = portfolioData;
+    const { colors, fonts, content, visibility, user, experience, education, skills, languages } = portfolioData;
 
     let html = `
         <div class="portfolio-header" style="border-bottom: 3px solid ${colors.primary}; padding-bottom: 2rem; margin-bottom: 2rem; font-family: '${fonts.heading}', sans-serif;">
@@ -221,7 +235,6 @@ function updatePreview() {
         </div>
     `;
 
-    // Objetivo
     if (visibility.objective && content.objective) {
         html += `
             <div class="portfolio-section" style="margin-bottom: 2rem; font-family: '${fonts.body}', sans-serif; font-size: ${fonts.size}px;">
@@ -231,7 +244,6 @@ function updatePreview() {
         `;
     }
 
-    // Sobre Mí
     if (content.about) {
         html += `
             <div class="portfolio-section" style="margin-bottom: 2rem; font-family: '${fonts.body}', sans-serif; font-size: ${fonts.size}px;">
@@ -241,7 +253,6 @@ function updatePreview() {
         `;
     }
 
-    // Experiencia
     if (visibility.exp && experience.length > 0) {
         html += `
             <div class="portfolio-section" style="margin-bottom: 2rem; font-family: '${fonts.body}', sans-serif; font-size: ${fonts.size}px;">
@@ -257,7 +268,6 @@ function updatePreview() {
         `;
     }
 
-    // Educación
     if (visibility.edu && education.length > 0) {
         html += `
             <div class="portfolio-section" style="margin-bottom: 2rem; font-family: '${fonts.body}', sans-serif; font-size: ${fonts.size}px;">
@@ -273,7 +283,6 @@ function updatePreview() {
         `;
     }
 
-    // Habilidades with levels and text color applied
     if (visibility.skills && skills.length > 0) {
         html += `
             <div class="portfolio-section" style="margin-bottom: 2rem; font-family: '${fonts.body}', sans-serif; font-size: ${fonts.size}px;">
@@ -297,7 +306,6 @@ function updatePreview() {
         `;
     }
 
-    // Proyectos
     if (visibility.projects && content.projects) {
         html += `
             <div class="portfolio-section" style="margin-bottom: 2rem; font-family: '${fonts.body}', sans-serif; font-size: ${fonts.size}px;">
@@ -307,12 +315,15 @@ function updatePreview() {
         `;
     }
 
-    // Idiomas
-    if (visibility.languages && content.languages) {
+    if (visibility.languages && languages.length > 0) {
         html += `
             <div class="portfolio-section" style="margin-bottom: 2rem; font-family: '${fonts.body}', sans-serif; font-size: ${fonts.size}px;">
                 <h2 style="color: ${colors.primary}; font-size: 1.5rem; margin-bottom: 1rem; border-bottom: 2px solid ${colors.secondary}; padding-bottom: 0.5rem; font-family: '${fonts.heading}', sans-serif;">Idiomas</h2>
-                <p style="line-height: 1.6; color: ${colors.text};">${content.languages.replace(/\n/g, '<br>')}</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                    ${languages.map(lang => `
+                        <span style="background: ${colors.primary}; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9375rem;">${lang}</span>
+                    `).join('')}
+                </div>
             </div>
         `;
     }
@@ -328,58 +339,69 @@ function downloadPDF() {
         return;
     }
 
-    const userName = portfolioData.user.nombre || 'Portfolio';
-    const sanitizedName = userName.replace(/[^a-zA-Z0-9]/g, '_');
+    showToast('Generando PDF...', 'info');
 
-    const opt = {
+    // Force the filename with .pdf extension
+    const options = {
         margin: 10,
-        filename: `${sanitizedName}_Portfolio.pdf`,
+        filename: 'DevFolio_Portfolio.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, letterRendering: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    showToast('Generando PDF...', 'info');
-
-    html2pdf().set(opt).from(preview).save().then(() => {
-        showToast('PDF descargado correctamente', 'success');
-    }).catch(err => {
-        console.error('Error generando PDF:', err);
-        showToast('Error al generar PDF', 'error');
-    });
+    html2pdf()
+        .set(options)
+        .from(preview)
+        .save()
+        .then(() => {
+            showToast('PDF descargado: DevFolio_Portfolio.pdf', 'success');
+        })
+        .catch(err => {
+            console.error('Error PDF:', err);
+            showToast('Error al generar PDF', 'error');
+        });
 }
 
 function publishPortfolio() {
-    if (!confirm('Publicar tu portfolio en Comunidades?')) return;
+    if (!confirm('¿Publicar tu portfolio en la sección de Comunidades?')) return;
 
-    const publishData = {
-        id: Date.now(),
-        userId: portfolioData.user.id || portfolioData.user.email,
-        title: `Portfolio de ${portfolioData.user.nombre}`,
-        author: portfolioData.user.nombre,
-        professionalTitle: portfolioData.experience[0]?.role || 'Profesional',
-        email: portfolioData.user.email,
-        phone: portfolioData.user.telefono || '',
-        photo: portfolioData.user.avatar || '',
-        color: portfolioData.colors.primary,
-        about: portfolioData.content.about,
-        projects: portfolioData.content.projects,
-        experience: portfolioData.experience,
-        education: portfolioData.education,
-        skills: portfolioData.skills,
-        showExperience: portfolioData.visibility.exp,
-        showEducation: portfolioData.visibility.edu,
-        showSkills: portfolioData.visibility.skills,
-        publishedDate: new Date().toISOString(),
-        views: 0,
-        tags: ['Portfolio', 'Profesional']
-    };
+    try {
+        const publishData = {
+            id: Date.now(),
+            userId: portfolioData.user.id || portfolioData.user.email,
+            title: `Portfolio de ${portfolioData.user.nombre}`,
+            author: portfolioData.user.nombre,
+            professionalTitle: portfolioData.experience[0]?.role || 'Profesional',
+            email: portfolioData.user.email,
+            phone: portfolioData.user.telefono || '',
+            photo: portfolioData.user.avatar || '',
+            colors: portfolioData.colors,
+            fonts: portfolioData.fonts,
+            about: portfolioData.content.about,
+            objective: portfolioData.content.objective,
+            projects: portfolioData.content.projects,
+            languages: portfolioData.languages,
+            experience: portfolioData.experience,
+            education: portfolioData.education,
+            skills: portfolioData.skills,
+            visibility: portfolioData.visibility,
+            publishedDate: new Date().toISOString(),
+            views: 0,
+            tags: ['Portfolio', 'Profesional']
+        };
 
-    const published = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
-    const filtered = published.filter(p => p.userId !== publishData.userId);
-    filtered.unshift(publishData);
-    localStorage.setItem('published_portfolios', JSON.stringify(filtered));
+        const published = JSON.parse(localStorage.getItem('published_portfolios') || '[]');
+        const filtered = published.filter(p => p.userId !== publishData.userId);
+        filtered.unshift(publishData);
+        localStorage.setItem('published_portfolios', JSON.stringify(filtered));
 
-    showToast('Portfolio publicado correctamente', 'success');
-    setTimeout(() => window.location.href = 'communities.html?tab=recent', 1500);
+        showToast('Portfolio publicado correctamente', 'success');
+        setTimeout(() => {
+            window.location.href = 'communities.html?tab=recent';
+        }, 1500);
+    } catch (err) {
+        console.error('Error al publicar:', err);
+        showToast('Error al publicar portfolio', 'error');
+    }
 }
