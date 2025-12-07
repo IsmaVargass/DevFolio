@@ -51,6 +51,12 @@
     background: #fffbeb;
 }
 
+.stat-card.stat-success {
+    border-color: #10b981;
+    background: #ecfdf5;
+}
+
+
 .stat-icon {
     font-size: 2.5rem;
 }
@@ -331,6 +337,47 @@
     width: 300px;
 }
 
+.role-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.role-badge.admin {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.role-badge.tecnico {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.role-badge.user {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.role-select {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    background: white;
+    cursor: pointer;
+}
+
+.role-select:disabled {
+    background: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+
+
 /* Reports Grid */
 .reports-grid {
     display: grid;
@@ -350,6 +397,26 @@
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--border-color);
 }
+
+.report-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.report-card-header svg {
+    color: var(--primary-color);
+}
+
+.report-card-header h3 {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
 
 .report-content p {
     margin-bottom: 1rem;

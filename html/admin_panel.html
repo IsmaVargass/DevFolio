@@ -73,17 +73,19 @@
                     <div class="stat-label">Portfolios Publicados</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card stat-success">
                 <div class="stat-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
                 </div>
                 <div class="stat-content">
-                    <div class="stat-number" id="total-jobs">0</div>
-                    <div class="stat-label">Ofertas de Trabajo</div>
+                    <div class="stat-number" id="active-users">0</div>
+                    <div class="stat-label">Usuarios Activos</div>
                 </div>
             </div>
         </div>
@@ -91,9 +93,8 @@
         <!-- Tabs -->
         <div class="admin-tabs">
             <button class="admin-tab-btn active" data-tab="tickets">Tickets de Soporte</button>
-            <button class="admin-tab-btn" data-tab="applications">Aplicaciones a Ofertas</button>
             <button class="admin-tab-btn" data-tab="users">Gestión de Usuarios</button>
-            <button class="admin-tab-btn" data-tab="reports">Reportes</button>
+            <button class="admin-tab-btn" data-tab="reports">Reportes del Sistema</button>
         </div>
 
         <!-- Tickets Tab -->
@@ -112,15 +113,7 @@
             </div>
         </div>
 
-        <!-- Applications Tab -->
-        <div id="applications-tab" class="admin-tab-content">
-            <div class="tab-header">
-                <h2>Aplicaciones a Ofertas de Trabajo</h2>
-            </div>
-            <div class="applications-list" id="applications-list">
-                <!-- Applications will be loaded here -->
-            </div>
-        </div>
+
 
         <!-- Users Tab -->
         <div id="users-tab" class="admin-tab-content">
@@ -133,6 +126,28 @@
             </div>
         </div>
 
+        <!-- Password Reset Email Modal -->
+        <div id="password-reset-modal" class="modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <span class="close" id="reset-modal-close">&times;</span>
+                <h2>Enviar Email de Restablecimiento</h2>
+                <div id="reset-email-content">
+                    <p>Se enviará un correo a <strong id="reset-user-email"></strong> con instrucciones para restablecer
+                        su contraseña.</p>
+                    <div class="form-group">
+                        <label>Mensaje personalizado (opcional):</label>
+                        <textarea id="reset-custom-message" rows="4"
+                            placeholder="Añade un mensaje personalizado para el usuario..."></textarea>
+                    </div>
+                    <div class="modal-actions"
+                        style="display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="closePasswordResetModal()">Cancelar</button>
+                        <button class="btn btn-primary" onclick="confirmPasswordReset()">Enviar Email</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Reports Tab -->
         <div id="reports-tab" class="admin-tab-content">
             <div class="tab-header">
@@ -140,24 +155,74 @@
             </div>
             <div class="reports-grid">
                 <div class="report-card">
-                    <h3>Actividad de Usuarios</h3>
+                    <div class="report-card-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <h3>Actividad de Usuarios</h3>
+                    </div>
                     <div class="report-content">
+                        <p>Total de usuarios: <strong id="report-total-users">0</strong></p>
                         <p>Usuarios activos hoy: <strong id="active-today">0</strong></p>
                         <p>Nuevos registros esta semana: <strong id="new-users-week">0</strong></p>
+                        <p>Última actividad: <strong id="last-activity">-</strong></p>
                     </div>
                 </div>
                 <div class="report-card">
-                    <h3>Portfolios</h3>
+                    <div class="report-card-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
+                            </path>
+                        </svg>
+                        <h3>Portfolios</h3>
+                    </div>
                     <div class="report-content">
+                        <p>Total publicados: <strong id="report-total-portfolios">0</strong></p>
                         <p>Publicados hoy: <strong id="portfolios-today">0</strong></p>
+                        <p>Publicados esta semana: <strong id="portfolios-week">0</strong></p>
                         <p>Total de vistas: <strong id="total-views">0</strong></p>
+                        <p>Portfolio más visto: <strong id="top-portfolio">-</strong></p>
                     </div>
                 </div>
                 <div class="report-card">
-                    <h3>Soporte</h3>
+                    <div class="report-card-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <h3>Soporte</h3>
+                    </div>
                     <div class="report-content">
-                        <p>Tiempo promedio de respuesta: <strong>2.5h</strong></p>
-                        <p>Tasa de resolución: <strong>94%</strong></p>
+                        <p>Total de tickets: <strong id="report-total-tickets">0</strong></p>
+                        <p>Tickets abiertos: <strong id="report-open-tickets">0</strong></p>
+                        <p>Tickets en progreso: <strong id="report-progress-tickets">0</strong></p>
+                        <p>Tickets cerrados: <strong id="report-closed-tickets">0</strong></p>
+                        <p>Tasa de resolución: <strong id="ticket-resolution-rate">0%</strong></p>
+                    </div>
+                </div>
+                <div class="report-card">
+                    <div class="report-card-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <h3>Grupos de Trabajo</h3>
+                    </div>
+                    <div class="report-content">
+                        <p>Total de grupos: <strong id="report-total-groups">0</strong></p>
+                        <p>Grupos creados hoy: <strong id="groups-today">0</strong></p>
+                        <p>Total de miembros: <strong id="total-group-members">0</strong></p>
+                        <p>Grupo más activo: <strong id="top-group">-</strong></p>
                     </div>
                 </div>
             </div>
@@ -211,7 +276,7 @@
     </footer>
 
     <script src="../js/utils.js"></script>
-    
+
     <script src="../js/admin_panel.js"></script>
     <script src="../js/auth-guard.js"></script>
 </body>

@@ -18,18 +18,24 @@ function loadTickets() {
         return;
     }
 
-    list.innerHTML = userTickets.map(t => `
-        <div class="ticket-item" onclick="showTicketDetail(${t.id})" style="cursor: pointer;">
+    list.innerHTML = userTickets.map(t => {
+        const hasResponses = t.responses && t.responses.length > 0;
+        const hasNewResponse = t.hasNewResponse === true;
+
+        return `
+        <div class="ticket-item ${hasNewResponse ? 'has-new-response' : ''}" onclick="showTicketDetail(${t.id})" style="cursor: pointer; position: relative;">
+            ${hasNewResponse ? '<span class="new-response-badge">Nueva respuesta</span>' : ''}
             <div class="ticket-header">
                 <span class="ticket-subject">#${t.id} - ${t.subject}</span>
                 <span class="ticket-status status-${t.status}">${getStatusLabel(t.status)}</span>
             </div>
             <div class="ticket-meta">
-                <span>Fecha: ${new Date(t.created).toLocaleDateString()}</span>
+                <span>Fecha: ${new Date(t.created || t.createdAt).toLocaleDateString('es-ES')}</span>
                 <span>Prioridad: ${getPriorityLabel(t.priority)}</span>
+                ${hasResponses ? `<span style="color: #4caf50; font-weight: 600;">✓ ${t.responses.length} respuesta(s)</span>` : ''}
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 window.showTicketDetail = (ticketId) => {
@@ -41,6 +47,36 @@ window.showTicketDetail = (ticketId) => {
     const modal = document.getElementById('ticket-detail-modal');
     const closeBtn = document.getElementById('detail-close');
     const content = document.getElementById('ticket-detail-content');
+
+    // Mark ticket as read
+    if (ticket.hasNewResponse) {
+        ticket.hasNewResponse = false;
+        localStorage.setItem('support_tickets', JSON.stringify(tickets));
+        loadTickets(); // Refresh the list to remove badge
+    }
+
+    // Build responses HTML
+    let responsesHTML = '';
+    if (ticket.responses && ticket.responses.length > 0) {
+        responsesHTML = `
+            <div class="detail-section">
+                <strong>Respuestas del Equipo:</strong>
+                <div class="responses-container" style="margin-top: 1rem;">
+                    ${ticket.responses.map((r, index) => `
+                        <div class="response-item" style="margin-bottom: 1rem; padding: 1rem; background: ${index % 2 === 0 ? '#e8f5e9' : '#e3f2fd'}; border-left: 4px solid ${index % 2 === 0 ? '#4caf50' : '#2196f3'}; border-radius: 4px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <strong style="color: #333;">${r.author}</strong>
+                                <small style="color: #666;">${new Date(r.date).toLocaleString('es-ES')}</small>
+                            </div>
+                            <p style="margin: 0; white-space: pre-wrap; line-height: 1.6;">${r.text}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    } else {
+        responsesHTML = '<p style="color: #999; margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 4px; text-align: center;">⏳ Aún no hay respuesta del equipo de soporte. Te contactaremos pronto.</p>';
+    }
 
     // Build ticket detail HTML
     content.innerHTML = `
@@ -61,19 +97,13 @@ window.showTicketDetail = (ticketId) => {
                 <strong>Estado:</strong> <span class="ticket-status status-${ticket.status}">${getStatusLabel(ticket.status)}</span>
             </div>
             <div class="detail-row">
-                <strong>Fecha:</strong> <span>${new Date(ticket.created).toLocaleString()}</span>
+                <strong>Fecha de creación:</strong> <span>${new Date(ticket.created || ticket.createdAt).toLocaleString('es-ES')}</span>
             </div>
             <div class="detail-section">
-                <strong>Descripción:</strong>
-                <p style="margin-top: 0.5rem; white-space: pre-wrap;">${ticket.description}</p>
+                <strong>Tu consulta:</strong>
+                <p style="margin-top: 0.5rem; white-space: pre-wrap; padding: 1rem; background: #f9f9f9; border-radius: 4px; line-height: 1.6;">${ticket.description}</p>
             </div>
-            ${ticket.response ? `
-                <div class="detail-section admin-response">
-                    <strong>Respuesta del Administrador:</strong>
-                    <p style="margin-top: 0.5rem; white-space: pre-wrap; padding: 1rem; background: #e8f5e9; border-left: 4px solid #4caf50; border-radius: 4px;">${ticket.response}</p>
-                    ${ticket.respondedAt ? `<small style="color: #666;">Respondido el: ${new Date(ticket.respondedAt).toLocaleString()}</small>` : ''}
-                </div>
-            ` : '<p style="color: #999; margin-top: 1rem;">Aún no hay respuesta del equipo de soporte.</p>'}
+            ${responsesHTML}
         </div>
     `;
 
@@ -155,7 +185,9 @@ function setupModal() {
             status: 'open',
             created: new Date().toISOString(),
             user: user ? user.email : 'anonymous',
-            userName: user ? user.nombre : 'Usuario'
+            userName: user ? user.nombre : 'Usuario',
+            userEmail: user ? user.email : '',
+            responses: []
         };
 
         const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');

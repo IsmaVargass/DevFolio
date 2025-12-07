@@ -88,32 +88,6 @@
 .ticket-item {
     border: 1px solid var(--border-color);
     border-radius: 6px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.ticket-item:hover {
-    border-color: var(--text-color);
-    background: #f9f9f9;
-}
-
-.ticket-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-}
-
-.ticket-subject {
-    font-weight: 600;
-}
-
-.ticket-status {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 12px;
-    text-transform: uppercase;
     font-weight: 600;
 }
 
