@@ -70,6 +70,52 @@
                                 style="margin-top: 0.5rem;">Ver Tutorial de Nuevo</button>
                         </div>
                     </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>¿Cómo cambio mi contraseña?</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Ve a tu perfil y haz clic en "Cambiar Contraseña". Ingresa tu contraseña actual y la
+                                nueva contraseña dos veces para confirmar.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>¿Puedo exportar mi portfolio?</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Sí, desde el Constructor de Portfolio puedes descargar tu portfolio en formato PDF
+                                haciendo clic en "Descargar PDF".</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>¿Mis datos están seguros?</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Sí, tus datos se almacenan de forma segura en tu navegador (localStorage). Solo tú tienes
+                                acceso a ellos. Para más información, consulta nuestra Política de Privacidad.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>No puedo ver mis cambios en el portfolio</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Intenta refrescar la página o borrar la caché del navegador. Si el problema persiste,
+                                crea un ticket de soporte técnico.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>¿Cómo funciona el sistema de tickets?</span>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Puedes crear un ticket describiendo tu problema o sugerencia. El equipo de soporte
+                                revisará tu ticket y te responderá. Podrás ver la respuesta haciendo clic en el ticket
+                                en la sección "Mis Tickets".</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -122,6 +168,17 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Enviar Ticket</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Ticket Detail Modal -->
+    <div id="ticket-detail-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close" id="detail-close">&times;</span>
+            <h2>Detalles del Ticket</h2>
+            <div id="ticket-detail-content">
+                <!-- Ticket details will be loaded here -->
+            </div>
         </div>
     </div>
 

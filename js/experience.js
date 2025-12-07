@@ -238,8 +238,36 @@ window.editEntry = (id, type) => {
 };
 
 window.deleteEntry = (id, type) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta entrada?')) return;
+    const modal = document.getElementById('delete-modal');
+    const closeBtn = document.getElementById('delete-close');
+    const cancelBtn = document.getElementById('cancelDelete');
+    const confirmBtn = document.getElementById('confirmDelete');
+    const message = document.getElementById('delete-message');
 
+    // Update message based on type
+    message.textContent = type === 'work'
+        ? '¿Estás seguro de que quieres eliminar esta experiencia laboral?'
+        : '¿Estás seguro de que quieres eliminar estos estudios?';
+
+    // Show modal
+    modal.classList.add('show');
+
+    // Close handlers
+    const closeModal = () => modal.classList.remove('show');
+    closeBtn.onclick = closeModal;
+    cancelBtn.onclick = closeModal;
+    window.onclick = (e) => {
+        if (e.target === modal) closeModal();
+    };
+
+    // Confirm handler
+    confirmBtn.onclick = () => {
+        modal.classList.remove('show');
+        executeDelete(id, type);
+    };
+};
+
+function executeDelete(id, type) {
     const key = type === 'work' ? 'experience' : 'education';
     let items = JSON.parse(localStorage.getItem(key) || '[]');
 
@@ -251,6 +279,7 @@ window.deleteEntry = (id, type) => {
 
     showToast('Eliminado correctamente', 'success');
 };
+
 
 function showToast(message, type = 'info') {
     const existingToast = document.querySelector('.toast');

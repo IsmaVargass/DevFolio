@@ -364,8 +364,30 @@ function downloadPDF() {
 }
 
 function publishPortfolio() {
-    if (!confirm('¿Publicar tu portfolio en la sección de Comunidades?')) return;
+    const modal = document.getElementById('publish-modal');
+    const closeBtn = modal.querySelector('.close');
+    const cancelBtn = document.getElementById('cancelPublish');
+    const confirmBtn = document.getElementById('confirmPublish');
 
+    // Show modal
+    modal.classList.add('show');
+
+    // Close handlers
+    const closeModal = () => modal.classList.remove('show');
+    closeBtn.onclick = closeModal;
+    cancelBtn.onclick = closeModal;
+    window.onclick = (e) => {
+        if (e.target === modal) closeModal();
+    };
+
+    // Confirm handler
+    confirmBtn.onclick = () => {
+        modal.classList.remove('show');
+        executePublish();
+    };
+}
+
+function executePublish() {
     try {
         const publishData = {
             id: Date.now(),
