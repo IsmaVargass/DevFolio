@@ -293,7 +293,7 @@ erDiagram
 
 | Rol | Permisos | Acceso a |
 |-----|----------|----------|
-| **User** | Estándar | Portfolio, Communities, Mensajes, Perfil, Soporte |
+| **User** | Estándar | Portfolio, Communities, Perfil, Soporte |
 | **Técnico** | Extendido | Todo lo de User + Panel Admin básico |
 | **Admin** | Completo | Todo el sistema + Gestión total |
 
@@ -689,7 +689,6 @@ Todo esto se calcula **sin base de datos**, **sin SQL**, **sin backend**:
 - Cambiar colores y fuentes
 - Unirse a grupos
 - Buscar trabajo
-- Enviar mensajes
 - Problemas de acceso
 
 #### 🎫 Mis Tickets
@@ -1128,7 +1127,7 @@ Input change → Actualizar objeto JavaScript → Regenerar preview
    - Crear discusiones
    - Leer posts
 
-#### 5️⃣ Enviar Mensajes
+#### 5️⃣ Enviar Mensajes (NO IMPLEMENTADO)
 
 1. Click "Mensajes" en navegación
 2. Click "Nueva Conversación"
