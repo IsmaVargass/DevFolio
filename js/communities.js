@@ -112,10 +112,12 @@ function loadFeaturedPortfolios() {
 }
 
 function renderPortfolioCards(portfolios, showViews = false) {
-    return portfolios.map(p => `
+    return portfolios.map(p => {
+        const photoUrl = p.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.author)}&background=random&size=200`;
+        return `
         <div class="portfolio-card" onclick="viewPortfolio(${p.id})">
-            <div class="portfolio-preview" style="background-image: url('${p.photo || ''}'); background-size: cover; background-position: center; background-color: #f5f5f5;">
-                ${!p.photo ? '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #999;">Vista Previa</div>' : ''}
+            <div class="portfolio-preview">
+                <div class="portfolio-avatar" style="background-image: url('${photoUrl}');"></div>
             </div>
             <div class="portfolio-info">
                 <div class="portfolio-title">${p.title}</div>
@@ -126,7 +128,8 @@ function renderPortfolioCards(portfolios, showViews = false) {
                 </div>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 window.viewPortfolio = (portfolioId) => {
@@ -153,62 +156,150 @@ window.viewPortfolio = (portfolioId) => {
 function showPortfolioModal(portfolio) {
     const modal = document.getElementById('portfolio-modal');
     const content = document.getElementById('portfolio-modal-content');
+    const user = JSON.parse(localStorage.getItem('user'));
+    const isOwner = user && (user.email === portfolio.email || user.id === portfolio.userId);
 
-    const color = portfolio.color || '#2563eb';
+    // Fallback for missing colors/fonts
+    const colors = portfolio.colors || { primary: '#2563eb', secondary: '#1e40af', text: '#1f2937', bg: '#ffffff' };
+    const fonts = portfolio.fonts || { heading: 'Inter', body: 'Inter', size: '16' };
 
-    content.innerHTML = `
-        <div class="portfolio-modal-header" style="border-color: ${color}">
-            <h1 class="portfolio-modal-name">${portfolio.author}</h1>
-            <h2 class="portfolio-modal-title" style="color: ${color}">${portfolio.professionalTitle || portfolio.title}</h2>
-            <p style="margin-top: 0.5rem; color: #666;">${portfolio.email || ''}</p>
+    // Visibility check helper
+    const isVisible = (key) => {
+        if (portfolio.visibility && portfolio.visibility[key] !== undefined) return portfolio.visibility[key];
+        // Fallback for old data structure
+        if (key === 'exp') return portfolio.showExperience;
+        if (key === 'edu') return portfolio.showEducation;
+        return true;
+    };
+
+    let html = `
+        <div class="portfolio-modal-header" style="border-color: ${colors.primary}; padding-bottom: 1.5rem; margin-bottom: 2rem;">
+            <h1 class="portfolio-modal-name" style="font-family: '${fonts.heading}', sans-serif; color: ${colors.primary};">${portfolio.author}</h1>
+            <h2 class="portfolio-modal-title" style="font-family: '${fonts.heading}', sans-serif; color: ${colors.secondary};">${portfolio.professionalTitle || portfolio.title}</h2>
+            <p style="margin-top: 0.5rem; color: #666; font-family: '${fonts.body}', sans-serif;">${portfolio.email || ''}</p>
+            ${portfolio.phone ? `<p style="margin-top: 0.25rem; color: #666; font-family: '${fonts.body}', sans-serif;">${portfolio.phone}</p>` : ''}
             <p style="font-size: 0.85rem; color: #999; margin-top: 1rem;">Vistas: ${portfolio.views} | Publicado: ${formatDate(portfolio.publishedDate)}</p>
         </div>
+        
+        <div style="font-family: '${fonts.body}', sans-serif; font-size: ${fonts.size}px; color: ${colors.text};">
+    `;
 
-        ${portfolio.about ? `
+    // Objective
+    if (isVisible('objective') && portfolio.objective) {
+        html += `
         <div class="portfolio-modal-section">
-            <h3>Sobre Mí</h3>
-            <p style="line-height: 1.6; color: #4b5563;">${portfolio.about.replace(/\n/g, '<br>')}</p>
+            <h3 style="color: ${colors.primary}; font-family: '${fonts.heading}', sans-serif; border-bottom: 2px solid ${colors.secondary}; padding-bottom: 0.5rem;">Objetivo Profesional</h3>
+            <p style="line-height: 1.6; color: ${colors.text};">${portfolio.objective.replace(/\n/g, '<br>')}</p>
         </div>
-        ` : ''}
+        `;
+    }
 
-        ${portfolio.showExperience && portfolio.experience && portfolio.experience.length > 0 ? `
+    // About
+    if (portfolio.about) {
+        html += `
         <div class="portfolio-modal-section">
-            <h3>Experiencia Laboral</h3>
+            <h3 style="color: ${colors.primary}; font-family: '${fonts.heading}', sans-serif; border-bottom: 2px solid ${colors.secondary}; padding-bottom: 0.5rem;">Sobre Mí</h3>
+            <p style="line-height: 1.6; color: ${colors.text};">${portfolio.about.replace(/\n/g, '<br>')}</p>
+        </div>
+        `;
+    }
+
+    // Experience
+    if (isVisible('exp') && portfolio.experience && portfolio.experience.length > 0) {
+        html += `
+        <div class="portfolio-modal-section">
+            <h3 style="color: ${colors.primary}; font-family: '${fonts.heading}', sans-serif; border-bottom: 2px solid ${colors.secondary}; padding-bottom: 0.5rem;">Experiencia Laboral</h3>
             ${portfolio.experience.map(exp => `
                 <div class="portfolio-modal-item">
-                    <div class="portfolio-modal-item-title">${exp.title}</div>
-                    <div class="portfolio-modal-item-subtitle">${exp.company} • ${exp.startDate} - ${exp.endDate}</div>
-                    <p style="margin-top: 0.25rem; font-size: 0.9rem; color: #4b5563;">${exp.description || ''}</p>
+                    <div class="portfolio-modal-item-title" style="color: ${colors.primary}; font-weight: bold;">${exp.role || exp.title}</div>
+                    <div class="portfolio-modal-item-subtitle" style="color: ${colors.secondary}; font-weight: 500;">${exp.company} • ${formatDate(exp.start)} - ${exp.end ? formatDate(exp.end) : 'Actualidad'}</div>
+                    <p style="margin-top: 0.25rem; font-size: 0.95em; color: ${colors.text};">${exp.description || ''}</p>
                 </div>
             `).join('')}
         </div>
-        ` : ''}
+        `;
+    }
 
-        ${portfolio.showEducation && portfolio.education && portfolio.education.length > 0 ? `
+    // Education
+    if (isVisible('edu') && portfolio.education && portfolio.education.length > 0) {
+        html += `
         <div class="portfolio-modal-section">
-            <h3>Formación Académica</h3>
+            <h3 style="color: ${colors.primary}; font-family: '${fonts.heading}', sans-serif; border-bottom: 2px solid ${colors.secondary}; padding-bottom: 0.5rem;">Formación Académica</h3>
             ${portfolio.education.map(edu => `
                 <div class="portfolio-modal-item">
-                    <div class="portfolio-modal-item-title">${edu.degree}</div>
-                    <div class="portfolio-modal-item-subtitle">${edu.school} • ${edu.year}</div>
+                    <div class="portfolio-modal-item-title" style="color: ${colors.primary}; font-weight: bold;">${edu.degree || edu.title}</div>
+                    <div class="portfolio-modal-item-subtitle" style="color: ${colors.secondary}; font-weight: 500;">${edu.institution || edu.school} • ${formatDate(edu.start)} - ${edu.end ? formatDate(edu.end) : 'Actualidad'}</div>
+                    ${edu.description ? `<p style="margin-top: 0.25rem; font-size: 0.95em; color: ${colors.text};">${edu.description}</p>` : ''}
                 </div>
             `).join('')}
         </div>
-        ` : ''}
+        `;
+    }
 
-        ${portfolio.projects ? `
+    // Skills
+    if (isVisible('skills') && portfolio.skills && portfolio.skills.length > 0) {
+        html += `
         <div class="portfolio-modal-section">
-            <h3>Proyectos Destacados</h3>
-            <p style="line-height: 1.6; color: #4b5563;">${portfolio.projects.replace(/\n/g, '<br>')}</p>
+            <h3 style="color: ${colors.primary}; font-family: '${fonts.heading}', sans-serif; border-bottom: 2px solid ${colors.secondary}; padding-bottom: 0.5rem;">Habilidades</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                ${portfolio.skills.map(skill => {
+            const skillName = typeof skill === 'string' ? skill : (skill.name || skill);
+            const skillLevel = typeof skill === 'object' && skill.level ? skill.level : 75;
+            return `
+                        <div style="background: ${colors.primary}15; padding: 0.75rem; border-radius: 8px; border-left: 3px solid ${colors.primary};">
+                            <div style="font-weight: 600; color: ${colors.text}; margin-bottom: 0.25rem;">${skillName}</div>
+                            <div style="background: #e5e7eb; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div style="background: ${colors.primary}; height: 100%; width: ${skillLevel}%;"></div>
+                            </div>
+                        </div>
+                    `;
+        }).join('')}
+            </div>
         </div>
-        ` : ''}
+        `;
+    }
 
+    // Projects
+    if (isVisible('projects') && portfolio.content?.projects) {
+        html += `
+        <div class="portfolio-modal-section">
+            <h3 style="color: ${colors.primary}; font-family: '${fonts.heading}', sans-serif; border-bottom: 2px solid ${colors.secondary}; padding-bottom: 0.5rem;">Proyectos Destacados</h3>
+            <p style="line-height: 1.6; color: ${colors.text};">${portfolio.content.projects.replace(/\n/g, '<br>')}</p>
+        </div>
+        `;
+    } else if (isVisible('projects') && portfolio.projects) { // Fallback for old data or direct string
+        html += `
+        <div class="portfolio-modal-section">
+            <h3 style="color: ${colors.primary}; font-family: '${fonts.heading}', sans-serif; border-bottom: 2px solid ${colors.secondary}; padding-bottom: 0.5rem;">Proyectos Destacados</h3>
+            <p style="line-height: 1.6; color: ${colors.text};">${portfolio.projects.replace(/\n/g, '<br>')}</p>
+        </div>
+        `;
+    }
+
+    // Languages
+    if (isVisible('languages') && portfolio.languages && portfolio.languages.length > 0) {
+        html += `
+        <div class="portfolio-modal-section">
+            <h3 style="color: ${colors.primary}; font-family: '${fonts.heading}', sans-serif; border-bottom: 2px solid ${colors.secondary}; padding-bottom: 0.5rem;">Idiomas</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                ${portfolio.languages.map(lang => `
+                    <span style="background: ${colors.primary}; color: white; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.9rem;">${lang}</span>
+                `).join('')}
+            </div>
+        </div>
+        `;
+    }
+
+    html += `</div>`; // Close main font/color container
+
+    html += `
         <div class="portfolio-modal-actions">
             <button class="btn btn-secondary" onclick="closePortfolioModal()">Cerrar</button>
-            <button class="btn btn-primary" onclick="openMessageModal('${portfolio.author}')">Enviar Mensaje</button>
+            ${!isOwner ? `<button class="btn btn-primary" onclick="openMessageModal('${portfolio.author}')">Enviar Mensaje</button>` : ''}
         </div>
     `;
 
+    content.innerHTML = html;
     modal.classList.add('active');
 }
 

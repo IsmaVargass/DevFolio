@@ -397,7 +397,7 @@ function executePublish() {
             professionalTitle: portfolioData.experience[0]?.role || 'Profesional',
             email: portfolioData.user.email,
             phone: portfolioData.user.telefono || '',
-            photo: portfolioData.user.avatar || '',
+            photo: portfolioData.user.profile_photo || portfolioData.user.avatar || '',
             colors: portfolioData.colors,
             fonts: portfolioData.fonts,
             about: portfolioData.content.about,
