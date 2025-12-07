@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -25,6 +25,7 @@
     <main class="container communities-container">
         <div class="communities-header">
             <h1>Comunidades y Empleo</h1>
+            <div id="header-actions"></div>
         </div>
 
         <div class="communities-tabs">
@@ -52,7 +53,7 @@
                     <input type="text" id="job-keyword" class="filter-input"
                         placeholder="Palabras clave (ej. developer, javascript)">
                     <select id="job-location" class="filter-select">
-                        <option value="">Toda Espa�a</option>
+                        <option value="">Toda España</option>
                         <option value="Madrid">Madrid</option>
                         <option value="Barcelona">Barcelona</option>
                         <option value="Valencia">Valencia</option>
@@ -67,7 +68,9 @@
             </div>
 
             <div id="groups-view" class="content-view">
-                <div class="grid-layout" id="groups-grid">
+                <div id="groups-actions"></div>
+                <!-- Button container outside grid -->
+                <div id="groups-grid">
                     <!-- Groups will be loaded here -->
                 </div>
             </div>
@@ -138,10 +141,34 @@
             <p>&copy; 2025 DevFolio. Todos los derechos reservados.</p>
         </div>
     </footer>
-</body>
 
-<script src="../js/utils.js"></script>
-<script src="../js/communities.js?v=3"></script>
-<script src="../js/auth-guard.js"></script>
+    <!-- Create Group Modal -->
+    <div id="create-group-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close" onclick="closeCreateGroupModal()">&times;</span>
+            <h2>Crear Nueva Comunidad</h2>
+            <p style="color: #666; margin-bottom: 1.5rem;">Crea un grupo de trabajo para conectar con otros
+                profesionales</p>
+            <div class="form-group">
+                <label for="group-name">Nombre del Grupo *</label>
+                <input type="text" id="group-name" placeholder="Ej: Desarrolladores Vue.js"
+                    style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;">
+            </div>
+            <div class="form-group">
+                <label for="group-desc">Descripción *</label>
+                <textarea id="group-desc" rows="4" placeholder="Describe el propósito y temática del grupo..."
+                    style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical; font-family: inherit;"></textarea>
+            </div>
+            <div class="modal-actions" style="display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeCreateGroupModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="createGroup()">Crear Grupo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/communities.js?v=3"></script>
+    <script src="../js/auth-guard.js"></script>
+</body>
 
 </html>

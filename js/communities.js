@@ -41,6 +41,12 @@ window.switchTab = (tabName) => {
 
     const view = document.getElementById(`${tabName}-view`);
     if (view) view.classList.add('active');
+
+    // Show/Hide Header Actions (Create Group Button) based on tab
+    const headerActions = document.getElementById('header-actions');
+    if (headerActions) {
+        headerActions.style.display = tabName === 'groups' ? 'block' : 'none';
+    }
 };
 
 function setupTabs() {
@@ -294,7 +300,7 @@ async function loadJobs(keyword = '', location = '') {
         console.error('Error loading jobs:', error);
         list.innerHTML = `
             <div style="text-align: center; padding: 2rem;">
-                <p style="color: #ef4444; margin-bottom: 1rem;">❌ Error al cargar ofertas de trabajo</p>
+                <p style="color: #ef4444; margin-bottom: 1rem;">⚠️ Error al cargar ofertas de trabajo</p>
                 <p style="color: #666; font-size: 0.9rem;">${error.message}</p>
                 <p style="color: #999; font-size: 0.85rem; margin-top: 1rem;">Verifica tu conexión a internet o intenta de nuevo más tarde.</p>
             </div>
@@ -370,33 +376,76 @@ function loadGroups() {
     const grid = document.getElementById('groups-grid');
     if (!grid) return;
 
-    const groups = [
-        { id: 1, name: 'React Developers', members: 120, desc: 'Comunidad para compartir conocimientos sobre React.' },
-        { id: 2, name: 'Freelancers España', members: 85, desc: 'Grupo de apoyo para freelancers en España.' },
-        { id: 3, name: 'Diseño UX/UI', members: 240, desc: 'Comparte tus diseños y recibe feedback.' }
+    // Default groups
+    // Default groups
+    // Default groups
+    const defaultGroups = [
+        { id: 1, name: 'React Developers', members: 120, desc: 'Comunidad para compartir conocimientos sobre React.', isDefault: true },
+        { id: 2, name: 'Freelancers España', members: 85, desc: 'Grupo de apoyo para freelancers en España.', isDefault: true },
+        { id: 3, name: 'Diseño UX/UI', members: 240, desc: 'Comparte tus diseños y recibe feedback.', isDefault: true }
     ];
 
+    let customGroups = [];
+    try {
+        customGroups = JSON.parse(localStorage.getItem('custom_groups') || '[]');
+    } catch (e) {
+        console.error('Error loading custom groups:', e);
+        customGroups = [];
+    }
+
+    const allGroups = [...customGroups, ...defaultGroups];
     const joinedGroups = JSON.parse(localStorage.getItem('joined_groups') || '[]');
 
-    grid.innerHTML = groups.map(g => {
+    // Render "Crear Comunidad" button in the header if it exists
+    const headerActions = document.getElementById('header-actions');
+    if (headerActions) {
+        // Only show button if we are in the groups tab (to be handled by switchTab or here check visibility)
+        // But since loadGroups is called on load, we might want to just render it and let CSS handle visibility or just show it always?
+        // User asked for "Encima de Grupos de Trabajo". Placing it in header puts it to the right of "Comunidades y Empleo".
+        headerActions.innerHTML = `
+            <button class="btn btn-primary" onclick="openCreateGroupModal()" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.2rem;">+</span> Crear Comunidad
+            </button>
+        `;
+    }
+
+    // Also clear the old action container if it exists
+    const oldActions = document.getElementById('groups-actions');
+    if (oldActions) {
+        oldActions.innerHTML = '';
+        oldActions.style.display = 'none';
+    }
+
+    if (allGroups.length === 0) {
+        grid.innerHTML = '<p class="text-muted">No hay grupos disponibles en este momento.</p>';
+        return;
+    }
+
+    const content = `
+        <div class="groups-section">
+            ${allGroups.map(g => {
         const isJoined = joinedGroups.includes(g.id);
         return `
-        <div class="group-card" onclick="window.location.href='group_view.html?id=${g.id}'" style="cursor: pointer;">
-            <div class="group-icon">${getGroupIcon(g.name)}</div>
-            <div class="group-name">${g.name}</div>
-            <div class="group-desc">${g.desc}</div>
-            <div class="group-stats">
-                <span id="members-${g.id}">${g.members + (isJoined ? 1 : 0)} miembros</span>
-            </div>
-            <button 
-                class="btn ${isJoined ? 'btn-outline' : 'btn-primary'} btn-full-width"
-                onclick="event.stopPropagation(); toggleGroupJoin(${g.id}, '${g.name}', ${g.members})"
-            >
-                ${isJoined ? 'Salir del Grupo' : 'Unirse'}
-            </button>
-            ${isJoined ? '<div style="margin-top: 1rem; font-size: 0.85rem; color: var(--success-color);">✓ Eres miembro</div>' : ''}
+                <div class="group-card" onclick="window.location.href='group_view.html?id=${g.id}'" style="cursor: pointer;">
+                    <div class="group-icon">${getGroupIcon(g.name)}</div>
+                    <div class="group-name">${g.name}</div>
+                    <div class="group-desc">${g.desc}</div>
+                    <div class="group-stats">
+                        <span id="members-${g.id}">${g.members + (isJoined ? 1 : 0)} miembros</span>
+                    </div>
+                    <button 
+                        class="btn ${isJoined ? 'btn-outline' : 'btn-primary'} btn-full-width"
+                        onclick="event.stopPropagation(); toggleGroupJoin(${g.id}, '${g.name}', ${g.members})"
+                    >
+                        ${isJoined ? 'Salir del Grupo' : 'Unirse'}
+                    </button>
+                    ${isJoined ? '<div style="margin-top: 1rem; font-size: 0.85rem; color: var(--success-color);">✓ Eres miembro</div>' : ''}
+                </div>
+            `}).join('')}
         </div>
-    `}).join('');
+    `;
+
+    grid.innerHTML = content;
 }
 
 function getGroupIcon(name) {
@@ -440,3 +489,62 @@ function checkNotifications() {
 
     localStorage.setItem('last_visit_communities', now);
 }
+
+// Create Group Modal Functions
+window.openCreateGroupModal = () => {
+    const modal = document.getElementById('create-group-modal');
+    if (modal) {
+        document.getElementById('group-name').value = '';
+        document.getElementById('group-desc').value = '';
+        modal.classList.add('show');
+    }
+};
+
+window.closeCreateGroupModal = () => {
+    const modal = document.getElementById('create-group-modal');
+    if (modal) modal.classList.remove('show');
+};
+
+window.createGroup = () => {
+    const name = document.getElementById('group-name').value.trim();
+    const desc = document.getElementById('group-desc').value.trim();
+
+    if (!name) {
+        showToast('El nombre del grupo es obligatorio', 'error');
+        return;
+    }
+
+    if (!desc) {
+        showToast('La descripción es obligatoria', 'error');
+        return;
+    }
+
+    const customGroups = JSON.parse(localStorage.getItem('custom_groups') || '[]');
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    const newGroup = {
+        id: Date.now(),
+        name: name,
+        desc: desc,
+        members: 1,
+        creator: user ? (user.nombre || user.email) : 'Usuario',
+        created: new Date().toISOString(),
+        isDefault: false
+    };
+
+    customGroups.unshift(newGroup);
+    localStorage.setItem('custom_groups', JSON.stringify(customGroups));
+
+    // Auto-join the creator
+    const joinedGroups = JSON.parse(localStorage.getItem('joined_groups') || '[]');
+    if (!joinedGroups.includes(newGroup.id)) {
+        joinedGroups.push(newGroup.id);
+        localStorage.setItem('joined_groups', JSON.stringify(joinedGroups));
+    }
+
+    closeCreateGroupModal();
+    showToast('Comunidad creada correctamente', 'success');
+
+    // Reload groups
+    loadGroups();
+};

@@ -170,12 +170,39 @@
 }
 
 /* Group Card */
+/* Group Card */
+.groups-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Force 3 columns as requested */
+    gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .groups-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .groups-section {
+        grid-template-columns: 1fr;
+    }
+}
+
 .group-card {
     background: white;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 1.5rem;
     text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.group-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    border-color: var(--primary-color);
 }
 
 .group-icon {
@@ -210,6 +237,7 @@
     color: var(--text-muted);
     margin-bottom: 1.5rem;
 }
+
 /* Portfolio Card - Clickable */
 .portfolio-card {
     cursor: pointer;
@@ -254,8 +282,13 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal.active {
@@ -281,6 +314,7 @@
         transform: translateY(-50px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -383,8 +417,13 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-container {

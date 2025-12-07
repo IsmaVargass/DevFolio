@@ -144,16 +144,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadGroupDetails(id) {
-    const groups = JSON.parse(localStorage.getItem('groups') || '[]');
-    let group = groups.find(g => g.id == id);
+    // Load from custom groups first
+    const customGroups = JSON.parse(localStorage.getItem('custom_groups') || '[]');
+    let group = customGroups.find(g => g.id == id);
 
+    // If not found in custom, check default groups
     if (!group) {
-        const mockGroups = [
+        const defaultGroups = [
             { id: 1, name: 'React Developers', members: 120, desc: 'Comunidad para compartir conocimientos sobre React.' },
             { id: 2, name: 'Freelancers España', members: 85, desc: 'Grupo de apoyo para freelancers en España.' },
             { id: 3, name: 'Diseño UX/UI', members: 240, desc: 'Comparte tus diseños y recibe feedback.' }
         ];
-        group = mockGroups.find(g => g.id == id);
+        group = defaultGroups.find(g => g.id == id);
     }
 
     if (!group) {
@@ -223,6 +225,8 @@ function setupTabNavigation() {
 
 function renderDiscussions(groupId) {
     const discussions = JSON.parse(localStorage.getItem(`group_${groupId}_discussions`) || '[]');
+    const user = JSON.parse(localStorage.getItem('user'));
+    const currentUserName = user ? (user.nombre || user.email) : '';
 
     if (discussions.length === 0) {
         return `
@@ -239,13 +243,18 @@ function renderDiscussions(groupId) {
         </div>
         <ul class="topic-list">
             ${discussions.map(d => `
-                <li class="topic-item">
+                <li class="topic-item" style="cursor: pointer; position: relative;" onclick="viewDiscussionMessages(${groupId}, ${d.id})">
                     <div class="topic-icon">💬</div>
                     <div class="topic-content">
                         <div class="topic-title">${d.title}</div>
-                        <div class="topic-meta">Publicado por ${d.author} • ${formatDate(d.date)} • ${d.replies || 0} respuestas</div>
+                        <div class="topic-meta">Publicado por ${d.author} • ${formatDate(d.date)} • ${(d.messages || []).length} mensajes</div>
                         ${d.content ? `<div style="font-size: 0.9rem; color: #666; margin-top: 0.25rem;">${d.content}</div>` : ''}
                     </div>
+                    ${d.author === currentUserName ? `
+                        <button class="btn-delete-discussion" onclick="event.stopPropagation(); deleteDiscussion(${groupId}, ${d.id})" style="position: absolute; right: 1rem; top: 1rem; background: #dc2626; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">
+                            Eliminar
+                        </button>
+                    ` : ''}
                 </li>
             `).join('')}
         </ul>
@@ -363,4 +372,136 @@ function announcePortfolio(groupId, portfolio, message = '') {
         const portfoliosTab = document.querySelector('[data-tab="portfolios"]');
         if (portfoliosTab) portfoliosTab.click();
     }, 500);
+}
+
+// Delete discussion function
+window.deleteDiscussion = (groupId, discussionId) => {
+    const modal = document.getElementById('delete-discussion-modal');
+    if (!modal) {
+        // Fallback if modal doesn't exist
+        const discussions = JSON.parse(localStorage.getItem(`group_${groupId}_discussions`) || '[]');
+        const filtered = discussions.filter(d => d.id !== discussionId);
+        localStorage.setItem(`group_${groupId}_discussions`, JSON.stringify(filtered));
+        showToast('Discusión eliminada', 'success');
+        const discussionsTab = document.getElementById('discussions-tab');
+        if (discussionsTab && currentGroup) {
+            discussionsTab.innerHTML = renderDiscussions(currentGroup.id);
+        }
+        return;
+    }
+
+    // Show delete confirmation modal
+    modal.classList.add('show');
+
+    const closeBtn = modal.querySelector('.close');
+    const cancelBtn = document.getElementById('cancelDeleteDiscussion');
+    const confirmBtn = document.getElementById('confirmDeleteDiscussion');
+
+    const closeModal = () => modal.classList.remove('show');
+
+    closeBtn.onclick = closeModal;
+    cancelBtn.onclick = closeModal;
+
+    confirmBtn.onclick = () => {
+        const discussions = JSON.parse(localStorage.getItem(`group_${groupId}_discussions`) || '[]');
+        const filtered = discussions.filter(d => d.id !== discussionId);
+        localStorage.setItem(`group_${groupId}_discussions`, JSON.stringify(filtered));
+
+        modal.classList.remove('show');
+        showToast('Discusión eliminada correctamente', 'success');
+
+        const discussionsTab = document.getElementById('discussions-tab');
+        if (discussionsTab && currentGroup) {
+            discussionsTab.innerHTML = renderDiscussions(currentGroup.id);
+        }
+    };
+};
+
+// View discussion messages
+window.viewDiscussionMessages = (groupId, discussionId) => {
+    const discussions = JSON.parse(localStorage.getItem(`group_${groupId}_discussions`) || '[]');
+    const discussion = discussions.find(d => d.id === discussionId);
+
+    if (!discussion) return;
+
+    const modal = document.getElementById('discussion-messages-modal');
+    const content = document.getElementById('discussion-messages-content');
+
+    if (!modal || !content) return;
+
+    // Build messages HTML
+    const messages = discussion.messages || [];
+
+    content.innerHTML = `
+        <h3 style="margin-top: 0;">${discussion.title}</h3>
+        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">
+            Por ${discussion.author} • ${formatDate(discussion.date)}
+        </p>
+        ${discussion.content ? `<p style="padding: 1rem; background: #f9f9f9; border-radius: 4px; margin-bottom: 1.5rem;">${discussion.content}</p>` : ''}
+        
+        <h4 style="margin-bottom: 1rem; color: #333;">Mensajes (${messages.length})</h4>
+        
+        ${messages.length > 0 ? `
+            <div class="messages-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 1.5rem;">
+                ${messages.map(m => `
+                    <div class="message-item" style="padding: 1rem; border-left: 3px solid #2563eb; background: #f8f9fa; margin-bottom: 0.75rem; border-radius: 4px;">
+                        <div style="font-weight: 600; color: #2563eb; margin-bottom: 0.25rem;">${m.author}</div>
+                        <div style="font-size: 0.85rem; color: #999; margin-bottom: 0.5rem;">${formatDate(m.date)}</div>
+                        <div style="color: #333;">${m.content}</div>
+                    </div>
+                `).join('')}
+            </div>
+        ` : '<p style="color: #999; text-align: center; padding: 2rem;">No hay mensajes aún. Sé el primero en comentar.</p>'}
+        
+        <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem;">
+            <textarea id="new-message-content" rows="3" placeholder="Escribe tu mensaje..." style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical; font-family: inherit;"></textarea>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeDiscussionMessagesModal()">Cerrar</button>
+                <button class="btn btn-primary" onclick="addDiscussionMessage(${groupId}, ${discussionId})">Enviar Mensaje</button>
+            </div>
+        </div>
+    `;
+
+    modal.classList.add('show');
+};
+
+window.closeDiscussionMessagesModal = () => {
+    const modal = document.getElementById('discussion-messages-modal');
+    if (modal) modal.classList.remove('show');
+};
+
+window.addDiscussionMessage = (groupId, discussionId) => {
+    const content = document.getElementById('new-message-content').value;
+
+    if (!content || !content.trim()) {
+        showToast('Por favor escribe un mensaje', 'error');
+        return;
+    }
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    const discussions = JSON.parse(localStorage.getItem(`group_${groupId}_discussions`) || '[]');
+    const discussion = discussions.find(d => d.id === discussionId);
+
+    if (!discussion) return;
+
+    if (!discussion.messages) discussion.messages = [];
+
+    discussion.messages.push({
+        id: Date.now(),
+        author: user.nombre || user.email,
+        content: content.trim(),
+        date: new Date().toISOString()
+    });
+
+    localStorage.setItem(`group_${groupId}_discussions`, JSON.stringify(discussions));
+    showToast('Mensaje enviado', 'success');
+
+    // Refresh the modal
+    viewDiscussionMessages(groupId, discussionId);
+};
+
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' });
 }

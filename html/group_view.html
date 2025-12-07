@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -68,18 +68,41 @@
     <div id="discussion-modal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeDiscussionModal()">&times;</span>
-            <h2 style="margin-bottom: 1.5rem;">Nueva Discusi�n</h2>
+            <h2 style="margin-bottom: 1.5rem;">Nueva Discusión</h2>
             <div class="form-group">
-                <label for="discussion-title">T�tulo</label>
-                <input type="text" id="discussion-title" class="form-input" placeholder="�Sobre qu� quieres debatir?">
+                <label for="discussion-title">Título</label>
+                <input type="text" id="discussion-title" class="form-input" placeholder="¿Sobre qué quieres debatir?">
             </div>
             <div class="form-group">
                 <label for="discussion-content">Contenido (Opcional)</label>
                 <textarea id="discussion-content" class="form-input" rows="4" placeholder="Detalles adicionales..."></textarea>
             </div>
-            <button class="btn btn-primary btn-full-width" onclick="submitDiscussion()">Publicar Discusi�n</button>
+            <button class="btn btn-primary btn-full-width" onclick="submitDiscussion()">Publicar Discusión</button>
         </div>
     </div>
+    <!-- Delete Discussion Confirmation Modal -->
+    <div id="delete-discussion-modal" class="modal">
+        <div class="modal-content" style="max-width: 350px;">
+            <span class="close">&times;</span>
+            <h2>Eliminar Discusión</h2>
+            <p>¿Estás seguro de que quieres eliminar esta discusión? Esta acción no se puede deshacer.</p>
+            <div class="modal-actions">
+                <button id="cancelDeleteDiscussion" class="btn btn-secondary">Cancelar</button>
+                <button id="confirmDeleteDiscussion" class="btn btn-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discussion Messages Modal -->
+    <div id="discussion-messages-modal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="close" onclick="closeDiscussionMessagesModal()">&times;</span>
+            <div id="discussion-messages-content">
+                <!-- Content will be loaded by JS -->
+            </div>
+        </div>
+    </div>
+
 
     <script src="../js/utils.js"></script>
     <script src="../js/group_view.js?v=4"></script>
@@ -87,7 +110,3 @@
 </body>
 
 </html>
-
-
-
-
