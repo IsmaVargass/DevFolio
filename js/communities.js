@@ -1,8 +1,8 @@
 ﻿/* js/communities.js */
 
 // Adzuna API credentials
-const ADZUNA_APP_ID = '3fc224ea';
-const ADZUNA_APP_KEY = '4c352b45d620647c60abf49c26aa0381';
+const ADZUNA_APP_ID = '141e0cfe';
+const ADZUNA_APP_KEY = '87c8f24eeb70fb73a397564f62ffa0ca';
 const ADZUNA_API_BASE = 'https://api.adzuna.com/v1/api/jobs/es/search';
 
 // Global variable for message recipient
