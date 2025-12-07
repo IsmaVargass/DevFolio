@@ -293,7 +293,7 @@ erDiagram
 
 | Rol | Permisos | Acceso a |
 |-----|----------|----------|
-| **User** | Estándar | Portfolio, Communities, Mensajes, Perfil, Soporte |
+| **User** | Estándar | Portfolio, Communities, Perfil, Soporte |
 | **Técnico** | Extendido | Todo lo de User + Panel Admin básico |
 | **Admin** | Completo | Todo el sistema + Gestión total |
 
@@ -505,51 +505,7 @@ Comunidades temáticas donde profesionales de la misma tecnología comparten y c
 
 ---
 
-### BLOQUE 4: Sistema de Mensajería
-
-#### 💬 Mensajería Directa entre Usuarios
-
-**¿Cómo funciona?**
-
-- Conversaciones privadas 1 a 1
-- Sin grupos (por ahora)
-- Ordenadas por última actividad
-
-**Características:**
-
-1. **Nueva Conversación:**
-   - Modal con buscador de usuarios
-   - Filtra por nombre o email
-   - Selecciona destinatario
-   - Escribe primer mensaje
-
-2. **Lista de Conversaciones:**
-   - Muestra todas tus conversaciones activas
-   - Última mensaje visible
-   - Timestamp relativo ("hace 2h")
-   - Badge de mensajes no leídos
-
-3. **Chat Individual:**
-   - Historial completo de mensajes
-   - Tu perfil vs. perfil del otro usuario
-   - Input de mensaje
-   - **Selector de emojis** integrado
-   - Scroll automático al último mensaje
-
-4. **Emojis:**
-   - Picker visual
-   - Categorías organizadas
-   - Click para insertar
-   - Unicode completo
-
-5. **Estados:**
-   - Leído / No leído
-   - Indicador visual
-   - Badge de contador
-
----
-
-### BLOQUE 5: Panel de Administración
+### BLOQUE 4: Panel de Administración
 
 #### 🛡️ Acceso Restringido
 
@@ -713,7 +669,7 @@ Todo esto se calcula **sin base de datos**, **sin SQL**, **sin backend**:
 
 ---
 
-### BLOQUE 6: Soporte al Cliente
+### BLOQUE 5: Soporte al Cliente
 
 #### 🎧 Customer Support (vista del usuario)
 
@@ -733,7 +689,6 @@ Todo esto se calcula **sin base de datos**, **sin SQL**, **sin backend**:
 - Cambiar colores y fuentes
 - Unirse a grupos
 - Buscar trabajo
-- Enviar mensajes
 - Problemas de acceso
 
 #### 🎫 Mis Tickets
@@ -793,44 +748,7 @@ Al abrir:
 
 ---
 
-### BLOQUE 7: Sistema de Notificaciones
-
-#### 🔔 Notificaciones Globales
-
-**¿Dónde está?**
-
-Campana (SVG, no emoji) en la barra de navegación superior, **presente en todas las páginas**.
-
-**Badge de contador:**
-- Número rojo con notificaciones no leídas
-- Aparece automáticamente
-- Desaparece al leerlas todas
-
-**Tipos de notificaciones:**
-
-1. **Mensajes nuevos**
-   - "Tienes un nuevo mensaje de [Nombre]"
-
-2. **Respuestas a tickets**
-   - "Tu ticket #123 tiene una nueva respuesta"
-
-3. **Actualizaciones del sistema**
-   - "Nueva funcionalidad disponible"
-
-4. **Actividad en grupos**
-   - "[Usuario] publicó en [Grupo]"
-
-**Interacción:**
-
-- Click en campana → Abre dropdown
-- Lista de notificaciones
-- Scroll si hay muchas
-- Click en notificación → Va a la página correspondiente
-- Se marca como leída automáticamente
-
----
-
-### BLOQUE 8: Perfil de Usuario
+### BLOQUE 6: Perfil de Usuario
 
 #### 👤 Gestión del Perfil Personal
 
@@ -1209,7 +1127,7 @@ Input change → Actualizar objeto JavaScript → Regenerar preview
    - Crear discusiones
    - Leer posts
 
-#### 5️⃣ Enviar Mensajes
+#### 5️⃣ Enviar Mensajes (NO IMPLEMENTADO)
 
 1. Click "Mensajes" en navegación
 2. Click "Nueva Conversación"
