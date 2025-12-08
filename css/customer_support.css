@@ -89,6 +89,7 @@
     border: 1px solid var(--border-color);
     border-radius: 6px;
     font-weight: 600;
+    padding: 15px;
 }
 
 .status-open {
