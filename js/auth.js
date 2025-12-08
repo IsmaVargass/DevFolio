@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Validación con Expresiones Regulares (Regex)
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            // Contraseña: Mínimo 6 caracteres, al menos una letra y un número
-            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+            // Contraseña: Mínimo 6 caracteres, al menos una letra y un número (acepta símbolos)
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
 
             if (!emailRegex.test(email)) {
                 showToast('Por favor, introduce un email válido', 'error');
