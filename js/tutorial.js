@@ -15,13 +15,23 @@ class TutorialSystem {
         this.createOverlay();
         this.createTooltip();
 
-        // Check if tutorial should run
-        const user = JSON.parse(localStorage.getItem('user'));
-        const tutorialCompleted = localStorage.getItem('tutorial_completed');
+        // Check if tutorial should auto-start using simple boolean flag
+        this.checkAutoStart();
+    }
 
-        if (user && !tutorialCompleted) {
-            // Start tutorial after a short delay
-            setTimeout(() => this.start(), 1000);
+    checkAutoStart() {
+        const shouldShow = localStorage.getItem('show_tutorial');
+        console.log('Tutorial check (show_tutorial):', shouldShow);
+
+        if (shouldShow === 'true') {
+            console.log('Tutorial flag detected, starting...');
+            localStorage.removeItem('show_tutorial'); // Clear flag
+
+            // Use longer delay to ensure DOM is ready and visible
+            setTimeout(() => {
+                console.log('Executing start()');
+                this.start();
+            }, 1500);
         }
     }
 
@@ -50,35 +60,25 @@ class TutorialSystem {
 
         if (!element) {
             console.warn(`Tutorial element not found: ${step.element}`);
-            this.nextStep(); // Skip if element missing
+            this.nextStep();
             return;
         }
 
-        // Highlight element
         this.highlightElement(element);
-
-        // Position and show tooltip
         this.updateTooltip(step, element);
     }
 
     highlightElement(element) {
-        // Remove previous highlights
         document.querySelectorAll('.tutorial-spotlight').forEach(el => {
             el.classList.remove('tutorial-spotlight');
         });
-
-        // Add spotlight class
         element.classList.add('tutorial-spotlight');
-
-        // Scroll into view if needed
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     updateTooltip(step, element) {
         const rect = element.getBoundingClientRect();
-        const tooltipRect = this.tooltip.getBoundingClientRect();
 
-        // Content
         this.tooltip.innerHTML = `
             <div class="tutorial-header">
                 <span class="tutorial-title">${step.title}</span>
@@ -97,21 +97,17 @@ class TutorialSystem {
             </div>
         `;
 
-        // Positioning (Simple logic - can be improved)
         let top, left;
         const spacing = 15;
-
-        // Default to bottom
         top = rect.bottom + window.scrollY + spacing;
-        left = rect.left + window.scrollX + (rect.width / 2) - (300 / 2); // Center horizontally
+        left = rect.left + window.scrollX + (rect.width / 2) - (300 / 2);
 
-        // Check bounds
         if (left < 10) left = 10;
         if (left + 300 > window.innerWidth) left = window.innerWidth - 310;
 
         this.tooltip.style.top = `${top}px`;
         this.tooltip.style.left = `${left}px`;
-        this.tooltip.className = 'tutorial-tooltip show bottom'; // Reset classes
+        this.tooltip.className = 'tutorial-tooltip show bottom';
     }
 
     nextStep() {
@@ -135,21 +131,21 @@ class TutorialSystem {
         this.overlay.classList.remove('active');
         this.tooltip.classList.remove('show');
 
-        // Remove highlights
         document.querySelectorAll('.tutorial-spotlight').forEach(el => {
             el.classList.remove('tutorial-spotlight');
         });
 
-        if (completed) {
-            localStorage.setItem('tutorial_completed', 'true');
-            if (window.showToast) {
-                window.showToast('¡Tutorial completado! Disfruta de DevFolio.', 'success');
-            }
+        if (completed && window.showToast) {
+            window.showToast('¡Tutorial completado! Disfruta de DevFolio.', 'success');
         }
+    }
+
+    restart() {
+        localStorage.setItem('show_tutorial', 'true');
+        window.location.reload();
     }
 }
 
-// Define steps for Dashboard
 const dashboardSteps = [
     {
         element: '.dashboard-welcome',
@@ -181,9 +177,13 @@ const dashboardSteps = [
 // Initialize
 let tutorial;
 document.addEventListener('DOMContentLoaded', () => {
-    // Only run on dashboard
-    if (window.location.pathname.includes('dashboard.html')) {
+    // Check if we are on dashboard by looking for a unique element
+    // This is more robust than checking URL pathname
+    if (document.querySelector('.dashboard-welcome')) {
+        console.log('Dashboard detected, initializing tutorial system...');
         tutorial = new TutorialSystem(dashboardSteps);
-        window.tutorial = tutorial; // Expose to global scope for onclick handlers
+        window.tutorial = tutorial; // Expose to global scope
+    } else {
+        console.log('Not on dashboard, skipping tutorial init.');
     }
 });

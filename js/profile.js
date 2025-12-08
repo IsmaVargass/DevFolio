@@ -321,9 +321,9 @@ function compressImage(dataUrl, callback) {
 
 function handleAvatarDelete() {
     console.log('handleAvatarDelete called - restoring default avatar');
-    
+
     const user = JSON.parse(localStorage.getItem('user'));
-    
+
     // Remove the custom photo to restore default
     delete user.profile_photo;
     localStorage.setItem('user', JSON.stringify(user));
@@ -334,7 +334,7 @@ function handleAvatarDelete() {
         avatarImg.src = getUserAvatar(user);
         console.log('Avatar restored to default (initials)');
     }
-    
+
     // Update profile completion
     calculateProfileCompletion(user);
 
@@ -510,11 +510,11 @@ function handleClearData() {
    TUTORIAL RESTART
    ============================================ */
 function handleRestartTutorial() {
-    localStorage.removeItem('tutorial_completed');
-    showToast('Redirigiendo al tutorial...', 'info');
+    localStorage.setItem('show_tutorial', 'true');
+    showToast('Reiniciando tutorial...', 'info');
     setTimeout(() => {
-        window.location.href = 'dashboard.html?start_tutorial=true';
-    }, 1000);
+        window.location.href = 'dashboard.html';
+    }, 500);
 }
 
 /* ============================================

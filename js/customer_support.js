@@ -206,10 +206,10 @@ function setupTutorialButton() {
     const tutorialBtn = document.getElementById('show-tutorial-btn');
     if (tutorialBtn) {
         tutorialBtn.addEventListener('click', () => {
-            localStorage.removeItem('tutorial_completed');
+            localStorage.setItem('show_tutorial', 'true');
             showToast('Redirigiendo al tutorial...', 'info');
             setTimeout(() => {
-                window.location.href = 'dashboard.html?start_tutorial=true';
+                window.location.href = 'dashboard.html';
             }, 1000);
         });
     }

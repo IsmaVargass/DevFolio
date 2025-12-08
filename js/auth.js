@@ -23,6 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     localStorage.setItem('user', JSON.stringify(result.user));
+
+                    // Set flag for tutorial
+                    localStorage.setItem('show_tutorial', 'true');
+
                     showToast('¡Registro exitoso! Redirigiendo...', 'success');
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
