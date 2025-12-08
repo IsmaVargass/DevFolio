@@ -1,8 +1,8 @@
 // js/auth.js
-// Authentication handling with toast notifications
+// Gestión de autenticación con notificaciones toast
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Register
+    // Registro
     const registerForm = document.getElementById('register-form');
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     localStorage.setItem('user', JSON.stringify(result.user));
 
-                    // Set flag for tutorial
+                    // Establecer bandera para tutorial
                     localStorage.setItem('show_tutorial', 'true');
 
                     showToast('¡Registro exitoso! Redirigiendo...', 'success');
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Login
+    // Iniciar Sesión
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {

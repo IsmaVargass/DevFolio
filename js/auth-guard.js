@@ -1,9 +1,9 @@
-// js/auth-guard.js - Protection for authenticated pages
+// js/auth-guard.js - Protección para páginas autenticadas
 (function () {
     const user = JSON.parse(localStorage.getItem('user'));
     const currentPage = window.location.pathname;
 
-    // Pages that require authentication
+    // Páginas que requieren autenticación
     const protectedPages = [
         '/html/dashboard.html',
         '/html/profile.html',
@@ -16,7 +16,7 @@
         '/html/admin_panel.html'
     ];
 
-    // Check if current page is protected
+    // Comprobar si la página actual está protegida
     const isProtected = protectedPages.some(page => currentPage.includes(page));
 
     if (isProtected && !user) {

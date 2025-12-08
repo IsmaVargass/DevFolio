@@ -56,7 +56,7 @@ try {
         session_start();
         $_SESSION['user_id'] = $userId;
         $_SESSION['user_nombre'] = $nombre;
-        $_SESSION['user_role'] = 'user'; // Default role
+        $_SESSION['user_role'] = 'user'; // Rol por defecto
 
         http_response_code(201);
         echo json_encode([
