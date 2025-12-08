@@ -1406,6 +1406,382 @@ USUARIO:
 9. Responde
 10. User A ve badge de no leído
 11. Ciclo continúa
+
+```
+# 🌐 API PHP - Documentación Completa
+
+## 🔐 Autenticación (auth/)
+
+### `login.php`
+**¿Qué hace?**
+- Procesa login de usuarios
+- Valida email y contraseña
+- Crea sesión PHP (`$_SESSION['user_id']`)
+- Retorna datos del usuario
+
+**Método:** POST
+**Parámetros:** email, password
+**Respuesta:** { user_id, nombre, email, role }
+
+### `register.php`
+**¿Qué hace?**
+- Crea nuevo usuario en BD
+- Valida email único
+- Encripta contraseña (password_hash)
+- Asigna rol por defecto "user"
+- Crea sesión automáticamente
+
+**Método:** POST
+**Parámetros:** nombre, email, password
+**Validaciones:**
+- Email no existe
+- Contraseña mínimo 6 caracteres
+- Todos los campos requeridos
+
+### `logout.php`
+**¿Qué hace?**
+- Destruye la sesión PHP
+- Limpia datos temporales
+- Redirige a login
+
+**Método:** GET
+
+### `session.php`
+**¿Qué hace?**
+- Verifica si hay sesión activa
+- Retorna datos del usuario actual
+- Se ejecuta al cargar cada página protegida
+- Redirige si no hay sesión
+
+**Método:** GET
+**Respuesta:** { user_id, nombre, email, role, authenticated: true/false }
+
+---
+
+## 👤 Perfil (profile/)
+
+### `get_profile.php`
+**¿Qué hace?**
+- Obtiene datos completos del perfil
+- Requiere autenticación
+- Retorna info personal, profesional, foto, skills
+
+**Método:** GET
+**Parámetros:** (opcional) user_id para ver perfil ajeno
+**Respuesta:** 
+```json
+{
+  "id": 1,
+  "nombre": "Juan",
+  "email": "juan@email.com",
+  "bio": "Desarrollador...",
+  "ubicacion": "Madrid",
+  "telefono": "123456789",
+  "empresa": "Tech Co",
+  "titulo_profesional": "Senior Dev",
+  "foto": "base64...",
+  "skills": ["JavaScript", "React"],
+  "redes": { "github": "...", "linkedin": "..." }
+}
+```
+
+### `update_profile.php`
+**¿Qué hace?**
+- Actualiza datos del perfil del usuario
+- Requiere autenticación
+- Validar permisos (solo propio perfil)
+- Guarda cambios en BD
+
+**Método:** PUT
+**Parámetros:** nombre, bio, ubicacion, telefono, empresa, titulo_profesional, skills, redes
+**Seguridad:** Solo el propietario puede editar
+
+### `upload_avatar.php`
+**¿Qué hace?**
+- Sube foto de perfil
+- Convierte a base64
+- Valida tipo de archivo (JPG, PNG)
+- Limita tamaño (máx 5MB)
+- Actualiza perfil
+
+**Método:** POST (multipart/form-data)
+**Parámetros:** avatar (file)
+**Validaciones:**
+- Solo imágenes
+- Máximo 5MB
+- Redimensiona si es necesario
+
+---
+
+## 💼 Experiencia Laboral (experience/)
+
+### `create.php`
+**¿Qué hace?**
+- Crea nueva experiencia laboral
+- Requiere autenticación
+- Asocia a usuario actual
+- Valida fechas (inicio < fin)
+
+**Método:** POST
+**Parámetros:** company, position, start_date, end_date (opcional), description
+**Respuesta:** { id, message: "Experiencia creada" }
+
+### `list.php`
+**¿Qué hace?**
+- Obtiene todas las experiencias del usuario
+- Ordena por fecha (más recientes primero)
+- Requiere autenticación
+
+**Método:** GET
+**Respuesta:** 
+```json
+[
+  {
+    "id": 1,
+    "company": "Tech Inc",
+    "position": "Developer",
+    "start_date": "2022-01-15",
+    "end_date": null,
+    "description": "..."
+  }
+]
+```
+
+### `delete.php`
+**¿Qué hace?**
+- Elimina una experiencia
+- Verifica pertenencia (solo propietario)
+- Requiere autenticación
+
+**Método:** DELETE
+**Parámetros:** id
+**Seguridad:** Solo el propietario puede eliminar
+
+---
+
+## 🎓 Educación (education/)
+
+### `create.php`
+**¿Qué hace?**
+- Crea nuevo registro de educación
+- Requiere autenticación
+- Campos: institución, grado, fechas
+
+**Método:** POST
+**Parámetros:** institution, degree, start_date, end_date (opcional), description
+
+### `list.php`
+**¿Qué hace?**
+- Lista toda la educación del usuario
+- Ordena por fecha
+
+**Método:** GET
+**Respuesta:** Array de educaciones
+
+### `delete.php`
+**¿Qué hace?**
+- Elimina un registro de educación
+- Solo el propietario
+
+**Método:** DELETE
+**Parámetros:** id
+
+---
+
+## 🛠️ Habilidades (skills/)
+
+### `create.php`
+**¿Qué hace?**
+- Añade nueva habilidad técnica
+- Requiere autenticación
+- Previene duplicados
+
+**Método:** POST
+**Parámetros:** skill_name, level (beginner/intermediate/advanced/expert)
+**Validaciones:** No duplicados
+
+### `list.php`
+**¿Qué hace?**
+- Lista todas las habilidades del usuario
+- Ordena alfabéticamente o por nivel
+
+**Método:** GET
+**Respuesta:**
+```json
+[
+  { "id": 1, "name": "JavaScript", "level": "expert" }
+]
+```
+
+### `delete.php`
+**¿Qué hace?**
+- Elimina una habilidad
+- Solo el propietario
+
+**Método:** DELETE
+**Parámetros:** id
+
+---
+
+## 📁 Proyectos (projects/)
+
+### `create.php`
+**¿Qué hace?**
+- Crea nuevo proyecto personal
+- Asocia al usuario autenticado
+- Valida título requerido
+
+**Método:** POST
+**Parámetros:** titulo, descripcion, imagen_url, enlace_proyecto, tecnologias
+**Respuesta:** { id, message: "Proyecto creado" }
+
+### `list.php`
+**¿Qué hace?**
+- Obtiene proyectos del usuario actual
+- O de otro usuario (si es público)
+
+**Método:** GET
+**Parámetros:** (opcional) user_id
+**Respuesta:**
+```json
+[
+  {
+    "id": 1,
+    "titulo": "Mi App",
+    "descripcion": "...",
+    "imagen_url": "...",
+    "enlace_proyecto": "https://...",
+    "tecnologias": "JavaScript, React"
+  }
+]
+```
+
+### `update.php`
+**¿Qué hace?**
+- Actualiza un proyecto existente
+- Verifica pertenencia
+- Solo el propietario puede editar
+
+**Método:** PUT
+**Parámetros:** id, titulo, descripcion, imagen_url, enlace_proyecto, tecnologias
+**Seguridad:** Validar user_id
+
+### `delete.php`
+**¿Qué hace?**
+- Elimina un proyecto
+- Solo el propietario
+- Borra registros relacionados
+
+**Método:** DELETE
+**Parámetros:** id
+
+---
+
+## 🔗 Redes Sociales (social_links/)
+
+### `create.php`
+**¿Qué hace?**
+- Añade link a red social
+- Válidos: GitHub, LinkedIn, Twitter, Web, etc.
+
+**Método:** POST
+**Parámetros:** platform, url
+**Validaciones:** URL válida, plataforma reconocida
+
+### `list.php`
+**¿Qué hace?**
+- Obtiene todos los links del usuario
+
+**Método:** GET
+
+### `delete.php`
+**¿Qué hace?**
+- Elimina un link de red social
+
+**Método:** DELETE
+**Parámetros:** id
+
+---
+
+## 🗣️ Testimonios (testimonials/)
+
+### `create.php`
+**¿Qué hace?**
+- Crea nuevo testimonio para el usuario
+- Se dejan otros usuarios
+- Requiere autenticación
+
+**Método:** POST
+**Parámetros:** from_user_id, text, rating (1-5), title
+
+### `list.php`
+**¿Qué hace?**
+- Obtiene testimonios del usuario
+- Ordena por fecha (más recientes)
+
+**Método:** GET
+
+### `delete.php`
+**¿Qué hace?**
+- Elimina un testimonio
+- Solo el autor del testimonio
+
+**Método:** DELETE
+**Parámetros:** id
+
+---
+
+## 📊 Otros Endpoints
+
+### `users/` (vacío)
+**Futuro:** Gestión de usuarios (admin)
+
+### `jobs/` (vacío)
+**Futuro:** Publicar ofertas de trabajo
+
+### `portfolio/` (vacío)
+**Futuro:** Gestión de portfolios publicados
+
+---
+
+## 🔧 Configuración (config/)
+
+### `db.php`
+**¿Qué hace?**
+- Conexión a la base de datos MySQL
+- Configura PDO
+- Manejo de errores
+- Se incluye en todos los endpoints
+
+**Configuración:**
+```php
+const DB_HOST = 'localhost';
+const DB_USER = 'root';
+const DB_PASS = '';
+const DB_NAME = 'devfolio';
+```
+
+---
+
+## 🛡️ Seguridad en la API
+
+### Headers requeridos
+- Content-Type: application/json
+- Authorization: Bearer (futura implementación)
+
+### Validaciones en todos los endpoints
+- Autenticación (sesión PHP)
+- Validación de entrada (trim, type)
+- XSS prevention (htmlspecialchars)
+- SQL Injection prevention (prepared statements)
+- CORS headers
+
+### Respuestas de error
+```json
+{
+  "error": "Descripción del error",
+  "code": 400
+}
 ```
 
 ---
