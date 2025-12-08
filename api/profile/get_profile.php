@@ -17,7 +17,7 @@ $userId = $_SESSION['user_id'];
 
 try {
     // Seleccionar todos los campos del usuario
-    $stmt = $conn->prepare("SELECT id, nombre, email, role, profile_photo, bio, location, phone, job_title, company, website, github, linkedin, twitter, member_since, last_updated FROM users WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, nombre, email, role, profile_photo, bio, location, phone, job_title, company, website, github, linkedin, twitter FROM users WHERE id = ?");
     $stmt->execute([$userId]);
     $user = $stmt->fetch();
 
