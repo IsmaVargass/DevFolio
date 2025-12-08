@@ -12,6 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
 
+            // Validación con Expresiones Regulares (Regex)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // Contraseña: Mínimo 6 caracteres, al menos una letra y un número
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+
+            if (!emailRegex.test(email)) {
+                showToast('Por favor, introduce un email válido', 'error');
+                return;
+            }
+
+            if (!passwordRegex.test(password)) {
+                showToast('La contraseña debe tener al menos 6 caracteres, una letra y un número', 'error');
+                return;
+            }
+
             try {
                 const response = await fetch('../api/auth/register.php', {
                     method: 'POST',
