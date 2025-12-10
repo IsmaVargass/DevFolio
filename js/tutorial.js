@@ -25,13 +25,16 @@ class TutorialSystem {
 
         if (shouldShow === 'true') {
             console.log('Tutorial flag detected, starting...');
-            localStorage.removeItem('show_tutorial'); // Clear flag
+            // Don't remove the flag here - remove it when the tutorial actually starts
+            // This prevents issues if auth-guard causes a page reload before the timeout
 
-            // Use longer delay to ensure DOM is ready and visible
+            // Use longer delay to ensure DOM is ready and auth-guard has finished
             setTimeout(() => {
                 console.log('Executing start()');
+                // Now it's safe to remove the flag since we're actually starting
+                localStorage.removeItem('show_tutorial');
                 this.start();
-            }, 1500);
+            }, 2000); // Increased delay to allow auth-guard to finish
         }
     }
 
@@ -153,14 +156,14 @@ const dashboardSteps = [
         content: 'Este es tu panel de control. Aquí podrás gestionar todo tu perfil profesional.'
     },
     {
-        element: 'a[href="profile.html"]',
-        title: 'Configura tu Perfil',
-        content: 'Empieza por aquí. Añade tu foto, biografía y redes sociales.'
+        element: 'a[href="portfolio_builder.html"]',
+        title: 'Crea tu Portfolio',
+        content: 'Genera tu portfolio profesional en un clic cuando tengas toda tu información lista.'
     },
     {
-        element: 'a[href="experience.html"]',
-        title: 'Añade Experiencia',
-        content: 'Registra tu historial laboral y educación para que los reclutadores te conozcan.'
+        element: 'a[href="profile.html"]',
+        title: 'Configura tu Perfil',
+        content: 'Añade tu foto, biografía y redes sociales para personalizar tu presencia.'
     },
     {
         element: 'a[href="skills.html"]',
@@ -168,9 +171,24 @@ const dashboardSteps = [
         content: 'Muestra lo que sabes hacer. Añade tus skills técnicas y blandas.'
     },
     {
-        element: 'a[href="portfolio_builder.html"]',
-        title: 'Crea tu Portfolio',
-        content: 'Una vez tengas tus datos, genera tu portfolio profesional en un clic.'
+        element: 'a[href="experience.html"]',
+        title: 'Añade Experiencia',
+        content: 'Registra tu historial laboral y educación para que los reclutadores te conozcan.'
+    },
+    {
+        element: 'a[href="communities.html"]',
+        title: 'Únete a Comunidades',
+        content: 'Conecta con otros profesionales y descubre ofertas de trabajo.'
+    },
+    {
+        element: 'a[href="resources.html"]',
+        title: 'Recursos',
+        content: 'Accede a herramientas y recursos útiles para tu desarrollo profesional.'
+    },
+    {
+        element: 'a[href="customer_support.html"]',
+        title: 'Centro de Ayuda',
+        content: 'Si tienes dudas o problemas, aquí encontrarás soporte y asistencia.'
     }
 ];
 
